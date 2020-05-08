@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="208.342" height="168.302" viewBox="0 0 208.342 168.302">
+  <g id="Grupo_9" data-name="Grupo 9" transform="translate(-8 3.382)">
+    <ellipse id="Elipse_9" data-name="Elipse 9" cx="30" cy="28.5" rx="30" ry="28.5" transform="translate(9 1.791)" fill="#f1f1f1"/>
+    <path id="Trazado_51" data-name="Trazado 51" d="M278.372,209.928l-24.934-7.434a38.08,38.08,0,0,1-16.569,3.767c-19.5,0-35.37-14.526-35.37-32.381S217.367,141.5,236.87,141.5s35.37,14.526,35.37,32.381a31.26,31.26,0,0,1-11.364,23.781Zm-24.978-7.967.093.028,22.084,6.584L260.057,197.7l.251-.208a30.793,30.793,0,0,0,11.434-23.607C271.742,156.3,256.1,142,236.87,142S202,156.3,202,173.881s15.643,31.883,34.872,31.883A37.568,37.568,0,0,0,253.307,202Z" transform="translate(-193.5 -144.882)" fill="#2f2e41"/>
+    <circle id="Elipse_13" data-name="Elipse 13" cx="2.74" cy="2.74" r="2.74" transform="translate(28.798 28.127)" fill="#3795f6"/>
+    <circle id="Elipse_14" data-name="Elipse 14" cx="2.74" cy="2.74" r="2.74" transform="translate(36.769 28.127)" fill="#3795f6"/>
+    <circle id="Elipse_15" data-name="Elipse 15" cx="2.74" cy="2.74" r="2.74" transform="translate(44.74 28.127)" fill="#3795f6"/>
+    <ellipse id="Elipse_121" data-name="Elipse 121" cx="86.929" cy="11.826" rx="86.929" ry="11.826" transform="translate(42.484 141.268)" fill="#3f3d56"/>
+    <ellipse id="Elipse_122" data-name="Elipse 122" cx="40.397" cy="40.397" rx="40.397" ry="40.397" transform="translate(84.315 56.926)" fill="#2f2e41"/>
+    <rect id="Rectángulo_215" data-name="Rectángulo 215" width="12.272" height="21.988" transform="translate(106.303 127.016)" fill="#2f2e41"/>
+    <rect id="Rectángulo_216" data-name="Rectángulo 216" width="12.272" height="21.988" transform="translate(130.848 127.016)" fill="#2f2e41"/>
+    <ellipse id="Elipse_123" data-name="Elipse 123" cx="10.227" cy="3.835" rx="10.227" ry="3.835" transform="translate(106.303 147.435)" fill="#2f2e41"/>
+    <ellipse id="Elipse_124" data-name="Elipse 124" cx="10.227" cy="3.835" rx="10.227" ry="3.835" transform="translate(130.848 146.924)" fill="#2f2e41"/>
+    <ellipse id="Elipse_125" data-name="Elipse 125" cx="13.806" cy="13.806" rx="13.806" ry="13.806" transform="translate(111.928 73.29)" fill="#fff"/>
+    <ellipse id="Elipse_126" data-name="Elipse 126" cx="4.602" cy="4.602" rx="4.602" ry="4.602" transform="translate(121.132 82.494)" fill="#3f3d56"/>
+    <ellipse id="Elipse_142" data-name="Elipse 142" cx="6.998" cy="6.998" rx="6.998" ry="6.998" transform="translate(70.672 134.125)" fill="#3795f6"/>
+    <rect id="Rectángulo_225" data-name="Rectángulo 225" width="18.409" height="18.409" transform="translate(173.697 134.94)" fill="#ff6584"/>
+    <ellipse id="Elipse_143" data-name="Elipse 143" cx="6.998" cy="6.998" rx="6.998" ry="6.998" transform="translate(166.805 138.216)" fill="#3795f6"/>
+  </g>
+</svg>
