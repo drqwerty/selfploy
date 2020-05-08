@@ -1,0 +1,7 @@
+{
+  "name": "selfploy",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
