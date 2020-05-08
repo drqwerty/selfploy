@@ -1,0 +1,30 @@
+.title h1 {
+  text-align: center;
+  margin-top: 15%;
+  font-size: 3rem;
+
+  font-weight: 300;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+
+  
+  .continue-with-email {
+    font-weight: 400;
+  }
+
+  .continue-with {
+    margin-top: 40px;
+  }
+
+  .social-buttons {
+    margin: 20px 0;
+
+  }
+}

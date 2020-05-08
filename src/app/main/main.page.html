@@ -1,0 +1,28 @@
+<ion-content>
+
+  <img src="/assets/background-drawings/main-background-down.svg" width="100%">
+
+  <ion-text color="primary" class="title">
+    <h1>Selfploy</h1>
+  </ion-text>
+  
+  <div class="bottom">
+    <ion-button (click)="continueWithEmail()" shape="round" mode="ios" class="continue-with-email">
+      Continuar con email
+    </ion-button>
+
+    <div class="continue-with">
+      <ion-text color="medium">o continuar con</ion-text>
+
+      <div class="social-buttons" mode="ios">
+        <ion-button (click)="continueWithGoogle()" fill="clear" size="large">
+          <ion-icon slot="icon-only" src="/assets/icon/google.svg"></ion-icon>
+        </ion-button>
+
+        <ion-button (click)="continueWithFacebook()" fill="clear" size="large">
+          <ion-icon slot="icon-only" src="/assets/icon/facebook.svg"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
