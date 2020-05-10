@@ -1,0 +1,36 @@
+<ion-content color="primary" class="ion-padding">
+  <div #content class="login-content">
+
+    <div class="img">
+      <img src="/assets/background-drawings/email.svg">
+    </div>
+
+    <ion-text class="title">
+      <h1>Inicia sesión o regístrate</h1>
+    </ion-text>
+
+    <div class="input-div border-radius">
+      <ion-input color="dark" type="text" placeholder="Escribe tu email"></ion-input>
+    </div>
+
+  </div>
+</ion-content>
+
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar color="primary" mode="ios" class="ion-padding">
+
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <div #backButton>Atrás</div>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="goNext()">
+        <div #continueButton>Siguiente</div>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-footer>
