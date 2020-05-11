@@ -35,9 +35,15 @@
   border-radius: 15px;
 }
 
+.modal-fullscreen .modal-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
 .login-content {
   width: 80%;
   height: 100%;
+  min-width: 300px;
   max-width: 350px;
   margin: auto;
 
@@ -52,6 +58,10 @@
       bottom: 50px;
       left: 50%;
       transform: translateX(-50%);
+
+      &.near-bottom {
+        bottom: 20px;
+      }
     }
   }
 
@@ -59,7 +69,7 @@
     h1 {
       text-align: center;
       color: #fff;
-      font-size: 2rem;
+      font-size: 1.9rem;
       font-weight: 600;
       margin-top: 20px;
       margin-bottom: 50px;
@@ -70,4 +80,12 @@
     background: #fff;
     padding: 5px 20px 5px 10px;
   }
+}
+
+.transparent {
+  background-color: transparent !important;
+}
+
+.no-shadow {
+  box-shadow: none !important;
 }

@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, Platform } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -16,18 +17,15 @@ export class MainPage {
 
 
   constructor(
-    private navCtrl: NavController,
+    private navController: NavController,
     private platform: Platform,
   ) { }
 
 
   ionViewDidEnter() {
 
-    if (this.backgroundAnimation) {
-      this.playBackgroundAnimation(true);
-    } else {
-      this.createAnimations();
-    }
+    if (!this.backgroundAnimation) this.createAnimations();
+    this.playBackgroundAnimation(true);
   }
 
 
@@ -35,7 +33,7 @@ export class MainPage {
 
     this.playBackgroundAnimation()
       .then(() => {
-        this.navCtrl.navigateForward('login-email', { animated: false });
+        this.navController.navigateForward('login-email', { animated: false });
       });
   }
 
@@ -46,10 +44,10 @@ export class MainPage {
   }
 
 
-  playBackgroundAnimation(reverse = false) {
+  playBackgroundAnimation(reverse = false): Promise<void> {
 
     const direction = reverse ? 'reverse' : 'normal';
-    const easing = reverse ? 'ease-in' : 'ease-out';
+    const easing    = reverse ? 'ease-in' : 'ease-out';
 
     return this.backgroundAnimation
       .direction(direction)

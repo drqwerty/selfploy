@@ -1,6 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, IonContent, IonFooter, IonToolbar } from '@ionic/angular';
+import { NavController, ModalController, Platform } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
+import { LoginPasswordComponent } from '../login-password/login-password.component';
+import { ModalAnimationSlideEnter, ModalAnimationSlideLeave } from '../animations/page-transitions';
 
 @Component({
   selector: 'app-login-email',
@@ -15,15 +17,16 @@ export class LoginEmailPage {
 
   animation: Animation;
 
-
   constructor(
-    private navCtrl: NavController,
+    private navController: NavController,
+    private modalController: ModalController,
+    private platfrom: Platform,
   ) { }
 
 
   ionViewWillEnter() {
-    
-    this.createAnimations();
+
+    this.createFadeAnimation();
     this.animation.direction('normal').play();
   }
 
@@ -32,12 +35,40 @@ export class LoginEmailPage {
 
     this.animation.direction('reverse').play()
       .then(() =>
-        this.navCtrl.navigateBack('main', { animated: false })
+        this.navController.navigateBack('main', { animated: false })
       );
   }
 
 
-  createAnimations() {
+  async goNext() {
+
+    const modal = await this.modalController.create({
+      component: LoginPasswordComponent,
+      enterAnimation: ModalAnimationSlideEnter,
+      leaveAnimation: ModalAnimationSlideLeave,
+      showBackdrop: false,
+      cssClass: 'modal-fullscreen',
+    });
+
+    const slideAnimation = this.createSlideAnimation();
+    slideAnimation.direction('normal').play();
+    modal.onWillDismiss().then(() => slideAnimation.direction('reverse').play());
+
+    modal.present();
+  }
+
+
+  createSlideAnimation(): Animation {
+
+    return createAnimation()
+      .addElement(this.content.nativeElement)
+      .fromTo('transform', 'translateX(0)', `translateX(-${this.platfrom.width()}px)`)
+      .duration(200)
+      .easing('linear')
+  }
+
+
+  createFadeAnimation(): Animation {
 
     if (this.animation != null) return;
 

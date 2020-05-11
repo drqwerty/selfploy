@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { LoginEmailPageRoutingModule } from './login-email-routing.module';
 
 import { LoginEmailPage } from './login-email.page';
+import { LoginPasswordComponent } from '../login-password/login-password.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,12 @@ import { LoginEmailPage } from './login-email.page';
     IonicModule,
     LoginEmailPageRoutingModule
   ],
-  declarations: [LoginEmailPage]
+  declarations: [
+    LoginEmailPage,
+    LoginPasswordComponent,
+  ],
+  entryComponents: [
+    LoginPasswordComponent,
+  ]
 })
-export class LoginEmailPageModule {}
+export class LoginEmailPageModule { }
