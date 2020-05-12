@@ -2,7 +2,8 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, ModalController, Platform } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { LoginPasswordComponent } from '../login-password/login-password.component';
-import { ModalAnimationSlideEnter, ModalAnimationSlideLeave } from '../animations/page-transitions';
+import { ModalAnimationSlideEnter, ModalAnimationSlideLeave, ModalAnimationSlideDuration, ModalAnimationSlideEasing } from '../animations/page-transitions';
+import { LoginRegisterComponent } from '../login-register/login-register.component';
 
 @Component({
   selector: 'app-login-email',
@@ -28,6 +29,8 @@ export class LoginEmailPage {
 
     this.createFadeAnimation();
     this.animation.direction('normal').play();
+
+    this.goNext();
   }
 
 
@@ -43,7 +46,8 @@ export class LoginEmailPage {
   async goNext() {
 
     const modal = await this.modalController.create({
-      component: LoginPasswordComponent,
+      // component: LoginPasswordComponent,
+      component: LoginRegisterComponent,
       enterAnimation: ModalAnimationSlideEnter,
       leaveAnimation: ModalAnimationSlideLeave,
       showBackdrop: false,
@@ -63,8 +67,8 @@ export class LoginEmailPage {
     return createAnimation()
       .addElement(this.content.nativeElement)
       .fromTo('transform', 'translateX(0)', `translateX(-${this.platfrom.width()}px)`)
-      .duration(200)
-      .easing('linear')
+      .duration(ModalAnimationSlideDuration)
+      .easing(ModalAnimationSlideEasing)
   }
 
 

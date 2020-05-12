@@ -50,6 +50,7 @@ export class MainPage {
     const easing    = reverse ? 'ease-in' : 'ease-out';
 
     return this.backgroundAnimation
+      .delay(1000)
       .direction(direction)
       .easing(easing)
       .play();

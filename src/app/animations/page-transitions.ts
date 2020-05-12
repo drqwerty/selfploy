@@ -61,7 +61,11 @@ export const SlideAnimation = (_: HTMLElement, opts: any) => {
 };
 
 
-export const ModalAnimationSlideEnter = (baseEl: any, duration = 200, delay = 0) => {
+export const ModalAnimationSlideDuration = 400;
+export const ModalAnimationSlideEasing = 'ease';
+
+
+export const ModalAnimationSlideEnter = (baseEl: any, duration = ModalAnimationSlideDuration, delay = 0) => {
 
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.modal-wrapper'))
@@ -70,7 +74,7 @@ export const ModalAnimationSlideEnter = (baseEl: any, duration = 200, delay = 0)
     .fromTo('transform', 'translateX(100%)', 'translateX(0)')
     .fromTo('opacity', '1', '1')
     .duration(duration)
-    .easing('linear')
+    .easing(ModalAnimationSlideEasing)
     ;
 
   return createAnimation()
@@ -82,5 +86,5 @@ export const ModalAnimationSlideEnter = (baseEl: any, duration = 200, delay = 0)
 
 export const ModalAnimationSlideLeave = (baseEl: any) => {
 
-  return ModalAnimationSlideEnter(baseEl, 200, 0).direction('reverse');
+  return ModalAnimationSlideEnter(baseEl).direction('reverse');
 };

@@ -8,6 +8,7 @@ import { LoginEmailPageRoutingModule } from './login-email-routing.module';
 
 import { LoginEmailPage } from './login-email.page';
 import { LoginPasswordComponent } from '../login-password/login-password.component';
+import { LoginRegisterComponent } from '../login-register/login-register.component';
 
 @NgModule({
   imports: [
@@ -19,9 +20,11 @@ import { LoginPasswordComponent } from '../login-password/login-password.compone
   declarations: [
     LoginEmailPage,
     LoginPasswordComponent,
+    LoginRegisterComponent
   ],
   entryComponents: [
     LoginPasswordComponent,
+    LoginRegisterComponent
   ]
 })
 export class LoginEmailPageModule { }

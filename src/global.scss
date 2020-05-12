@@ -33,6 +33,11 @@
 
 .border-radius {
   border-radius: 15px;
+  --border-radius: 15px;
+}
+
+.swiper-scrollbar {
+  visibility: hidden;
 }
 
 .modal-fullscreen .modal-wrapper {
@@ -53,7 +58,7 @@
     min-height: 260px;
     position: relative;
 
-    img {
+    .background-drawings {
       position: absolute;
       bottom: 50px;
       left: 50%;
@@ -73,14 +78,54 @@
       font-weight: 600;
       margin-top: 20px;
       margin-bottom: 50px;
+
+      span::before {
+        content: "\A";
+        white-space: pre;
+      }
     }
   }
 
-  .input-div {
-    background: #fff;
-    padding: 5px 20px 5px 10px;
+  .div-user-interaction {
+    font-size: 1rem;
+    position: relative;
+    height: 50px;
+    font-weight: 400;
+
+    &.input {
+      background: #fff;
+      text-align: start;
+
+      ion-input {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 10px;
+        right: 15px;
+        margin: auto;
+        width: auto;
+      }
+    }
+
+    &.buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      ion-button {
+        font-size: 1rem;
+        font-weight: inherit;
+        text-transform: none;
+        width: 45%;
+        margin: 0;
+        height: 100%;
+        --transition: .5s;
+        --box-shadow: none;
+      }
+    }
   }
 }
+
 
 .transparent {
   background-color: transparent !important;

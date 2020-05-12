@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ModalController, IonToolbar } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
+import { ModalAnimationSlideDuration } from '../animations/page-transitions';
 
 @Component({
   selector: 'app-login-password',
@@ -28,7 +29,7 @@ export class LoginPasswordComponent {
 
     this.toolbarAnimation = this.createToolbarAnimation();
     this.toolbarAnimation
-      .delay(200)
+      .delay(ModalAnimationSlideDuration)
       .play();
   }
 
