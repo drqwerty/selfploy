@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonToolbar, ModalController, IonSlides } from '@ionic/angular';
+import { IonToolbar, ModalController, IonSlides, IonInput } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { ModalAnimationSlideDuration } from '../animations/page-transitions';
 
@@ -12,6 +12,7 @@ export class LoginRegisterComponent {
 
   @ViewChild(IonToolbar, { static: false }) ionToolbar: any;
   @ViewChild(IonSlides, { static: false }) slides: IonSlides;
+  @ViewChild('passwordInput', { static: false }) passwordInput: IonInput;
 
   toolbarAnimation: Animation;
   slideOpts = {
@@ -21,6 +22,8 @@ export class LoginRegisterComponent {
     allowSlideNext: false,
     allowSlidePrev: false,
   };
+  passwordInputType: 'password' | 'text' = 'password';
+  passwordInputIcon: 'eye' | 'eye-off' = 'eye';
 
   buttonsColors = {
     client: {
@@ -42,7 +45,7 @@ export class LoginRegisterComponent {
 
 
   onClick(button: number) {
-    
+
     this.buttonsColors.client.button = button == 1 ? 'tertiary' : 'light';
     this.buttonsColors.client.text = button == 1 ? 'light' : 'primary';
     this.buttonsColors.professional.button = button == 2 ? 'tertiary' : 'light';
@@ -77,9 +80,26 @@ export class LoginRegisterComponent {
             });
         }
       })
+  }
 
 
+  togglePasswordMode() {
 
+    if (this.passwordInputType == 'text') {
+      this.passwordInputType = 'password';
+      this.passwordInputIcon = 'eye'
+
+    } else {
+      this.passwordInputType = 'text';
+      this.passwordInputIcon = 'eye-off'
+    }
+
+    this.passwordInput.getInputElement()
+      .then(inputElement => {
+        const selectionStart = inputElement.selectionStart;
+        this.passwordInput.setFocus();
+        setTimeout(() => inputElement.setSelectionRange(selectionStart, selectionStart));
+      });
   }
 
 

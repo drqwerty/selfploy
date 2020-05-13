@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ModalController, IonToolbar } from '@ionic/angular';
+import { ModalController, IonToolbar, IonInput } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { ModalAnimationSlideDuration } from '../animations/page-transitions';
 
@@ -11,8 +11,12 @@ import { ModalAnimationSlideDuration } from '../animations/page-transitions';
 export class LoginPasswordComponent {
 
   @ViewChild(IonToolbar, { static: false }) ionToolbar: any;
+  @ViewChild('passwordInput', { static: false }) passwordInput: IonInput;
 
   toolbarAnimation: Animation;
+  passwordInputType: 'password' | 'text' = 'password';
+  passwordInputIcon: 'eye' | 'eye-off' = 'eye';
+
 
   constructor(
     private modalController: ModalController,
@@ -22,6 +26,26 @@ export class LoginPasswordComponent {
   goBack() {
 
     this.modalController.dismiss();
+  }
+
+
+  togglePasswordMode() {
+
+    if (this.passwordInputType == 'text') {
+      this.passwordInputType = 'password';
+      this.passwordInputIcon = 'eye'
+
+    } else {
+      this.passwordInputType = 'text';
+      this.passwordInputIcon = 'eye-off'
+    }
+
+    this.passwordInput.getInputElement()
+      .then(inputElement => {
+        const selectionStart = inputElement.selectionStart;
+        this.passwordInput.setFocus();
+        setTimeout(() => inputElement.setSelectionRange(selectionStart, selectionStart));
+      });
   }
 
 

@@ -86,25 +86,13 @@
     }
   }
 
-  .div-user-interaction {
+  .user-interaction {
     font-size: 1rem;
-    position: relative;
-    height: 50px;
+    height: 48px;
     font-weight: 400;
 
-    &.input {
-      background: #fff;
-      text-align: start;
-
-      ion-input {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 10px;
-        right: 15px;
-        margin: auto;
-        width: auto;
-      }
+    &.input-password {
+      --inner-padding-end: 4px;
     }
 
     &.buttons {
