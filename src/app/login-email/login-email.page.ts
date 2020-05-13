@@ -29,8 +29,6 @@ export class LoginEmailPage {
 
     this.createFadeAnimation();
     this.animation.direction('normal').play();
-
-    this.goNext();
   }
 
 

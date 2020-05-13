@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 })
 export class MainPage {
 
-  @ViewChild('backgroundImage', { static: false }) backgroundImage: ElementRef;
   @ViewChild('background', { static: false }) background: ElementRef;
 
   backgroundAnimation: Animation;
@@ -18,7 +17,6 @@ export class MainPage {
 
   constructor(
     private navController: NavController,
-    private platform: Platform,
   ) { }
 
 
@@ -50,7 +48,6 @@ export class MainPage {
     const easing    = reverse ? 'ease-in' : 'ease-out';
 
     return this.backgroundAnimation
-      .delay(1000)
       .direction(direction)
       .easing(easing)
       .play();
@@ -59,17 +56,11 @@ export class MainPage {
 
   createAnimations() {
 
-    const elements = [this.backgroundImage, this.background];
-
-    const animations = elements.map(element =>
-      createAnimation()
-        .addElement(element.nativeElement)
-        .fromTo('transform', 'translateY(0px)', `translateY(${this.platform.height()}px)`)
-    );
-
     this.backgroundAnimation = createAnimation()
-      .duration(500)
-      .addAnimation(animations);
+      .addElement(this.background.nativeElement)
+      .delay(1000)
+      .fromTo('transform', 'translateY(-100%)', `translateY(0)`)
+      .duration(500);
   }
 
 }

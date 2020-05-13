@@ -1,0 +1,16 @@
+<div class="background-animation-wrapper">
+  <div #background class="background"></div>
+  <img #backgroundImage src="/assets/background-drawings/main-background-down.svg">
+</div>
+
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom" class="ion-no-border">
+
+    <ion-tab-button *ngFor="let tab of tabs" [tab]="tab.path">
+      <div class="background-button-selected"></div>
+      <ion-icon [name]="tab.icon"></ion-icon>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-tabs>

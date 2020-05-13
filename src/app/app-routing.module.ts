@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'login-email',
     loadChildren: () => import('./login-email/login-email.module').then( m => m.LoginEmailPageModule)
   },
+  {
+    path: 'tabs',
+    loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
+  },
 ];
 
 @NgModule({

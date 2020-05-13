@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonToolbar, ModalController, IonSlides, IonInput } from '@ionic/angular';
+import { IonToolbar, ModalController, IonSlides, IonInput, NavController, IonContent } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
-import { ModalAnimationSlideDuration } from '../animations/page-transitions';
+import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../animations/page-transitions';
 
 @Component({
   selector: 'app-login-register',
@@ -10,6 +10,7 @@ import { ModalAnimationSlideDuration } from '../animations/page-transitions';
 })
 export class LoginRegisterComponent {
 
+  @ViewChild(IonContent, { static: false }) ionContent: any;
   @ViewChild(IonToolbar, { static: false }) ionToolbar: any;
   @ViewChild(IonSlides, { static: false }) slides: IonSlides;
   @ViewChild('passwordInput', { static: false }) passwordInput: IonInput;
@@ -41,6 +42,7 @@ export class LoginRegisterComponent {
 
   constructor(
     private modalController: ModalController,
+    private navController: NavController,
   ) { }
 
 
@@ -55,31 +57,41 @@ export class LoginRegisterComponent {
 
   goNext() {
 
-    this.slides.lockSwipeToNext(false)
-      .then(() => {
-        this.slides.slideNext();
-        this.slides.lockSwipeToNext(true);
-      });
+    this.slides.isEnd().then(end => {
+
+      if (end) {
+        this.navController.navigateForward('tabs', { animated: false })
+          .then(() => this.modalController.getTop().then(modal => {
+            modal.leaveAnimation = ModalAnimationFadeLeave;
+            setTimeout(() => this.modalController.dismiss());
+          }));
+
+      } else {
+        this.slides.lockSwipeToNext(false)
+          .then(() => {
+            this.slides.slideNext();
+            this.slides.lockSwipeToNext(true);
+          });
+      }
+    });
   }
 
 
   goBack() {
 
-    this.slides.getActiveIndex()
-      .then(currentSlide => {
+    this.slides.isBeginning().then(beginning => {
 
-        if (currentSlide == 0) {
-          this.ionToolbar = null;
-          this.modalController.dismiss();
+      if (beginning) {
+        this.modalController.dismiss();
 
-        } else {
-          this.slides.lockSwipeToPrev(false)
-            .then(() => {
-              this.slides.slidePrev();
-              this.slides.lockSwipeToPrev(true);
-            });
-        }
-      })
+      } else {
+        this.slides.lockSwipeToPrev(false)
+          .then(() => {
+            this.slides.slidePrev();
+            this.slides.lockSwipeToPrev(true);
+          });
+      }
+    })
   }
 
 
@@ -114,10 +126,15 @@ export class LoginRegisterComponent {
 
   ionViewWillLeave() {
 
-    this.toolbarAnimation
-      .delay(0)
-      .direction('reverse')
-      .play();
+    this.slides.isBeginning().then(beginning => {
+
+      if (beginning) {
+        this.toolbarAnimation
+          .delay(0)
+          .direction('reverse')
+          .play();
+      }
+    })
   }
 
 

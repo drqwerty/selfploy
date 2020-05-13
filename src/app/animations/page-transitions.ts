@@ -79,7 +79,7 @@ export const ModalAnimationSlideEnter = (baseEl: any, duration = ModalAnimationS
 
   return createAnimation()
     .addElement(baseEl)
-    .addAnimation([wrapperAnimation]);
+    .addAnimation(wrapperAnimation);
 };
 
 
@@ -87,4 +87,19 @@ export const ModalAnimationSlideEnter = (baseEl: any, duration = ModalAnimationS
 export const ModalAnimationSlideLeave = (baseEl: any) => {
 
   return ModalAnimationSlideEnter(baseEl).direction('reverse');
+};
+
+
+export const ModalAnimationFadeLeave = (baseEl: any, duration = ModalAnimationSlideDuration) => {
+
+  const wrapperAnimation = createAnimation()
+    .addElement(baseEl.querySelector('.modal-wrapper'))
+    .fromTo('opacity', '1', '0')
+    .duration(duration)
+    .easing(ModalAnimationSlideEasing)
+    ;
+
+  return createAnimation()
+    .addElement(baseEl)
+    .addAnimation(wrapperAnimation);
 };
