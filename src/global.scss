@@ -93,6 +93,10 @@
 
     &.input-password {
       --inner-padding-end: 4px;
+
+      form {
+        width: 100%;
+      }
     }
 
     &.buttons {
@@ -112,6 +116,10 @@
       }
     }
   }
+}
+
+.login-toast {
+  text-align: center;
 }
 
 

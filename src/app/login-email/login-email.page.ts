@@ -1,9 +1,11 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, ModalController, Platform } from '@ionic/angular';
+import { NavController, ModalController, Platform, LoadingController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { LoginPasswordComponent } from '../login-password/login-password.component';
 import { ModalAnimationSlideEnter, ModalAnimationSlideLeave, ModalAnimationSlideDuration, ModalAnimationSlideEasing } from '../animations/page-transitions';
 import { LoginRegisterComponent } from '../login-register/login-register.component';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login-email',
@@ -18,11 +20,25 @@ export class LoginEmailPage {
 
   animation: Animation;
 
+  emailForm: FormGroup;
+  loading: HTMLIonLoadingElement;
+
+
   constructor(
     private navController: NavController,
     private modalController: ModalController,
     private platfrom: Platform,
-  ) { }
+    private formBuilder: FormBuilder,
+    private loadingController: LoadingController,
+    private authService: AuthService,
+  ) {
+
+    this.emailForm = this.formBuilder.group({
+      email: new FormControl('test@test.test2', [
+        Validators.required,
+      ]),
+    });
+  }
 
 
   ionViewWillEnter() {
@@ -43,20 +59,41 @@ export class LoginEmailPage {
 
   async goNext() {
 
-    const modal = await this.modalController.create({
-      // component: LoginPasswordComponent,
-      component: LoginRegisterComponent,
-      enterAnimation: ModalAnimationSlideEnter,
-      leaveAnimation: ModalAnimationSlideLeave,
-      showBackdrop: false,
-      cssClass: 'modal-fullscreen',
-    });
+    if (this.emailForm.invalid) return;
 
-    const slideAnimation = this.createSlideAnimation();
-    slideAnimation.direction('normal').play();
-    modal.onWillDismiss().then(() => slideAnimation.direction('reverse').play());
+    await this.presentLoading();
 
-    modal.present();
+    this.authService.checkEmail(this.emailForm.value.email)
+      .then(async res => {
+        
+        this.loading.dismiss();
+        
+        const component = res.includes('password') ? LoginPasswordComponent : LoginRegisterComponent;
+        const modal = await this.modalController.create({
+          component,
+          enterAnimation: ModalAnimationSlideEnter,
+          leaveAnimation: ModalAnimationSlideLeave,
+          showBackdrop: false,
+          cssClass: 'modal-fullscreen',
+          componentProps: {
+            email: this.emailForm.value.email
+          },
+        });
+
+        const slideAnimation = this.createSlideAnimation();
+        slideAnimation.direction('normal').play();
+        modal.onWillDismiss().then(() => slideAnimation.direction('reverse').play());
+
+        modal.present();
+      })
+      .catch(() => this.loading.dismiss());
+  }
+
+
+  async presentLoading() {
+    
+    this.loading = await this.loadingController.create();
+    await this.loading.present();
   }
 
 

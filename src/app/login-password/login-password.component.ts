@@ -1,7 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { ModalController, IonToolbar, IonInput } from '@ionic/angular';
+import { Component, ViewChild, Input } from '@angular/core';
+import { ModalController, IonToolbar, IonInput, LoadingController, ToastController, NavController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
-import { ModalAnimationSlideDuration } from '../animations/page-transitions';
+import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../animations/page-transitions';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { FirebaseError } from 'firebase';
+import { ToastAnimationEnter, ToastAnimationLeave } from '../animations/toast-transitions';
 
 @Component({
   selector: 'app-login-password',
@@ -10,6 +14,8 @@ import { ModalAnimationSlideDuration } from '../animations/page-transitions';
 })
 export class LoginPasswordComponent {
 
+  @Input() email: string;
+
   @ViewChild(IonToolbar, { static: false }) ionToolbar: any;
   @ViewChild('passwordInput', { static: false }) passwordInput: IonInput;
 
@@ -17,15 +23,91 @@ export class LoginPasswordComponent {
   passwordInputType: 'password' | 'text' = 'password';
   passwordInputIcon: 'eye' | 'eye-off' = 'eye';
 
+  loading: HTMLIonLoadingElement;
+  passwordForm: FormGroup;
+
 
   constructor(
     private modalController: ModalController,
-  ) { }
+    private formBuilder: FormBuilder,
+    private loadingController: LoadingController,
+    private authService: AuthService,
+    private toastController: ToastController,
+    private navController: NavController
+  ) {
+
+    this.passwordForm = this.formBuilder.group({
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+      ]),
+    });
+  }
 
 
   goBack() {
 
     this.modalController.dismiss();
+  }
+
+
+  async goNext() {
+
+    if (this.passwordForm.invalid) return;
+
+    await this.presentLoading();
+    this.authService.login(this.email, this.passwordForm.value.password)
+
+      .then(res => {
+        this.loading.dismiss();
+        this.navController.navigateRoot('tabs', { animated: false })
+          .then(() => this.modalController.getTop().then(modal => {
+            modal.leaveAnimation = ModalAnimationFadeLeave;
+            setTimeout(() => this.modalController.dismiss());
+          }));
+      })
+
+      .catch((error: FirebaseError) => {
+        this.loading.dismiss();
+        let message;
+
+        switch (error.code) {
+          case 'auth/wrong-password':
+            message = 'Contraseña incorrecta';
+            break;
+
+          case 'auth/too-many-requests':
+            message = 'Demasiados intentos. Prueba más tarde';
+            break;
+
+          default:
+            message = error.message;
+            break;
+        }
+
+        this.presentToast(message);
+        console.log(error);
+      })
+  }
+
+
+  async presentLoading() {
+
+    this.loading = await this.loadingController.create();
+    await this.loading.present();
+  }
+
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      mode: 'ios',
+      cssClass: 'login-toast',
+      enterAnimation: ToastAnimationEnter,
+      leaveAnimation: ToastAnimationLeave,
+    });
+    toast.present();
   }
 
 

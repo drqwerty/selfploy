@@ -10,7 +10,9 @@
     </ion-text>
 
     <ion-item lines="none" class="user-interaction border-radius">
-      <ion-input color="dark" type="text" placeholder="Escribe tu email"></ion-input>
+      <form (ngSubmit)="goNext()" #emailFormSubmit="ngForm" [formGroup]="emailForm">
+        <ion-input color="dark" type="text" placeholder="Escribe tu email" formControlName="email" email></ion-input>
+      </form>
     </ion-item>
 
   </div>
@@ -27,7 +29,7 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button (click)="goNext()">
+      <ion-button [disabled]="emailForm.invalid" type="submit" (click)="emailFormSubmit.ngSubmit.emit()">
         <div #continueButton>Siguiente</div>
       </ion-button>
     </ion-buttons>
