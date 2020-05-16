@@ -27,6 +27,7 @@ export class LoginRegisterComponent {
   toolbarAnimation: Animation;
   loading: HTMLIonLoadingElement;
 
+  slidesLength: number;
   slideOpts = {
     initialSlide: 0,
     pagination: false,
@@ -88,6 +89,7 @@ export class LoginRegisterComponent {
       .delay(ModalAnimationSlideDuration)
       .play();
 
+    this.slides.length().then(length => this.slidesLength = length);
     this.user.email = this.email;
   }
 
@@ -108,12 +110,13 @@ export class LoginRegisterComponent {
 
   goBack() {
 
-    this.slides.isBeginning().then(beginning => {
+    this.slides.getActiveIndex().then(activeIndex => {
 
-      if (beginning) {
+      if (activeIndex === 0) {
         this.modalController.dismiss({ animate: true });
 
       } else {
+        this.updateNextButtonState(activeIndex - 1);
         this.slides.lockSwipeToPrev(false)
           .then(() => {
             this.slides.slidePrev();
@@ -128,12 +131,13 @@ export class LoginRegisterComponent {
 
     if (this.goNextDisabled) return;
 
-    this.slides.isEnd().then(end => {
+    this.slides.getActiveIndex().then(activeIndex => {
 
-      if (end) {
+      if (activeIndex === this.slidesLength - 1) {
         this.signUp();
 
       } else {
+        this.updateNextButtonState(activeIndex + 1);
         this.slides.lockSwipeToNext(false)
           .then(() => {
             this.slides.slideNext();
@@ -157,31 +161,28 @@ export class LoginRegisterComponent {
   }
 
 
-  updateNextButtonState() {
+  updateNextButtonState(activeIndex: number) {
 
-    this.slides.getActiveIndex()
-      .then(activeIndex => {
+    switch (activeIndex) {
+      case 0:
+        this.goNextDisabled = this.user.type == undefined;
+        break;
 
-        switch (activeIndex) {
-          case 0:
-            this.goNextDisabled = this.user.type == undefined;
-            break;
+      case 1:
+        this.nameFormValid();
+        break;
 
-          case 1:
-            this.nameFormValid();
-            break;
+      case 2:
+        this.goNextDisabled = false;
+        break;
 
-          case 2:
-            break;
+      case 3:
+        this.passwordFormValid();
+        break;
 
-          case 3:
-            this.passwordFormValid();
-            break;
-
-          default:
-            break;
-        }
-      })
+      default:
+        break;
+    }
   }
 
 
