@@ -93,10 +93,6 @@
 
     &.input-password {
       --inner-padding-end: 4px;
-
-      form {
-        width: 100%;
-      }
     }
 
     &.buttons {
@@ -114,6 +110,10 @@
         --transition: .5s;
         --box-shadow: none;
       }
+    }
+
+    form {
+      width: 100%;
     }
   }
 }

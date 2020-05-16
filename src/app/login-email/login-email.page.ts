@@ -65,9 +65,9 @@ export class LoginEmailPage {
 
     this.authService.checkEmail(this.emailForm.value.email)
       .then(async res => {
-        
+
         this.loading.dismiss();
-        
+
         const component = res.includes('password') ? LoginPasswordComponent : LoginRegisterComponent;
         const modal = await this.modalController.create({
           component,
@@ -82,7 +82,9 @@ export class LoginEmailPage {
 
         const slideAnimation = this.createSlideAnimation();
         slideAnimation.direction('normal').play();
-        modal.onWillDismiss().then(() => slideAnimation.direction('reverse').play());
+        modal.onWillDismiss().then(({ data }) => {
+          if (data?.animate) slideAnimation.direction('reverse').play();
+        });
 
         modal.present();
       })
@@ -91,7 +93,7 @@ export class LoginEmailPage {
 
 
   async presentLoading() {
-    
+
     this.loading = await this.loadingController.create();
     await this.loading.present();
   }

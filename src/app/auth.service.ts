@@ -8,10 +8,9 @@ import { FirestoreService } from './firestore.service';
 })
 export class AuthService {
 
-  
+
   constructor(
-    private AFauth: AngularFireAuth,
-    private firestoreService: FirestoreService
+    private AFauth: AngularFireAuth
   ) { }
 
   login(email: string, password: string) {
@@ -26,11 +25,8 @@ export class AuthService {
   }
 
 
-  signUp(user: User, pass: string) {
+  signUp(user: User, password: string) {
 
-    return this.AFauth.createUserWithEmailAndPassword(user.email, pass)
-      .then(userCredential => {
-        this.firestoreService.setUser(userCredential.user.uid, user);
-      });
+    return this.AFauth.createUserWithEmailAndPassword(user.email, password);
   }
 }

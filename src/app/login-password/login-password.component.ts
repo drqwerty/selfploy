@@ -47,7 +47,7 @@ export class LoginPasswordComponent {
 
   goBack() {
 
-    this.modalController.dismiss();
+    this.modalController.dismiss({ animate: true });
   }
 
 
@@ -99,6 +99,7 @@ export class LoginPasswordComponent {
 
 
   async presentToast(message: string) {
+
     const toast = await this.toastController.create({
       message,
       duration: 2000,

@@ -1,7 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
-import { IonToolbar, ModalController, IonSlides, IonInput, NavController, IonContent } from '@ionic/angular';
+import { Component, ViewChild, Input } from '@angular/core';
+import { IonToolbar, ModalController, IonSlides, IonInput, NavController, IonContent, LoadingController, ToastController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../animations/page-transitions';
+import { User, UserType } from '../user-model';
+import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { ToastAnimationEnter, ToastAnimationLeave } from '../animations/toast-transitions';
+import { FirebaseError } from 'firebase';
 
 @Component({
   selector: 'app-login-register',
@@ -10,10 +15,14 @@ import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../animati
 })
 export class LoginRegisterComponent {
 
+  @Input() email: string;
+
   @ViewChild(IonContent, { static: false }) ionContent: any;
   @ViewChild(IonToolbar, { static: false }) ionToolbar: any;
   @ViewChild(IonSlides, { static: false }) slides: IonSlides;
   @ViewChild('passwordInput', { static: false }) passwordInput: IonInput;
+
+  userType = UserType;
 
   toolbarAnimation: Animation;
   slideOpts = {
@@ -26,6 +35,8 @@ export class LoginRegisterComponent {
   passwordInputType: 'password' | 'text' = 'password';
   passwordInputIcon: 'eye' | 'eye-off' = 'eye';
 
+  goNextDisabled = true;
+
   buttonsColors = {
     client: {
       button: 'light',
@@ -37,34 +48,110 @@ export class LoginRegisterComponent {
     }
   };
 
+  user: User;
+  nameForm: FormGroup;
+  passwordForm: FormGroup;
   profileImage = '';
+
+  loading: HTMLIonLoadingElement;
 
 
   constructor(
     private modalController: ModalController,
     private navController: NavController,
-  ) { }
+    private formBuilder: FormBuilder,
+    private auth: AuthService,
+    private loadingController: LoadingController,
+    private toastController: ToastController,
+  ) {
+
+    this.nameForm = this.formBuilder.group({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
+    });
+    this.passwordForm = this.formBuilder.group({
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6),
+      ]),
+    });
+    this.user = new User();
+  }
 
 
-  onClick(button: number) {
 
-    this.buttonsColors.client.button = button == 1 ? 'tertiary' : 'light';
-    this.buttonsColors.client.text = button == 1 ? 'light' : 'primary';
-    this.buttonsColors.professional.button = button == 2 ? 'tertiary' : 'light';
-    this.buttonsColors.professional.text = button == 2 ? 'light' : 'primary';
+  ionViewWillEnter() {
+
+    this.toolbarAnimation = this.createToolbarAnimation();
+    this.toolbarAnimation
+      .delay(ModalAnimationSlideDuration)
+      .play();
+
+    this.user.email = this.email;
+  }
+
+
+  ionViewWillLeave() {
+
+    this.slides.isBeginning().then(beginning => {
+
+      if (beginning) {
+        this.toolbarAnimation
+          .delay(0)
+          .direction('reverse')
+          .play();
+      }
+    })
+  }
+
+
+  setType(type: UserType, buttonSelected, buttonNotSelected) {
+
+    this.user.type = type;
+    this.goNextDisabled = false;
+
+    buttonSelected.button = 'tertiary';
+    buttonSelected.text = 'light';
+    buttonNotSelected.button = 'light';
+    buttonNotSelected.text = 'primary';
+  }
+
+
+  goBack() {
+
+    this.slides.isBeginning().then(beginning => {
+
+      if (beginning) {
+        this.modalController.dismiss({ animate: true });
+
+      } else {
+        this.slides.lockSwipeToPrev(false)
+          .then(() => {
+            this.slides.slidePrev();
+            this.slides.lockSwipeToPrev(true);
+          });
+      }
+    })
   }
 
 
   goNext() {
 
+    if (this.goNextDisabled) return;
+
     this.slides.isEnd().then(end => {
 
       if (end) {
-        this.navController.navigateForward('tabs', { animated: false })
-          .then(() => this.modalController.getTop().then(modal => {
-            modal.leaveAnimation = ModalAnimationFadeLeave;
-            setTimeout(() => this.modalController.dismiss());
-          }));
+        console.log(this.user);
+        this.signUp();
+
+        // this.navController.navigateRoot('tabs', { animated: false })
+        //   .then(() => this.modalController.getTop().then(modal => {
+        //     modal.leaveAnimation = ModalAnimationFadeLeave;
+        //     setTimeout(() => this.modalController.dismiss());
+        //   }));
 
       } else {
         this.slides.lockSwipeToNext(false)
@@ -77,21 +164,62 @@ export class LoginRegisterComponent {
   }
 
 
-  goBack() {
+  async presentLoading() {
 
-    this.slides.isBeginning().then(beginning => {
+    this.loading = await this.loadingController.create();
+    await this.loading.present();
+  }
 
-      if (beginning) {
-        this.modalController.dismiss();
 
-      } else {
-        this.slides.lockSwipeToPrev(false)
-          .then(() => {
-            this.slides.slidePrev();
-            this.slides.lockSwipeToPrev(true);
-          });
-      }
-    })
+  async presentErrorInToast(error: FirebaseError) {
+
+    let message = error.code;
+
+    if (error.code == 'auth/email-already-in-use')
+      message = 'Este correo ya está en uso';
+
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      mode: 'ios',
+      cssClass: 'login-toast',
+      enterAnimation: ToastAnimationEnter,
+      leaveAnimation: ToastAnimationLeave,
+    });
+    toast.present();
+  }
+
+
+  signUp() {
+
+    this.presentLoading();
+
+    this.auth
+      .signUp(this.user, this.passwordForm.value.password)
+      .then(
+        value => this.createUserProfile(value).then(() => this.goMainPage()),
+        reason => this.presentErrorInToast(reason)
+      )
+      .catch(reason => console.log(reason))
+  }
+
+
+  goMainPage() {
+
+    this.loading.dismiss();
+
+    this.navController.navigateRoot('tabs', { animated: false })
+      .then(() => this.modalController.getTop().then(modal => {
+        modal.leaveAnimation = ModalAnimationFadeLeave;
+        setTimeout(() => this.modalController.dismiss());
+      }));
+  }
+
+
+  createUserProfile(value: firebase.auth.UserCredential) {
+
+    console.log(value)
+    return new Promise(resolve => resolve());
   }
 
 
@@ -115,26 +243,44 @@ export class LoginRegisterComponent {
   }
 
 
-  ionViewWillEnter() {
+  nameFormValid() {
 
-    this.toolbarAnimation = this.createToolbarAnimation();
-    this.toolbarAnimation
-      .delay(ModalAnimationSlideDuration)
-      .play();
+    this.goNextDisabled = this.nameForm.invalid;
+    if (!this.goNextDisabled) this.user.name = this.nameForm.value.name;
   }
 
 
-  ionViewWillLeave() {
+  passwordFormValid() {
 
-    this.slides.isBeginning().then(beginning => {
+    this.goNextDisabled = this.passwordForm.invalid;
+  }
 
-      if (beginning) {
-        this.toolbarAnimation
-          .delay(0)
-          .direction('reverse')
-          .play();
-      }
-    })
+
+  updateNextButtonState() {
+
+    this.slides.getActiveIndex()
+      .then(activeIndex => {
+
+        switch (activeIndex) {
+          case 0:
+            this.goNextDisabled = this.user.type == undefined;
+            break;
+
+          case 1:
+            this.nameFormValid();
+            break;
+
+          case 2:
+            break;
+
+          case 3:
+            this.passwordFormValid();
+            break;
+
+          default:
+            break;
+        }
+      })
   }
 
 

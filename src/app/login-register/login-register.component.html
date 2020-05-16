@@ -1,5 +1,5 @@
 <ion-content color="primary">
-  <ion-slides pager="true" [options]="slideOpts" scrollbar="true">
+  <ion-slides pager="true" [options]="slideOpts" scrollbar="true" (ionSlideDidChange)="updateNextButtonState()">
 
 
     <ion-slide>
@@ -14,12 +14,12 @@
         </ion-text>
 
         <div class="user-interaction buttons">
-          <ion-button (click)="onClick(1)" class="border-radius" [color]="buttonsColors.client.button">
+          <ion-button (click)="setType(userType.client, buttonsColors.client, buttonsColors.professional)" class="border-radius" [color]="buttonsColors.client.button">
             <ion-text [color]="buttonsColors.client.text">
               Cliente
             </ion-text>
           </ion-button>
-          <ion-button (click)="onClick(2)" class="border-radius" [color]="buttonsColors.professional.button">
+          <ion-button (click)="setType(userType.profesional, buttonsColors.professional, buttonsColors.client)" class="border-radius" [color]="buttonsColors.professional.button">
             <ion-text [color]="buttonsColors.professional.text">
               Profesional
             </ion-text>
@@ -42,7 +42,9 @@
         </ion-text>
 
         <ion-item lines="none" class="user-interaction border-radius">
-          <ion-input color="dark" type="text" placeholder="Escribe tu nombre"></ion-input>
+          <form (ngSubmit)="goNext()" [formGroup]="nameForm">
+            <ion-input (ionChange)="nameFormValid()" color="dark" type="text" placeholder="Escribe tu nombre" formControlName="name"></ion-input>
+          </form>
         </ion-item>
 
       </div>
@@ -88,7 +90,9 @@
         </ion-text>
 
         <ion-item lines="none" class="user-interaction input-password border-radius">
-          <ion-input #passwordInput color="dark" [type]="passwordInputType" [clearOnEdit]="false" placeholder="Escribe tu contraseña"></ion-input>
+          <form (ngSubmit)="goNext()" [formGroup]="passwordForm">
+            <ion-input #passwordInput (ionChange)="passwordFormValid()" color="dark" [type]="passwordInputType" [clearOnEdit]="false" placeholder="Escribe tu contraseña" formControlName="password"></ion-input>
+          </form>
           <ion-button (click)="togglePasswordMode()" fill="clear" mode="ios">
             <ion-icon slot="icon-only" [name]="passwordInputIcon" color="medium"></ion-icon>
           </ion-button>
@@ -112,7 +116,7 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button (click)="goNext()">
+      <ion-button [disabled]="goNextDisabled" (click)="goNext()">
         <div>Siguiente</div>
       </ion-button>
     </ion-buttons>
