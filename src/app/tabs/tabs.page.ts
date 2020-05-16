@@ -9,8 +9,8 @@ import { Platform } from '@ionic/angular';
 })
 export class TabsPage {
 
-  @ViewChild('background', { static: false }) background: ElementRef;
-  @ViewChild('backgroundImage', { static: false }) backgroundImage: ElementRef;
+  @ViewChild('background') background: ElementRef;
+  @ViewChild('backgroundImage') backgroundImage: ElementRef;
 
   tabs = [
     {

@@ -14,14 +14,14 @@ import { AuthService } from '../auth.service';
 })
 export class LoginEmailPage {
 
-  @ViewChild('content', { static: false }) content: ElementRef;
-  @ViewChild('backButton', { static: false }) backButton: ElementRef;
-  @ViewChild('continueButton', { static: false }) continueButton: ElementRef;
+  @ViewChild('content') content: ElementRef;
+  @ViewChild('backButton') backButton: ElementRef;
+  @ViewChild('continueButton') continueButton: ElementRef;
 
   animation: Animation;
+  loading: HTMLIonLoadingElement;
 
   emailForm: FormGroup;
-  loading: HTMLIonLoadingElement;
 
 
   constructor(

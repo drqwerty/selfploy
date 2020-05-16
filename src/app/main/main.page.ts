@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class MainPage {
 
-  @ViewChild('background', { static: false }) background: ElementRef;
+  @ViewChild('background') background: ElementRef;
 
   backgroundAnimation: Animation;
 

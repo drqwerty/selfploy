@@ -16,14 +16,15 @@ export class LoginPasswordComponent {
 
   @Input() email: string;
 
-  @ViewChild(IonToolbar, { static: false }) ionToolbar: any;
-  @ViewChild('passwordInput', { static: false }) passwordInput: IonInput;
+  @ViewChild(IonToolbar) ionToolbar: any;
+  @ViewChild('passwordInput') passwordInput: IonInput;
 
   toolbarAnimation: Animation;
+  loading: HTMLIonLoadingElement;
+
   passwordInputType: 'password' | 'text' = 'password';
   passwordInputIcon: 'eye' | 'eye-off' = 'eye';
 
-  loading: HTMLIonLoadingElement;
   passwordForm: FormGroup;
 
 
@@ -45,6 +46,24 @@ export class LoginPasswordComponent {
   }
 
 
+  ionViewWillEnter() {
+
+    this.toolbarAnimation = this.createToolbarAnimation();
+    this.toolbarAnimation
+      .delay(ModalAnimationSlideDuration)
+      .play();
+  }
+
+
+  ionViewWillLeave() {
+
+    this.toolbarAnimation
+      .delay(0)
+      .direction('reverse')
+      .play();
+  }
+
+
   goBack() {
 
     this.modalController.dismiss({ animate: true });
@@ -55,39 +74,29 @@ export class LoginPasswordComponent {
 
     if (this.passwordForm.invalid) return;
 
+    this.signIn();
+  }
+
+
+  async signIn() {
+
     await this.presentLoading();
-    this.authService.login(this.email, this.passwordForm.value.password)
 
-      .then(res => {
-        this.loading.dismiss();
-        this.navController.navigateRoot('tabs', { animated: false })
-          .then(() => this.modalController.getTop().then(modal => {
-            modal.leaveAnimation = ModalAnimationFadeLeave;
-            setTimeout(() => this.modalController.dismiss());
-          }));
-      })
+    this.authService
+      .login(this.email, this.passwordForm.value.password)
+      .then(() => this.goToMainPage())
+      .catch(reason => this.presentErrorInToast(reason))
+      .then(() => this.loading.dismiss());
+  }
 
-      .catch((error: FirebaseError) => {
-        this.loading.dismiss();
-        let message;
 
-        switch (error.code) {
-          case 'auth/wrong-password':
-            message = 'Contraseña incorrecta';
-            break;
+  goToMainPage() {
 
-          case 'auth/too-many-requests':
-            message = 'Demasiados intentos. Prueba más tarde';
-            break;
-
-          default:
-            message = error.message;
-            break;
-        }
-
-        this.presentToast(message);
-        console.log(error);
-      })
+    this.navController.navigateRoot('tabs', { animated: false })
+      .then(() => this.modalController.getTop().then(modal => {
+        modal.leaveAnimation = ModalAnimationFadeLeave;
+        setTimeout(() => this.modalController.dismiss());
+      }));
   }
 
 
@@ -98,7 +107,25 @@ export class LoginPasswordComponent {
   }
 
 
-  async presentToast(message: string) {
+  async presentErrorInToast(error: FirebaseError) {
+
+    console.log(error);
+
+    let message: string;
+
+    switch (error.code) {
+      case 'auth/wrong-password':
+        message = 'Contraseña incorrecta';
+        break;
+
+      case 'auth/too-many-requests':
+        message = 'Demasiados intentos. Prueba más tarde';
+        break;
+
+      default:
+        message = error.code;
+        break;
+    }
 
     const toast = await this.toastController.create({
       message,
@@ -129,24 +156,6 @@ export class LoginPasswordComponent {
         this.passwordInput.setFocus();
         setTimeout(() => inputElement.setSelectionRange(selectionStart, selectionStart));
       });
-  }
-
-
-  ionViewWillEnter() {
-
-    this.toolbarAnimation = this.createToolbarAnimation();
-    this.toolbarAnimation
-      .delay(ModalAnimationSlideDuration)
-      .play();
-  }
-
-
-  ionViewWillLeave() {
-
-    this.toolbarAnimation
-      .delay(0)
-      .direction('reverse')
-      .play();
   }
 
 

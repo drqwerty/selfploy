@@ -17,14 +17,16 @@ export class LoginRegisterComponent {
 
   @Input() email: string;
 
-  @ViewChild(IonContent, { static: false }) ionContent: any;
-  @ViewChild(IonToolbar, { static: false }) ionToolbar: any;
-  @ViewChild(IonSlides, { static: false }) slides: IonSlides;
-  @ViewChild('passwordInput', { static: false }) passwordInput: IonInput;
+  @ViewChild(IonContent) ionContent: any;
+  @ViewChild(IonToolbar) ionToolbar: any;
+  @ViewChild(IonSlides) slides: IonSlides;
+  @ViewChild('passwordInput') passwordInput: IonInput;
 
   userType = UserType;
 
   toolbarAnimation: Animation;
+  loading: HTMLIonLoadingElement;
+
   slideOpts = {
     initialSlide: 0,
     pagination: false,
@@ -32,11 +34,9 @@ export class LoginRegisterComponent {
     allowSlideNext: false,
     allowSlidePrev: false,
   };
+  goNextDisabled = true;
   passwordInputType: 'password' | 'text' = 'password';
   passwordInputIcon: 'eye' | 'eye-off' = 'eye';
-
-  goNextDisabled = true;
-
   buttonsColors = {
     client: {
       button: 'light',
@@ -53,14 +53,12 @@ export class LoginRegisterComponent {
   passwordForm: FormGroup;
   profileImage = '';
 
-  loading: HTMLIonLoadingElement;
-
 
   constructor(
     private modalController: ModalController,
     private navController: NavController,
     private formBuilder: FormBuilder,
-    private auth: AuthService,
+    private authService: AuthService,
     private loadingController: LoadingController,
     private toastController: ToastController,
   ) {
@@ -77,6 +75,7 @@ export class LoginRegisterComponent {
         Validators.minLength(6),
       ]),
     });
+
     this.user = new User();
   }
 
@@ -107,18 +106,6 @@ export class LoginRegisterComponent {
   }
 
 
-  setType(type: UserType, buttonSelected, buttonNotSelected) {
-
-    this.user.type = type;
-    this.goNextDisabled = false;
-
-    buttonSelected.button = 'tertiary';
-    buttonSelected.text = 'light';
-    buttonNotSelected.button = 'light';
-    buttonNotSelected.text = 'primary';
-  }
-
-
   goBack() {
 
     this.slides.isBeginning().then(beginning => {
@@ -144,14 +131,7 @@ export class LoginRegisterComponent {
     this.slides.isEnd().then(end => {
 
       if (end) {
-        console.log(this.user);
         this.signUp();
-
-        // this.navController.navigateRoot('tabs', { animated: false })
-        //   .then(() => this.modalController.getTop().then(modal => {
-        //     modal.leaveAnimation = ModalAnimationFadeLeave;
-        //     setTimeout(() => this.modalController.dismiss());
-        //   }));
 
       } else {
         this.slides.lockSwipeToNext(false)
@@ -161,85 +141,6 @@ export class LoginRegisterComponent {
           });
       }
     });
-  }
-
-
-  async presentLoading() {
-
-    this.loading = await this.loadingController.create();
-    await this.loading.present();
-  }
-
-
-  async presentErrorInToast(error: FirebaseError) {
-
-    let message = error.code;
-
-    if (error.code == 'auth/email-already-in-use')
-      message = 'Este correo ya está en uso';
-
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      mode: 'ios',
-      cssClass: 'login-toast',
-      enterAnimation: ToastAnimationEnter,
-      leaveAnimation: ToastAnimationLeave,
-    });
-    toast.present();
-  }
-
-
-  signUp() {
-
-    this.presentLoading();
-
-    this.auth
-      .signUp(this.user, this.passwordForm.value.password)
-      .then(
-        value => this.createUserProfile(value).then(() => this.goMainPage()),
-        reason => this.presentErrorInToast(reason)
-      )
-      .catch(reason => console.log(reason))
-  }
-
-
-  goMainPage() {
-
-    this.loading.dismiss();
-
-    this.navController.navigateRoot('tabs', { animated: false })
-      .then(() => this.modalController.getTop().then(modal => {
-        modal.leaveAnimation = ModalAnimationFadeLeave;
-        setTimeout(() => this.modalController.dismiss());
-      }));
-  }
-
-
-  createUserProfile(value: firebase.auth.UserCredential) {
-
-    console.log(value)
-    return new Promise(resolve => resolve());
-  }
-
-
-  togglePasswordMode() {
-
-    if (this.passwordInputType == 'text') {
-      this.passwordInputType = 'password';
-      this.passwordInputIcon = 'eye'
-
-    } else {
-      this.passwordInputType = 'text';
-      this.passwordInputIcon = 'eye-off'
-    }
-
-    this.passwordInput.getInputElement()
-      .then(inputElement => {
-        const selectionStart = inputElement.selectionStart;
-        this.passwordInput.setFocus();
-        setTimeout(() => inputElement.setSelectionRange(selectionStart, selectionStart));
-      });
   }
 
 
@@ -284,12 +185,110 @@ export class LoginRegisterComponent {
   }
 
 
+  setUserType(type: UserType, buttonSelected, buttonNotSelected) {
+
+    this.user.type = type;
+    this.goNextDisabled = false;
+
+    buttonSelected.button = 'tertiary';
+    buttonSelected.text = 'light';
+    buttonNotSelected.button = 'light';
+    buttonNotSelected.text = 'primary';
+  }
+
+
+  signUp() {
+
+    this.presentLoading();
+
+    this.authService
+      .signUp(this.user, this.passwordForm.value.password)
+      .then(
+        value => this.createUserProfile(value).then(() => this.goToMainPage()),
+        reason => this.presentErrorInToast(reason)
+      )
+      .catch(reason => console.log(reason))
+      .then(() => this.loading.dismiss());
+  }
+
+
+  createUserProfile(value: firebase.auth.UserCredential) {
+
+    console.log(value)
+    return new Promise(resolve => resolve());
+  }
+
+
+  goToMainPage() {
+
+    this.navController.navigateRoot('tabs', { animated: false })
+      .then(() => this.modalController.getTop().then(modal => {
+        modal.leaveAnimation = ModalAnimationFadeLeave;
+        setTimeout(() => this.modalController.dismiss());
+      }));
+  }
+
+
+  async presentLoading() {
+
+    this.loading = await this.loadingController.create();
+    await this.loading.present();
+  }
+
+
+  async presentErrorInToast(error: FirebaseError) {
+
+    console.log(error);
+
+    let message: string;
+
+    switch (error.code) {
+      case 'auth/email-already-in-use':
+        message = 'Este correo ya está en uso';
+        break;
+
+      default:
+        message = error.code;
+        break;
+    }
+
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      mode: 'ios',
+      cssClass: 'login-toast',
+      enterAnimation: ToastAnimationEnter,
+      leaveAnimation: ToastAnimationLeave,
+    });
+    toast.present();
+  }
+
+
+  togglePasswordMode() {
+
+    if (this.passwordInputType == 'text') {
+      this.passwordInputType = 'password';
+      this.passwordInputIcon = 'eye'
+
+    } else {
+      this.passwordInputType = 'text';
+      this.passwordInputIcon = 'eye-off'
+    }
+
+    this.passwordInput.getInputElement()
+      .then(inputElement => {
+        const selectionStart = inputElement.selectionStart;
+        this.passwordInput.setFocus();
+        setTimeout(() => inputElement.setSelectionRange(selectionStart, selectionStart));
+      });
+  }
+
+
   createToolbarAnimation() {
 
     return createAnimation()
       .addElement(this.ionToolbar.el)
       .fromTo('opacity', '0', '1');
   }
-
 
 }
