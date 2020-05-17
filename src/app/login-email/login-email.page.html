@@ -11,7 +11,7 @@
 
     <ion-item lines="none" class="user-interaction border-radius">
       <form (ngSubmit)="goNext()" #emailFormSubmit="ngForm" [formGroup]="emailForm">
-        <ion-input color="dark" type="text" placeholder="Escribe tu email" formControlName="email" email></ion-input>
+        <ion-input (ionChange)="updateNextButtonStatus()" color="dark" type="text" placeholder="Escribe tu email" formControlName="email" email></ion-input>
       </form>
     </ion-item>
 
@@ -29,8 +29,8 @@
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button [disabled]="emailForm.invalid" type="submit" (click)="emailFormSubmit.ngSubmit.emit()">
-        <div #continueButton>Siguiente</div>
+      <ion-button [disabled]="goNextDisabled" type="submit" (click)="emailFormSubmit.ngSubmit.emit()">
+        <div #continueButton>{{nextButtonText}}</div>
       </ion-button>
     </ion-buttons>
 

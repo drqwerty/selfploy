@@ -23,6 +23,9 @@ export class LoginEmailPage {
 
   emailForm: FormGroup;
 
+  goNextDisabled = true;
+  nextButtonText: 'Siguiente' | 'Iniciar sesión';
+
 
   constructor(
     private navController: NavController,
@@ -33,6 +36,7 @@ export class LoginEmailPage {
     private authService: AuthService,
   ) {
 
+    this.nextButtonText = 'Siguiente';
     this.emailForm = this.formBuilder.group({
       email: new FormControl('test@test.test2', [
         Validators.required,
@@ -61,34 +65,56 @@ export class LoginEmailPage {
 
     if (this.emailForm.invalid) return;
 
+    this.updateNextButtonStatus(true);
     await this.presentLoading();
 
     this.authService.checkEmail(this.emailForm.value.email)
       .then(async res => {
-
         this.loading.dismiss();
 
-        const component = res.includes('password') ? LoginPasswordComponent : LoginRegisterComponent;
-        const modal = await this.modalController.create({
-          component,
-          enterAnimation: ModalAnimationSlideEnter,
-          leaveAnimation: ModalAnimationSlideLeave,
-          showBackdrop: false,
-          cssClass: 'modal-fullscreen',
-          componentProps: {
-            email: this.emailForm.value.email
-          },
-        });
-
+        let component: typeof LoginPasswordComponent | typeof LoginRegisterComponent;
+        if (res.includes('password')) {
+          component = LoginPasswordComponent;
+          this.nextButtonText = 'Iniciar sesión'
+        } else {
+          component = LoginRegisterComponent;
+        }
         const slideAnimation = this.createSlideAnimation();
-        slideAnimation.direction('normal').play();
-        modal.onWillDismiss().then(({ data }) => {
-          if (data?.animate) slideAnimation.direction('reverse').play();
-        });
+        const modal = await this.createModal(component, slideAnimation);
 
         modal.present();
+        slideAnimation.direction('normal').play();
       })
       .catch(() => this.loading.dismiss());
+  }
+
+
+  private async createModal(component: typeof LoginPasswordComponent | typeof LoginRegisterComponent, animation: Animation) {
+
+    const modal = await this.modalController.create({
+      component,
+      enterAnimation: ModalAnimationSlideEnter,
+      leaveAnimation: ModalAnimationSlideLeave,
+      showBackdrop: false,
+      cssClass: 'modal-fullscreen',
+      componentProps: {
+        email: this.emailForm.value.email
+      },
+    });
+
+    modal.onWillDismiss().then(({ data }) => {
+      if (data?.animate) animation.direction('reverse').play();
+      this.nextButtonText = 'Siguiente';
+      this.updateNextButtonStatus(false);
+    });
+
+    return modal;
+  }
+
+
+  updateNextButtonStatus(disabled = this.emailForm.invalid) {
+
+    this.goNextDisabled = disabled;
   }
 
 
