@@ -40,9 +40,57 @@
   visibility: hidden;
 }
 
-.modal-fullscreen .modal-wrapper {
-  height: 100%;
-  width: 100%;
+ion-list ion-item {
+  // --inner-padding-end: 0;
+}
+
+ion-toggle {
+  height: 22px;
+  width: 46px;
+  --handle-spacing: 4px;
+  --handle-height: 16px;
+  --handle-width: 16px;
+  --background: lightgray;
+  --background-checked: #FCE0C2;
+  --handle-box-shadow: none;
+}
+
+ion-checkbox {
+  --border-color: lightgray;
+  --border-radius: 4px;
+  --size: 22px;
+
+}
+   :host(.checkbox-icon) {
+      padding: 5px;
+    }
+
+ion-modal {
+  &.modal-fullscreen .modal-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+
+  &.modal-terms-and-conditions {
+    --height: auto;
+
+    ion-backdrop {
+      --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
+    }
+
+    .modal-wrapper {
+
+      .ion-page {
+        position: relative;
+        contain: content;
+      }
+
+      --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+      width: 80%;
+      max-width: 420px;
+      border-radius: 10px;
+    }
+  }
 }
 
 .login-content {

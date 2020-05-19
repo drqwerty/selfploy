@@ -7,6 +7,7 @@ import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms'
 import { AuthService } from '../auth.service';
 import { ToastAnimationEnter, ToastAnimationLeave } from '../animations/toast-transitions';
 import { FirebaseError } from 'firebase';
+import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
 
 @Component({
   selector: 'app-login-register',
@@ -131,10 +132,11 @@ export class LoginRegisterComponent {
 
     if (this.goNextDisabled) return;
 
-    this.slides.getActiveIndex().then(activeIndex => {
+    this.slides.getActiveIndex().then(async activeIndex => {
 
       if (activeIndex === this.slidesLength - 1) {
-        this.signUp();
+        const modal = await this.createTermsAndConditionsModal();
+        modal.present();
 
       } else {
         this.updateNextButtonState(activeIndex + 1);
@@ -145,6 +147,21 @@ export class LoginRegisterComponent {
           });
       }
     });
+  }
+
+
+  async createTermsAndConditionsModal() {
+
+    const modal = await this.modalController.create({
+      component: TermsAndConditionsComponent,
+      cssClass: 'modal-terms-and-conditions',
+    });
+
+    modal.onWillDismiss().then(({ data }) => {
+      if (data?.terms && data?.gprd) this.signUp();
+    });
+
+    return modal;
   }
 
 

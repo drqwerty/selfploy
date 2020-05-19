@@ -38,7 +38,7 @@ export class LoginEmailPage {
 
     this.nextButtonText = 'Siguiente';
     this.emailForm = this.formBuilder.group({
-      email: new FormControl('test@test.test2', [
+      email: new FormControl('', [
         Validators.required,
       ]),
     });

@@ -1,0 +1,40 @@
+<ion-header mode="ios" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<div class="ion-padding">
+  <ion-list lines="none" mode="md">
+
+    <form [formGroup]="form">
+      <ion-item>
+        <ion-checkbox checked="false" formControlName="terms" slot="start"></ion-checkbox>
+        <!-- <ion-toggle checked="false" formControlName="terms" slot="end"></ion-toggle> -->
+        <ion-label class="ion-text-wrap">Acepto los <a href="#">Términos y condiciones de Selfploy</a></ion-label>
+      </ion-item>
+      
+      <ion-item>
+        <ion-checkbox checked="false" formControlName="gprd" slot="start"></ion-checkbox>
+        <!-- <ion-toggle checked="false" formControlName="gprd" slot="end"></ion-toggle> -->
+        <ion-label class="ion-text-wrap">Acepto la <a href="#">Política de privacidad de Selfploy</a></ion-label>
+      </ion-item>
+    </form>
+
+  </ion-list>
+</div>
+
+
+<ion-footer mode="ios" class="ion-no-border">
+  <ion-toolbar>
+    <ion-button [disabled]="form.invalid" class="ion-no-margin" (click)="accept()" expand="block"
+      fill="clear">
+      Registrarse
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

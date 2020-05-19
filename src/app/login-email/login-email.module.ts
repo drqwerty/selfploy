@@ -9,6 +9,7 @@ import { LoginEmailPageRoutingModule } from './login-email-routing.module';
 import { LoginEmailPage } from './login-email.page';
 import { LoginPasswordComponent } from '../login-password/login-password.component';
 import { LoginRegisterComponent } from '../login-register/login-register.component';
+import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
 
 @NgModule({
   imports: [
@@ -21,11 +22,13 @@ import { LoginRegisterComponent } from '../login-register/login-register.compone
   declarations: [
     LoginEmailPage,
     LoginPasswordComponent,
-    LoginRegisterComponent
+    LoginRegisterComponent,
+    TermsAndConditionsComponent,
   ],
   entryComponents: [
     LoginPasswordComponent,
-    LoginRegisterComponent
+    LoginRegisterComponent,
+    TermsAndConditionsComponent,
   ]
 })
 export class LoginEmailPageModule { }

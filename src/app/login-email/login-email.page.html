@@ -11,7 +11,7 @@
 
     <ion-item lines="none" class="user-interaction border-radius">
       <form (ngSubmit)="goNext()" #emailFormSubmit="ngForm" [formGroup]="emailForm">
-        <ion-input (ionChange)="updateNextButtonStatus()" color="dark" type="text" placeholder="Escribe tu email" formControlName="email" email></ion-input>
+        <ion-input (ionChange)="updateNextButtonStatus()" color="dark" type="email" inputmode="email" placeholder="Escribe tu email" formControlName="email" email></ion-input>
       </form>
     </ion-item>
 
