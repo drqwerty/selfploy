@@ -27,4 +27,10 @@ export class StorageService {
 
     return Storage.get({ key: 'user' });
   }
+
+
+  removeUserProfile() {
+
+    return Storage.remove({ key: 'user' })
+  }
 }
