@@ -19,4 +19,10 @@ export class FirestoreService {
       d: Object.assign({}, user),
     });
   }
+
+
+  loadUserProfile(uid: string) {
+
+    return this.db.collection('users').doc(uid).get().toPromise()
+  }
 }
