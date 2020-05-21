@@ -14,12 +14,12 @@
         </ion-text>
 
         <div class="user-interaction buttons">
-          <ion-button (click)="setUserType(userType.client, buttonsColors.client, buttonsColors.professional)" class="border-radius" [color]="buttonsColors.client.button">
+          <ion-button (click)="setUserRole(userRole.client, buttonsColors.client, buttonsColors.professional)" class="border-radius" [color]="buttonsColors.client.button">
             <ion-text [color]="buttonsColors.client.text">
               Cliente
             </ion-text>
           </ion-button>
-          <ion-button (click)="setUserType(userType.profesional, buttonsColors.professional, buttonsColors.client)" class="border-radius" [color]="buttonsColors.professional.button">
+          <ion-button (click)="setUserRole(userRole.profesional, buttonsColors.professional, buttonsColors.client)" class="border-radius" [color]="buttonsColors.professional.button">
             <ion-text [color]="buttonsColors.professional.text">
               Profesional
             </ion-text>

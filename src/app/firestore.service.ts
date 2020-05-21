@@ -13,8 +13,10 @@ export class FirestoreService {
   ) { }
 
 
-  setUser(uid: string, user: User) {
+  createUserProfile(uid: string, user: User) {
 
-    this.db.collection('users').doc(uid).set(Object.assign({}, user));
+    return this.db.collection('users').doc(uid).set({
+      d: Object.assign({}, user),
+    });
   }
 }

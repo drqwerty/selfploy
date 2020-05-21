@@ -1,11 +1,11 @@
-export enum UserType {
+export enum UserRole {
   client = 0,
   profesional = 1
 }
 
 export class User {
   email: string;
-  type: UserType;
+  role: UserRole;
   profilePictureUrl: string;
   name: string;
 }

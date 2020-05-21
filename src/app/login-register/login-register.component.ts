@@ -2,12 +2,13 @@ import { Component, ViewChild, Input } from '@angular/core';
 import { IonToolbar, ModalController, IonSlides, IonInput, NavController, IonContent, LoadingController, ToastController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../animations/page-transitions';
-import { User, UserType } from '../user-model';
+import { User, UserRole } from '../user-model';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { ToastAnimationEnter, ToastAnimationLeave } from '../animations/toast-transitions';
 import { FirebaseError } from 'firebase';
 import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
+import { FirestoreService } from '../firestore.service';
 
 @Component({
   selector: 'app-login-register',
@@ -23,7 +24,7 @@ export class LoginRegisterComponent {
   @ViewChild(IonSlides) slides: IonSlides;
   @ViewChild('passwordInput') passwordInput: IonInput;
 
-  userType = UserType;
+  userRole = UserRole;
 
   toolbarAnimation: Animation;
   loading: HTMLIonLoadingElement;
@@ -63,6 +64,7 @@ export class LoginRegisterComponent {
     private authService: AuthService,
     private loadingController: LoadingController,
     private toastController: ToastController,
+    private firestoreService: FirestoreService,
   ) {
 
     this.nameForm = this.formBuilder.group({
@@ -182,7 +184,7 @@ export class LoginRegisterComponent {
 
     switch (activeIndex) {
       case 0:
-        this.goNextDisabled = this.user.type == undefined;
+        this.goNextDisabled = this.user.role == undefined;
         break;
 
       case 1:
@@ -203,9 +205,9 @@ export class LoginRegisterComponent {
   }
 
 
-  setUserType(type: UserType, buttonSelected, buttonNotSelected) {
+  setUserRole(role: UserRole, buttonSelected, buttonNotSelected) {
 
-    this.user.type = type;
+    this.user.role = role;
     this.goNextDisabled = false;
 
     buttonSelected.button = 'tertiary';
@@ -232,8 +234,7 @@ export class LoginRegisterComponent {
 
   createUserProfile(value: firebase.auth.UserCredential) {
 
-    console.log(value)
-    return new Promise(resolve => resolve());
+    return this.firestoreService.createUserProfile(value.user.uid, this.user);
   }
 
 
