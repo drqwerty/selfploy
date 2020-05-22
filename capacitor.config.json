@@ -1,12 +1,20 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "selfploy",
+  "appId": "es.tfg.selfploy",
+  "appName": "Selfploy",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0
+    },
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "serverClientId": "472007926816-65osns6vlkouqdnpk1ts1ae6d4jhu07q.apps.googleusercontent.com",
+      "forceCodeForRefreshToken" : true
     }
   },
   "cordova": {}

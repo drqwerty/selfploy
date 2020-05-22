@@ -83,18 +83,18 @@ export const ModalAnimationSlideEnter = (baseEl: any, duration = ModalAnimationS
 };
 
 
-
 export const ModalAnimationSlideLeave = (baseEl: any) => {
 
   return ModalAnimationSlideEnter(baseEl).direction('reverse');
 };
 
 
-export const ModalAnimationFadeLeave = (baseEl: any, duration = ModalAnimationSlideDuration) => {
+export const ModalAnimationFadeEnter = (baseEl: any, duration = ModalAnimationSlideDuration) => {
 
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.modal-wrapper'))
-    .fromTo('opacity', '1', '0')
+    .beforeAddClass(['no-transform'])
+    .fromTo('opacity', '0', '1')
     .duration(duration)
     .easing(ModalAnimationSlideEasing)
     ;
@@ -102,4 +102,39 @@ export const ModalAnimationFadeLeave = (baseEl: any, duration = ModalAnimationSl
   return createAnimation()
     .addElement(baseEl)
     .addAnimation(wrapperAnimation);
+};
+
+
+export const ModalAnimationFadeLeave = (baseEl: any) => {
+
+  return ModalAnimationFadeEnter(baseEl).direction('reverse');
+};
+
+
+export const ModalAnimationFadeWithMoveConentEnter = (baseEl: any, duration = ModalAnimationSlideDuration) => {
+
+  const wrapperAnimation = createAnimation()
+    .addElement(baseEl.querySelector('.modal-wrapper'))
+    .beforeAddClass(['no-transform'])
+    .fromTo('opacity', '0', '1')
+    .duration(duration)
+    .easing(ModalAnimationSlideEasing)
+    ;
+
+  const contentAnimation = createAnimation()
+    .addElement(baseEl.querySelector('.login-content'))
+    .fromTo('transform', 'translateY(-5px)', 'translateY(0)')
+    .duration(duration)
+    .easing(ModalAnimationSlideEasing)
+    ;
+
+  return createAnimation()
+    .addElement(baseEl)
+    .addAnimation([wrapperAnimation, contentAnimation]);
+};
+
+
+export const ModalAnimationFadeWithMoveConentLeave = (baseEl: any) => {
+
+  return ModalAnimationFadeWithMoveConentEnter(baseEl).direction('reverse');
 };

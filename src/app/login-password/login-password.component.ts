@@ -6,8 +6,6 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { AuthService } from '../auth.service';
 import { FirebaseError } from 'firebase';
 import { ToastAnimationEnter, ToastAnimationLeave } from '../animations/toast-transitions';
-import { FirestoreService } from '../firestore.service';
-import { StorageService } from '../storage.service';
 
 @Component({
   selector: 'app-login-password',
@@ -37,8 +35,6 @@ export class LoginPasswordComponent {
     private authService: AuthService,
     private toastController: ToastController,
     private navController: NavController,
-    private firestoreService: FirestoreService,
-    private storageService: StorageService,
   ) {
 
     this.passwordForm = this.formBuilder.group({
@@ -87,20 +83,10 @@ export class LoginPasswordComponent {
     await this.presentLoading();
 
     this.authService
-      .login(this.email, this.passwordForm.value.password)
-      .then(value => this.firestoreService.loadUserProfile(value.user.uid)
-        .then(documentSnapshot => {
-          this.saveUserData(documentSnapshot.data());
-          this.goToMainPage();
-        }))
+      .loginWithEmailAndPassword(this.email, this.passwordForm.value.password)
+      .then(() => this.goToMainPage())
       .catch(reason => this.presentErrorInToast(reason))
       .then(() => this.loading.dismiss());
-  }
-
-
-  saveUserData(data: firebase.firestore.DocumentData) {
-
-    return this.storageService.saveUserProfile(data.d);
   }
 
 

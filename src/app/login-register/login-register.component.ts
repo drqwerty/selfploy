@@ -18,6 +18,9 @@ import { FirestoreService } from '../firestore.service';
 export class LoginRegisterComponent {
 
   @Input() email: string;
+  @Input() name: string;
+  @Input() socialAccount = false;
+  @Input() idToken: string;
 
   @ViewChild(IonContent) ionContent: any;
   @ViewChild(IonToolbar) ionToolbar: any;
@@ -87,10 +90,15 @@ export class LoginRegisterComponent {
 
   ionViewWillEnter() {
 
-    this.toolbarAnimation = this.createToolbarAnimation();
-    this.toolbarAnimation
-      .delay(ModalAnimationSlideDuration)
-      .play();
+    if (this.socialAccount) {
+      this.nameForm.setValue({ name: this.name });
+
+    } else {
+      this.toolbarAnimation = this.createToolbarAnimation();
+      this.toolbarAnimation
+        .delay(ModalAnimationSlideDuration)
+        .play();
+    }
 
     this.slides.length().then(length => this.slidesLength = length);
     this.user.email = this.email;
@@ -101,7 +109,7 @@ export class LoginRegisterComponent {
 
     this.slides.isBeginning().then(beginning => {
 
-      if (beginning) {
+      if (beginning && !this.socialAccount) {
         this.toolbarAnimation
           .delay(0)
           .direction('reverse')
@@ -136,7 +144,7 @@ export class LoginRegisterComponent {
 
     this.slides.getActiveIndex().then(async activeIndex => {
 
-      if (activeIndex === this.slidesLength - 1) {
+      if (this.socialAccount && activeIndex === this.slidesLength - 2 || activeIndex === this.slidesLength - 1) {
         const modal = await this.createTermsAndConditionsModal();
         modal.present();
 
@@ -160,7 +168,15 @@ export class LoginRegisterComponent {
     });
 
     modal.onWillDismiss().then(({ data }) => {
-      if (data?.terms && data?.gprd) this.signUp();
+      if (data?.terms && data?.gprd) {
+
+        if (this.socialAccount) {
+          this.signUpWithGoogle();
+
+        } else {
+          this.signUpWithEmailAndPassword();
+        }
+      }
     });
 
     return modal;
@@ -217,18 +233,34 @@ export class LoginRegisterComponent {
   }
 
 
-  signUp() {
+  signUpWithEmailAndPassword() {
 
     this.presentLoading();
 
     this.authService
-      .signUp(this.user, this.passwordForm.value.password)
+      .signUpWithEmailAndPassword(this.user, this.passwordForm.value.password)
       .then(
-        value => this.createUserProfile(value).then(() => this.goToMainPage()),
+        () => this.goToMainPage(),
         reason => this.presentErrorInToast(reason)
       )
       .catch(reason => console.log(reason))
       .then(() => this.loading.dismiss());
+  }
+
+
+  async signUpWithGoogle() {
+
+    this.presentLoading();
+
+    this.authService
+      .signUpWithGoogle(this.user, this.idToken)
+      .then(
+        () => this.goToMainPage(),
+        reason => this.presentErrorInToast(reason)
+      )
+      .catch(reason => console.log(reason))
+      .then(() => this.loading.dismiss());
+
   }
 
 

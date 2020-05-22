@@ -139,18 +139,14 @@ export class LoginEmailPage {
 
     if (this.animation != null) return;
 
-    const elements = [this.content, this.backButton, this.continueButton];
-
-    const animations = elements.map(element =>
-      createAnimation()
-        .addElement(element.nativeElement)
+    const contentAnimation = createAnimation()
+        .addElement(this.content.nativeElement)
         .fromTo('opacity', '0', '1')
-        .fromTo('transform', 'translateY(-5px)', 'translateY(0px)')
-    )
+        .fromTo('transform', 'translateY(-5px)', 'translateY(0px)');
 
     this.animation = createAnimation()
       .duration(200)
-      .addAnimation(animations);
+      .addAnimation(contentAnimation);
   }
 
 }

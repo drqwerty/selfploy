@@ -1,7 +1,9 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, Platform } from '@ionic/angular';
+import { NavController, ModalController, LoadingController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
-import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { LoginRegisterComponent } from '../login-register/login-register.component';
+import { ModalAnimationFadeWithMoveConentEnter, ModalAnimationFadeWithMoveConentLeave } from '../animations/page-transitions';
 
 @Component({
   selector: 'app-main',
@@ -17,6 +19,9 @@ export class MainPage {
 
   constructor(
     private navController: NavController,
+    private authService: AuthService,
+    private modalController: ModalController,
+    private loadingController: LoadingController
   ) { }
 
 
@@ -35,8 +40,47 @@ export class MainPage {
       });
   }
 
-  continueWithGoogle() {
+  async continueWithGoogle() {
+
+    this.authService.getGoogleUser()
+      .then(googleUser => {
+        this.authService.checkEmail(googleUser.email)
+          .then(async res => {
+
+            if (res.includes('google.com')) {
+              const loading = await this.loadingController.create();
+
+              Promise.all([
+                this.playBackgroundAnimation().then(() => loading.present()),
+                this.authService.loginWithGoogle(googleUser.authentication.idToken),
+              ]).then(() => {
+                loading.dismiss()
+                  .then(() => this.navController.navigateForward('tabs', { animated: false }));
+              });
+
+            } else {
+              const modal = await this.modalController.create({
+                component: LoginRegisterComponent,
+                componentProps: {
+                  email: googleUser.email,
+                  name: googleUser.displayName ?? googleUser.name,
+                  socialAccount: true,
+                  idToken: googleUser.authentication.idToken
+                },
+                enterAnimation: ModalAnimationFadeWithMoveConentEnter,
+                leaveAnimation: ModalAnimationFadeWithMoveConentLeave,
+              });
+
+              modal.onDidDismiss().then(() => this.playBackgroundAnimation(true));
+
+              this.playBackgroundAnimation()
+                .then(() => modal.present());
+            }
+
+          });
+      })
   }
+
 
   continueWithFacebook() {
   }
@@ -45,7 +89,7 @@ export class MainPage {
   playBackgroundAnimation(reverse = false): Promise<void> {
 
     const direction = reverse ? 'reverse' : 'normal';
-    const easing    = reverse ? 'ease-in' : 'ease-out';
+    const easing = reverse ? 'ease-in' : 'ease-out';
 
     return this.backgroundAnimation
       .direction(direction)
@@ -58,7 +102,7 @@ export class MainPage {
 
     this.backgroundAnimation = createAnimation()
       .addElement(this.background.nativeElement)
-      .delay(1000)
+      // .delay(1000)
       .fromTo('transform', 'translateY(-100%)', `translateY(0)`)
       .duration(500);
   }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "472007926816",
+    "firebase_url": "https://tfg-selfploy.firebaseio.com",
+    "project_id": "tfg-selfploy",
+    "storage_bucket": "tfg-selfploy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472007926816:android:216e1e5da653fbb34dc845",
+        "android_client_info": {
+          "package_name": "es.tfg.selfploy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472007926816-65osns6vlkouqdnpk1ts1ae6d4jhu07q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAiRYcSdnxVNnxOgbMVsP1uKcEF_8MTyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472007926816-65osns6vlkouqdnpk1ts1ae6d4jhu07q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
