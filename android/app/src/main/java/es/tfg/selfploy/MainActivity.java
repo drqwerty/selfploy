@@ -3,6 +3,7 @@ package es.tfg.selfploy;
 import android.os.Bundle;
 
 import com.codetrixstudio.capacitor.GoogleAuth.GoogleAuth;
+import jp.rdlabo.capacitor.plugin.facebook.FacebookLogin;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.Plugin;
 
@@ -18,6 +19,7 @@ public class MainActivity extends BridgeActivity {
       // Additional plugins you've installed go here
       // Ex: add(TotallyAwesomePlugin.class);
       add(GoogleAuth.class);
+      add(FacebookLogin.class);
     }});
   }
 }

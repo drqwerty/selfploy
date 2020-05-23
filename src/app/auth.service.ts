@@ -10,6 +10,8 @@ const { GoogleAuth } = Plugins;
 import * as firebase from 'firebase';
 import { FirestoreService } from './firestore.service';
 
+declare var FB;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -48,6 +50,13 @@ export class AuthService {
   }
 
 
+  loginWithFacebook(idToken: string) {
+
+    const credential = firebase.auth.FacebookAuthProvider.credential(idToken);
+    return this.loadAndSaveUserProfile(this.AFauth.signInWithCredential(credential));
+  }
+
+
   loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
 
     return new Promise((resolve, reject) => {
@@ -70,6 +79,34 @@ export class AuthService {
   }
 
 
+  getFacebookUser(): Promise<{ id?: string, email?: string, name?: string, token: string }> {
+
+    return new Promise((resolve, reject) => {
+
+      Plugins.FacebookLogin.login({ permissions: ['public_profile', 'email'] })
+        .then(response => {
+
+          if (response?.accessToken?.token) {
+            FB.api(
+              '/me',
+              'GET',
+              {
+                fields: 'id,name,email',
+                access_token: response.accessToken.token
+              },
+              userData => resolve({ ...userData, token: response.accessToken.token })
+            );
+
+          } else {
+            reject({ token: null })
+          }
+
+        })
+        .catch(() => reject({ token: null }))
+    });
+  }
+
+
   async signOut() {
 
     await GoogleAuth.signOut();
@@ -83,6 +120,9 @@ export class AuthService {
 
     // TODO: choose method
     GoogleAuth.signOut();
+    Plugins.FacebookLogin.logout()
+
+    this.storageService.removeUserProfile();
   }
 
 
@@ -101,6 +141,13 @@ export class AuthService {
   signUpWithGoogle(user: User, idToken: string) {
 
     const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
+    return this.createAndSaveUserProfile(user, this.AFauth.signInWithCredential(credential));
+  }
+
+
+  signUpWithFacebook(user: User, idToken: string) {
+
+    const credential = firebase.auth.FacebookAuthProvider.credential(idToken);
     return this.createAndSaveUserProfile(user, this.AFauth.signInWithCredential(credential));
   }
 

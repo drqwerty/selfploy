@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-categories',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CategoriesPage implements OnInit {
 
-  constructor() { }
+  constructor(private a: AuthService, private router: Router) { }
 
   ngOnInit() {
   }
 
+
+  onClick() {
+    this.a.logout();
+    this.router.navigateByUrl('main')
+  }
 }

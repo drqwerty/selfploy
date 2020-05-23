@@ -19,7 +19,7 @@ export class LoginRegisterComponent {
 
   @Input() email: string;
   @Input() name: string;
-  @Input() socialAccount = false;
+  @Input() socialAccount: 'none' | 'google' | 'facebook' = 'none';
   @Input() idToken: string;
 
   @ViewChild(IonContent) ionContent: any;
@@ -90,7 +90,7 @@ export class LoginRegisterComponent {
 
   ionViewWillEnter() {
 
-    if (this.socialAccount) {
+    if (this.socialAccount != 'none') {
       this.nameForm.setValue({ name: this.name });
 
     } else {
@@ -109,7 +109,7 @@ export class LoginRegisterComponent {
 
     this.slides.isBeginning().then(beginning => {
 
-      if (beginning && !this.socialAccount) {
+      if (beginning && this.socialAccount == 'none') {
         this.toolbarAnimation
           .delay(0)
           .direction('reverse')
@@ -144,7 +144,7 @@ export class LoginRegisterComponent {
 
     this.slides.getActiveIndex().then(async activeIndex => {
 
-      if (this.socialAccount && activeIndex === this.slidesLength - 2 || activeIndex === this.slidesLength - 1) {
+      if (this.socialAccount != 'none' && activeIndex === this.slidesLength - 2 || activeIndex === this.slidesLength - 1) {
         const modal = await this.createTermsAndConditionsModal();
         modal.present();
 
@@ -170,11 +170,18 @@ export class LoginRegisterComponent {
     modal.onWillDismiss().then(({ data }) => {
       if (data?.terms && data?.gprd) {
 
-        if (this.socialAccount) {
-          this.signUpWithGoogle();
+        switch (this.socialAccount) {
+          case 'none':
+            this.signUpWithEmailAndPassword();
+            break;
 
-        } else {
-          this.signUpWithEmailAndPassword();
+          case 'google':
+            this.signUpWithGoogle();
+            break;
+
+          case 'facebook':
+            this.signUpWithFacebook();
+            break;
         }
       }
     });
@@ -254,6 +261,22 @@ export class LoginRegisterComponent {
 
     this.authService
       .signUpWithGoogle(this.user, this.idToken)
+      .then(
+        () => this.goToMainPage(),
+        reason => this.presentErrorInToast(reason)
+      )
+      .catch(reason => console.log(reason))
+      .then(() => this.loading.dismiss());
+
+  }
+
+
+  async signUpWithFacebook() {
+
+    this.presentLoading();
+
+    this.authService
+      .signUpWithFacebook(this.user, this.idToken)
       .then(
         () => this.goToMainPage(),
         reason => this.presentErrorInToast(reason)

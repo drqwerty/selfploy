@@ -5,4 +5,6 @@
     <string name="package_name">es.tfg.selfploy</string>
     <string name="custom_url_scheme">es.tfg.selfploy</string>
     <string name="server_client_id">472007926816-65osns6vlkouqdnpk1ts1ae6d4jhu07q.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">177992590208836</string>
+    <string name="fb_login_protocol_scheme">fb177992590208836</string>
 </resources>

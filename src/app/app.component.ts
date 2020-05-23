@@ -6,6 +6,9 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 
+import { registerWebPlugin } from '@capacitor/core';
+import { FacebookLogin } from '@rdlabo/capacitor-facebook-login';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -19,6 +22,7 @@ export class AppComponent {
     private authService: AuthService,
     private router: Router,
   ) {
+    registerWebPlugin(FacebookLogin);
     this.initializeApp();
   }
 

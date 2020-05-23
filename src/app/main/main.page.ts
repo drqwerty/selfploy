@@ -64,7 +64,7 @@ export class MainPage {
                 componentProps: {
                   email: googleUser.email,
                   name: googleUser.displayName ?? googleUser.name,
-                  socialAccount: true,
+                  socialAccount: 'google',
                   idToken: googleUser.authentication.idToken
                 },
                 enterAnimation: ModalAnimationFadeWithMoveConentEnter,
@@ -83,6 +83,46 @@ export class MainPage {
 
 
   continueWithFacebook() {
+
+    this.authService.getFacebookUser()
+      .then(facebookUser => {
+        this.authService.checkEmail(facebookUser.email)
+          .then(async res => {
+
+            console.log(res);
+            if (res.includes('facebook.com')) {
+              const loading = await this.loadingController.create();
+
+              Promise.all([
+                this.playBackgroundAnimation().then(() => loading.present()),
+                this.authService.loginWithFacebook(facebookUser.token),
+              ]).then(() => {
+                loading.dismiss()
+                  .then(() => this.navController.navigateForward('tabs', { animated: false }));
+              });
+
+            } else {
+              const modal = await this.modalController.create({
+                component: LoginRegisterComponent,
+                componentProps: {
+                  email: facebookUser.email,
+                  name: facebookUser.name,
+                  socialAccount: 'facebook',
+                  idToken: facebookUser.token
+                },
+                enterAnimation: ModalAnimationFadeWithMoveConentEnter,
+                leaveAnimation: ModalAnimationFadeWithMoveConentLeave,
+              });
+
+              modal.onDidDismiss().then(() => this.playBackgroundAnimation(true));
+
+              this.playBackgroundAnimation()
+                .then(() => modal.present());
+            }
+
+          })
+      })
+      .catch(() => console.error('errorcito con facebook'));
   }
 
 
