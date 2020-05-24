@@ -43,16 +43,11 @@ export class AuthService {
   }
 
 
-  loginWithGoogle(idToken: string) {
+  loginWithSocialAccount(token: string, socialAccount: 'google.com' | 'facebook.com') {
 
-    const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
-    return this.loadAndSaveUserProfile(this.AFauth.signInWithCredential(credential));
-  }
-
-
-  loginWithFacebook(idToken: string) {
-
-    const credential = firebase.auth.FacebookAuthProvider.credential(idToken);
+    const credential = socialAccount === 'google.com' ?
+      firebase.auth.GoogleAuthProvider.credential(token) :
+      firebase.auth.FacebookAuthProvider.credential(token);
     return this.loadAndSaveUserProfile(this.AFauth.signInWithCredential(credential));
   }
 
@@ -73,9 +68,17 @@ export class AuthService {
   }
 
 
-  async getGoogleUser() {
+  getGoogleUser() {
 
-    return await GoogleAuth.signIn();
+    return GoogleAuth.signIn()
+      .then(googleUser => {
+        return {
+          email: googleUser.email,
+          name: googleUser.displayName ?? googleUser.name,
+          socialAccount: 'google',
+          token: googleUser.authentication.idToken,
+        };
+      });
   }
 
 
@@ -94,7 +97,11 @@ export class AuthService {
                 fields: 'id,name,email',
                 access_token: response.accessToken.token
               },
-              userData => resolve({ ...userData, token: response.accessToken.token })
+              userData => resolve({
+                ...userData,
+                socialAccount: 'facebook',
+                token: response.accessToken.token,
+              })
             );
 
           } else {
@@ -118,11 +125,19 @@ export class AuthService {
     this.authState.next(false);
     this.AFauth.signOut();
 
-    // TODO: choose method
-    GoogleAuth.signOut();
-    Plugins.FacebookLogin.logout()
+    // this.AFauth.user.toPromise().then(a => console.log('aaaaaaaaaaaaaaaaa'))
 
-    this.storageService.removeUserProfile();
+    // this.AFauth.onAuthStateChanged(a => console.log('stateChanged', a))
+
+    this.AFauth.currentUser.then(a => {
+      console.log(a.providerData);
+    })
+
+    // TODO: choose method
+    // GoogleAuth.signOut();
+    // Plugins.FacebookLogin.logout()
+
+    // this.storageService.removeUserProfile();
   }
 
 
@@ -138,16 +153,16 @@ export class AuthService {
   }
 
 
-  signUpWithGoogle(user: User, idToken: string) {
+  signUpWithGoogle(user: User, token: string) {
 
-    const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
+    const credential = firebase.auth.GoogleAuthProvider.credential(token);
     return this.createAndSaveUserProfile(user, this.AFauth.signInWithCredential(credential));
   }
 
 
-  signUpWithFacebook(user: User, idToken: string) {
+  signUpWithFacebook(user: User, token: string) {
 
-    const credential = firebase.auth.FacebookAuthProvider.credential(idToken);
+    const credential = firebase.auth.FacebookAuthProvider.credential(token);
     return this.createAndSaveUserProfile(user, this.AFauth.signInWithCredential(credential));
   }
 

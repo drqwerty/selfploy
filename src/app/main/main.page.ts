@@ -1,9 +1,12 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, ModalController, LoadingController } from '@ionic/angular';
+import { NavController, ModalController, LoadingController, ToastController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { AuthService } from '../auth.service';
 import { LoginRegisterComponent } from '../login-register/login-register.component';
 import { ModalAnimationFadeWithMoveConentEnter, ModalAnimationFadeWithMoveConentLeave } from '../animations/page-transitions';
+import { ToastAnimationEnter, ToastAnimationLeave } from '../animations/toast-transitions';
+import { BehaviorSubject } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main',
@@ -14,6 +17,8 @@ export class MainPage {
 
   @ViewChild('background') background: ElementRef;
 
+  isLoadingObservable = new BehaviorSubject(false)
+
   backgroundAnimation: Animation;
 
 
@@ -21,7 +26,8 @@ export class MainPage {
     private navController: NavController,
     private authService: AuthService,
     private modalController: ModalController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private toastController: ToastController,
   ) { }
 
 
@@ -40,89 +46,111 @@ export class MainPage {
       });
   }
 
-  async continueWithGoogle() {
 
-    this.authService.getGoogleUser()
-      .then(googleUser => {
-        this.authService.checkEmail(googleUser.email)
-          .then(async res => {
+  continueWithGoogle() {
 
-            if (res.includes('google.com')) {
-              const loading = await this.loadingController.create();
-
-              Promise.all([
-                this.playBackgroundAnimation().then(() => loading.present()),
-                this.authService.loginWithGoogle(googleUser.authentication.idToken),
-              ]).then(() => {
-                loading.dismiss()
-                  .then(() => this.navController.navigateForward('tabs', { animated: false }));
-              });
-
-            } else {
-              const modal = await this.modalController.create({
-                component: LoginRegisterComponent,
-                componentProps: {
-                  email: googleUser.email,
-                  name: googleUser.displayName ?? googleUser.name,
-                  socialAccount: 'google',
-                  idToken: googleUser.authentication.idToken
-                },
-                enterAnimation: ModalAnimationFadeWithMoveConentEnter,
-                leaveAnimation: ModalAnimationFadeWithMoveConentLeave,
-              });
-
-              modal.onDidDismiss().then(() => this.playBackgroundAnimation(true));
-
-              this.playBackgroundAnimation()
-                .then(() => modal.present());
-            }
-
-          });
-      })
+    this.continueWithSocialAccount(this.authService.getGoogleUser, 'google.com');
   }
 
 
   continueWithFacebook() {
 
-    this.authService.getFacebookUser()
-      .then(facebookUser => {
-        this.authService.checkEmail(facebookUser.email)
-          .then(async res => {
+    this.continueWithSocialAccount(this.authService.getFacebookUser, 'facebook.com');
+  }
 
-            console.log(res);
-            if (res.includes('facebook.com')) {
-              const loading = await this.loadingController.create();
 
-              Promise.all([
-                this.playBackgroundAnimation().then(() => loading.present()),
-                this.authService.loginWithFacebook(facebookUser.token),
-              ]).then(() => {
-                loading.dismiss()
-                  .then(() => this.navController.navigateForward('tabs', { animated: false }));
-              });
+  continueWithSocialAccount(getUserPromise: () => Promise<any>, socialAccount: 'google.com' | 'facebook.com') {
 
-            } else {
-              const modal = await this.modalController.create({
-                component: LoginRegisterComponent,
-                componentProps: {
-                  email: facebookUser.email,
-                  name: facebookUser.name,
-                  socialAccount: 'facebook',
-                  idToken: facebookUser.token
-                },
-                enterAnimation: ModalAnimationFadeWithMoveConentEnter,
-                leaveAnimation: ModalAnimationFadeWithMoveConentLeave,
-              });
+    getUserPromise().then(user => {
+      this.authService.checkEmail(user.email).then(res => {
+        if (res.includes(socialAccount))
+          this.tryToLogin(user.token, socialAccount)
+        else
+          this.goToRegisterPage(user)
+      }).catch(() => this.showError());
+    })
+  }
 
-              modal.onDidDismiss().then(() => this.playBackgroundAnimation(true));
 
-              this.playBackgroundAnimation()
-                .then(() => modal.present());
-            }
+  async goToRegisterPage(componentProps) {
 
-          })
-      })
-      .catch(() => console.error('errorcito con facebook'));
+    const modal = await this.createModal(componentProps);
+    this.playBackgroundAnimation().then(() => modal.present());
+  }
+
+
+  async tryToLogin(token: string, socialAccount: 'google.com' | 'facebook.com') {
+
+    const loading = await this.loadingController.create();
+
+    Promise
+      .all([
+        this.playBackgroundAnimation().then(() => loading.present().then(() => this.isLoadingObservable.next(true))),
+        this.authService.loginWithSocialAccount(token, socialAccount),
+      ])
+      .then(() => this.dismissLoadingAndLogin(loading))
+      .catch(reason => this.dismissLoadingAndShowError(loading, reason));
+  }
+
+
+  dismissLoadingAndLogin(loading: HTMLIonLoadingElement) {
+
+    return loading.dismiss().then(() => this.navController.navigateForward('tabs', { animated: false }));
+  }
+
+
+  dismissLoadingAndShowError(loading: HTMLIonLoadingElement, reason: any) {
+
+    this.isLoadingObservable
+      .pipe(takeWhile(isLoading => !isLoading, true))
+      .subscribe(isLoading => {
+        if (isLoading) {
+          this.isLoadingObservable.next(false);
+          loading.dismiss()
+            .then(() => this.playBackgroundAnimation(true)
+              .then(() => this.showError(reason)));
+        }
+      });
+  }
+
+
+  async createModal(componentProps) {
+
+    const modal = await this.modalController.create({
+      component: LoginRegisterComponent,
+      componentProps,
+      enterAnimation: ModalAnimationFadeWithMoveConentEnter,
+      leaveAnimation: ModalAnimationFadeWithMoveConentLeave,
+    });
+    modal.onDidDismiss().then(() => this.playBackgroundAnimation(true));
+
+    return modal;
+  }
+
+
+  async showError(errorReason = null) {
+
+    let message;
+
+    switch (errorReason?.code ?? '') {
+      case 'auth/user-disabled':
+        message = 'Tu cuenta ha sido deshabilitada';
+        break;
+
+      default:
+        message = errorReason?.message ?? 'Error desconocido';
+        break;
+    }
+
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      mode: 'ios',
+      enterAnimation: ToastAnimationEnter,
+      leaveAnimation: ToastAnimationLeave,
+    });
+    toast.present();
+
   }
 
 

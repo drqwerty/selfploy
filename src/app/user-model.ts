@@ -8,4 +8,5 @@ export class User {
   role: UserRole;
   profilePictureUrl: string;
   name: string;
+  token: string;
 }

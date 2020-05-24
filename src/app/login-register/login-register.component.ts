@@ -20,7 +20,7 @@ export class LoginRegisterComponent {
   @Input() email: string;
   @Input() name: string;
   @Input() socialAccount: 'none' | 'google' | 'facebook' = 'none';
-  @Input() idToken: string;
+  @Input() token: string;
 
   @ViewChild(IonContent) ionContent: any;
   @ViewChild(IonToolbar) ionToolbar: any;
@@ -92,6 +92,7 @@ export class LoginRegisterComponent {
 
     if (this.socialAccount != 'none') {
       this.nameForm.setValue({ name: this.name });
+      this.user.name = this.name;
 
     } else {
       this.toolbarAnimation = this.createToolbarAnimation();
@@ -102,6 +103,7 @@ export class LoginRegisterComponent {
 
     this.slides.length().then(length => this.slidesLength = length);
     this.user.email = this.email;
+    this.user.token = this.token;
   }
 
 
@@ -192,8 +194,15 @@ export class LoginRegisterComponent {
 
   nameFormValid() {
 
-    this.goNextDisabled = this.nameForm.invalid;
-    if (!this.goNextDisabled) this.user.name = this.nameForm.value.name;
+    // hay que verificar que solo se ejecuta en la vista del nombre porque
+    // si se inicia con una rr.ss, al actualizar el nombre se lanza
+    this.slides.getActiveIndex().then(index => {
+      if (index === 1) {
+        this.goNextDisabled = this.nameForm.invalid;
+        if (!this.goNextDisabled) this.user.name = this.nameForm.value.name;
+      }
+    })
+
   }
 
 
@@ -260,7 +269,7 @@ export class LoginRegisterComponent {
     this.presentLoading();
 
     this.authService
-      .signUpWithGoogle(this.user, this.idToken)
+      .signUpWithGoogle(this.user, this.token)
       .then(
         () => this.goToMainPage(),
         reason => this.presentErrorInToast(reason)
@@ -276,7 +285,7 @@ export class LoginRegisterComponent {
     this.presentLoading();
 
     this.authService
-      .signUpWithFacebook(this.user, this.idToken)
+      .signUpWithFacebook(this.user, this.token)
       .then(
         () => this.goToMainPage(),
         reason => this.presentErrorInToast(reason)
