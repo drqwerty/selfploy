@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/auth";
-import { User } from './user-model';
+import { User } from '../models/user-model';
 import { BehaviorSubject } from 'rxjs';
 import { StorageService } from './storage.service';
 
@@ -23,24 +23,18 @@ export class AuthService {
     private firestoreService: FirestoreService,
   ) { }
 
-
   loginWithEmailAndPassword(email: string, password: string) {
-
     return this.loadAndSaveUserProfile(this.AFauth.signInWithEmailAndPassword(email, password));
   }
 
-
   loginWithSocialAccount(token: string, socialAccount: 'google.com' | 'facebook.com') {
-
     const credential = socialAccount === 'google.com' ?
       firebase.auth.GoogleAuthProvider.credential(token) :
       firebase.auth.FacebookAuthProvider.credential(token);
     return this.loadAndSaveUserProfile(this.AFauth.signInWithCredential(credential));
   }
 
-
   loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
-
     return new Promise((resolve, reject) => {
       signInPromise
         .then(userCrendential => {
@@ -53,9 +47,7 @@ export class AuthService {
     });
   }
 
-
   getGoogleUser() {
-
     return GoogleAuth.signIn()
       .then(googleUser => {
         return {
@@ -67,14 +59,10 @@ export class AuthService {
       });
   }
 
-
   getFacebookUser(): Promise<{ id?: string, email?: string, name?: string, token: string }> {
-
     return new Promise((resolve, reject) => {
-
       Plugins.FacebookLogin.login({ permissions: ['public_profile', 'email'] })
         .then(response => {
-
           if (response?.accessToken?.token) {
             FB.api(
               '/me',
@@ -89,60 +77,43 @@ export class AuthService {
                 token: response.accessToken.token,
               })
             );
-
           } else {
             reject({ token: null })
           }
-
         })
         .catch(() => reject({ token: null }))
     });
   }
 
-
   logout() {
-
     this.storageService.removeUserProfile();
-
     this.AFauth.currentUser.then(({ providerData }) => {
       this.AFauth.signOut();
-
       const providerId = providerData[0].providerId;
-
       if (providerId === 'facebook.com') Plugins.FacebookLogin.logout();
       if (providerId === 'google.com') GoogleAuth.signOut();
     })
   }
 
-
   checkEmail(email: string) {
-
     return this.AFauth.fetchSignInMethodsForEmail(email);
   }
 
-
   signUpWithEmailAndPassword(user: User, password: string) {
-
     return this.createAndSaveUserProfile(user, this.AFauth.createUserWithEmailAndPassword(user.email, password));
   }
 
-
   signUpWithGoogle(user: User, token: string) {
-
     const credential = firebase.auth.GoogleAuthProvider.credential(token);
     return this.createAndSaveUserProfile(user, this.AFauth.signInWithCredential(credential));
   }
 
-
   signUpWithFacebook(user: User, token: string) {
-
     const credential = firebase.auth.FacebookAuthProvider.credential(token);
     return this.createAndSaveUserProfile(user, this.AFauth.signInWithCredential(credential));
   }
 
-
   createAndSaveUserProfile(user: User, signUpPromise: Promise<firebase.auth.UserCredential>) {
-
     return new Promise((resolve, reject) => {
       signUpPromise
         .then(userCrendential => {

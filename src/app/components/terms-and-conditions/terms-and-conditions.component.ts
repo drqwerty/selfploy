@@ -16,7 +16,6 @@ export class TermsAndConditionsComponent {
     private formBuilder: FormBuilder,
     private modalController: ModalController,
   ) {
-
     this.form = this.formBuilder.group({
       terms: new FormControl(false, [
         Validators.requiredTrue,
@@ -27,19 +26,14 @@ export class TermsAndConditionsComponent {
     })
   }
 
-
   dismiss() {
-
     this.modalController.dismiss();
   }
 
-
   accept() {
-
     this.modalController.dismiss({
       terms: this.form.value.terms,
       gprd: this.form.value.gprd,
     })
   }
-
 }

@@ -1,14 +1,14 @@
 import { Component, ViewChild, Input } from '@angular/core';
 import { IonToolbar, ModalController, IonSlides, IonInput, NavController, IonContent, LoadingController, ToastController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
-import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../animations/page-transitions';
-import { User, UserRole } from '../user-model';
+import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../../animations/page-transitions';
+import { User, UserRole } from '../../models/user-model';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { AuthService } from '../auth.service';
-import { ToastAnimationEnter, ToastAnimationLeave } from '../animations/toast-transitions';
+import { AuthService } from '../../services/auth.service';
+import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast-transitions';
 import { FirebaseError } from 'firebase';
 import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
-import { FirestoreService } from '../firestore.service';
+import { FirestoreService } from '../../services/firestore.service';
 
 @Component({
   selector: 'app-login-register',
@@ -70,7 +70,6 @@ export class LoginRegisterComponent {
     private toastController: ToastController,
     private firestoreService: FirestoreService,
   ) {
-
     modalController.getTop().then(modal => this.rootModal = modal);
 
     this.nameForm = this.formBuilder.group({
@@ -90,9 +89,7 @@ export class LoginRegisterComponent {
   }
 
 
-
   ionViewWillEnter() {
-
     if (this.socialAccount != 'none') {
       this.nameForm.setValue({ name: this.name });
       this.user.name = this.name;
@@ -109,11 +106,8 @@ export class LoginRegisterComponent {
     this.user.token = this.token;
   }
 
-
   ionViewWillLeave() {
-
     this.slides.isBeginning().then(beginning => {
-
       if (beginning && this.socialAccount == 'none') {
         this.toolbarAnimation
           .delay(0)
@@ -123,14 +117,10 @@ export class LoginRegisterComponent {
     })
   }
 
-
   goBack() {
-
     this.slides.getActiveIndex().then(activeIndex => {
-
       if (activeIndex === 0) {
         this.modalController.dismiss({ animate: true });
-
       } else {
         this.updateNextButtonState(activeIndex, 'backward');
         this.slides.lockSwipeToPrev(false)
@@ -142,17 +132,13 @@ export class LoginRegisterComponent {
     })
   }
 
-
   goNext() {
-
     if (this.goNextDisabled) return;
 
     this.slides.getActiveIndex().then(async activeIndex => {
-
       if (this.socialAccount != 'none' && activeIndex === this.slidesLength - 2 || activeIndex === this.slidesLength - 1) {
         const modal = await this.createTermsAndConditionsModal();
         modal.present();
-
       } else {
         this.updateNextButtonState(activeIndex, 'forward');
         this.slides.lockSwipeToNext(false)
@@ -164,17 +150,13 @@ export class LoginRegisterComponent {
     });
   }
 
-
   async createTermsAndConditionsModal() {
-
     const modal = await this.modalController.create({
       component: TermsAndConditionsComponent,
       cssClass: 'modal-terms-and-conditions',
     });
-
     modal.onWillDismiss().then(({ data }) => {
       if (data?.terms && data?.gprd) {
-
         switch (this.socialAccount) {
           case 'none':
             this.signUpWithEmailAndPassword();
@@ -190,33 +172,24 @@ export class LoginRegisterComponent {
         }
       }
     });
-
     return modal;
   }
 
-
   nameFormValid(difference = 0) {
-
     // si se inicia con las rr.ss, se actualiza el next button de la primera slide
     this.slides.getActiveIndex().then(index => {
-
       if (index + difference === 1) {
         this.goNextDisabled = this.nameForm.invalid;
         if (!this.goNextDisabled) this.user.name = this.nameForm.value.name;
       }
     })
-
   }
 
-
   passwordFormValid() {
-
     this.goNextDisabled = this.passwordForm.invalid;
   }
 
-
   updateNextButtonState(activeIndex: number, direction: 'forward' | 'backward') {
-
     const difference = direction == 'forward' ? 1 : -1;
     const nextSlideIndex = activeIndex + difference;
     
@@ -224,27 +197,21 @@ export class LoginRegisterComponent {
       case 0:
         this.goNextDisabled = this.user.role == undefined;
         break;
-
       case 1:
         this.nameFormValid(difference);
         break;
-
       case 2:
         this.goNextDisabled = false;
         break;
-
       case 3:
         this.passwordFormValid();
         break;
-
       default:
         break;
     }
   }
 
-
   setUserRole(role: UserRole, buttonSelected, buttonNotSelected) {
-
     this.user.role = role;
     this.goNextDisabled = false;
 
@@ -254,29 +221,20 @@ export class LoginRegisterComponent {
     buttonNotSelected.text = 'primary';
   }
 
-
   signUpWithEmailAndPassword() {
-
     this.signUp(this.authService.signUpWithEmailAndPassword(this.user, this.passwordForm.value.password));
   }
 
-
   signUpWithGoogle() {
-
     this.signUp(this.authService.signUpWithGoogle(this.user, this.token));
   }
 
-
   signUpWithFacebook() {
-
     this.signUp(this.authService.signUpWithFacebook(this.user, this.token));
   }
 
-
   signUp(signUpMethod: Promise<any>) {
-
     this.presentLoading();
-
     signUpMethod
       .then(
         () => this.goToMainPage(),
@@ -286,40 +244,28 @@ export class LoginRegisterComponent {
       .finally(() => this.loading.dismiss());
   }
 
-
   createUserProfile(value: firebase.auth.UserCredential) {
-
     return this.firestoreService.createUserProfile(value.user.uid, this.user);
   }
 
-
   goToMainPage() {
-
     this.rootModal.leaveAnimation = ModalAnimationFadeLeave;
-
     this.navController.navigateRoot('tabs', { animated: false });
     setTimeout(() => this.rootModal.dismiss());
   }
 
-
   async presentLoading() {
-
     this.loading = await this.loadingController.create();
     await this.loading.present();
   }
 
-
   async presentErrorInToast(error: FirebaseError) {
-
     console.log(error);
-
     let message: string;
-
     switch (error.code) {
       case 'auth/email-already-in-use':
         message = 'Este correo ya está en uso';
         break;
-
       default:
         message = error.code;
         break;
@@ -336,13 +282,10 @@ export class LoginRegisterComponent {
     toast.present();
   }
 
-
   togglePasswordMode() {
-
     if (this.passwordInputType == 'text') {
       this.passwordInputType = 'password';
       this.passwordInputIcon = 'eye'
-
     } else {
       this.passwordInputType = 'text';
       this.passwordInputIcon = 'eye-off'
@@ -356,12 +299,9 @@ export class LoginRegisterComponent {
       });
   }
 
-
   createToolbarAnimation() {
-
     return createAnimation()
       .addElement(this.ionToolbar.el)
       .fromTo('opacity', '0', '1');
   }
-
 }

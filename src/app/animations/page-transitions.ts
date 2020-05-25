@@ -1,8 +1,6 @@
 import { createAnimation } from '@ionic/core';
 
-
 export const getIonPageElement = (element: HTMLElement) => {
-
   if (element.classList.contains('ion-page')) {
     return element;
   }
@@ -15,12 +13,9 @@ export const getIonPageElement = (element: HTMLElement) => {
   return element;
 };
 
-
 const rootTransition = createAnimation();
 
-
 export const SlideAnimation = (_: HTMLElement, opts: any) => {
-
   const duration = 300;
 
   const backDirection = opts.direction === 'back';
@@ -60,13 +55,10 @@ export const SlideAnimation = (_: HTMLElement, opts: any) => {
 
 };
 
-
 export const ModalAnimationSlideDuration = 400;
 export const ModalAnimationSlideEasing = 'ease';
 
-
 export const ModalAnimationSlideEnter = (baseEl: any, duration = ModalAnimationSlideDuration, delay = 0) => {
-
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.modal-wrapper'))
     .beforeAddClass(['transparent', 'no-shadow'])
@@ -82,15 +74,11 @@ export const ModalAnimationSlideEnter = (baseEl: any, duration = ModalAnimationS
     .addAnimation(wrapperAnimation);
 };
 
-
 export const ModalAnimationSlideLeave = (baseEl: any) => {
-
   return ModalAnimationSlideEnter(baseEl).direction('reverse');
 };
 
-
 export const ModalAnimationFadeEnter = (baseEl: any, duration = ModalAnimationSlideDuration) => {
-
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.modal-wrapper'))
     .beforeAddClass(['no-transform'])
@@ -104,15 +92,11 @@ export const ModalAnimationFadeEnter = (baseEl: any, duration = ModalAnimationSl
     .addAnimation(wrapperAnimation);
 };
 
-
 export const ModalAnimationFadeLeave = (baseEl: any) => {
-
   return ModalAnimationFadeEnter(baseEl).direction('reverse');
 };
 
-
 export const ModalAnimationFadeWithMoveConentEnter = (baseEl: any, duration = ModalAnimationSlideDuration) => {
-
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.modal-wrapper'))
     .beforeAddClass(['no-transform'])
@@ -133,8 +117,6 @@ export const ModalAnimationFadeWithMoveConentEnter = (baseEl: any, duration = Mo
     .addAnimation([wrapperAnimation, contentAnimation]);
 };
 
-
 export const ModalAnimationFadeWithMoveConentLeave = (baseEl: any) => {
-
   return ModalAnimationFadeWithMoveConentEnter(baseEl).direction('reverse');
 };

@@ -36,28 +36,20 @@ export class TabsPage {
     this.playAnimation();
   }
 
-
   playAnimation() {
-
     setTimeout(() => {
-
       const totalHeight = (this.backgroundImage.nativeElement as HTMLDivElement).getBoundingClientRect().height + this.platform.height();
-
       const elements = [this.backgroundImage, this.background];
       const animations = elements.map(element =>
         createAnimation()
           .addElement(element.nativeElement)
           .fromTo('transform', 'translateY(0)', `translateY(-${totalHeight}px)`)
       );
-
       createAnimation()
         .duration(600)
         .addAnimation(animations)
         .easing('ease-out')
         .play();
-
     }, 500);
-
-
   }
 }

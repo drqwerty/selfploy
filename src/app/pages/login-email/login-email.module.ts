@@ -7,9 +7,9 @@ import { IonicModule } from '@ionic/angular';
 import { LoginEmailPageRoutingModule } from './login-email-routing.module';
 
 import { LoginEmailPage } from './login-email.page';
-import { LoginPasswordComponent } from '../login-password/login-password.component';
-import { LoginRegisterComponent } from '../login-register/login-register.component';
-import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
+import { LoginPasswordComponent } from '../../components/login-password/login-password.component';
+import { LoginRegisterComponent } from '../../components/login-register/login-register.component';
+import { TermsAndConditionsComponent } from '../../components/terms-and-conditions/terms-and-conditions.component';
 
 @NgModule({
   imports: [

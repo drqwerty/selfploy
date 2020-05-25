@@ -1,11 +1,11 @@
 import { Component, ViewChild, Input } from '@angular/core';
 import { ModalController, IonToolbar, IonInput, LoadingController, ToastController, NavController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
-import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../animations/page-transitions';
+import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../../animations/page-transitions';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../services/auth.service';
 import { FirebaseError } from 'firebase';
-import { ToastAnimationEnter, ToastAnimationLeave } from '../animations/toast-transitions';
+import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast-transitions';
 
 @Component({
   selector: 'app-login-password',
@@ -36,7 +36,6 @@ export class LoginPasswordComponent {
     private toastController: ToastController,
     private navController: NavController,
   ) {
-
     this.passwordForm = this.formBuilder.group({
       password: new FormControl('', [
         Validators.required,
@@ -45,43 +44,31 @@ export class LoginPasswordComponent {
     });
   }
 
-
   ionViewWillEnter() {
-
     this.toolbarAnimation = this.createToolbarAnimation();
     this.toolbarAnimation
       .delay(ModalAnimationSlideDuration)
       .play();
   }
 
-
   ionViewWillLeave() {
-
     this.toolbarAnimation
       .delay(0)
       .direction('reverse')
       .play();
   }
 
-
   goBack() {
-
     this.modalController.dismiss({ animate: true });
   }
 
-
   async goNext() {
-
     if (this.passwordForm.invalid) return;
-
     this.signIn();
   }
 
-
   async signIn() {
-
     await this.presentLoading();
-
     this.authService
       .loginWithEmailAndPassword(this.email, this.passwordForm.value.password)
       .then(() => this.goToMainPage())
@@ -89,9 +76,7 @@ export class LoginPasswordComponent {
       .then(() => this.loading.dismiss());
   }
 
-
   goToMainPage() {
-
     this.navController.navigateRoot('tabs', { animated: false })
       .then(() => this.modalController.getTop().then(modal => {
         modal.leaveAnimation = ModalAnimationFadeLeave;
@@ -99,20 +84,15 @@ export class LoginPasswordComponent {
       }));
   }
 
-
   async presentLoading() {
-
     this.loading = await this.loadingController.create();
     await this.loading.present();
   }
 
-
   async presentErrorInToast(error: FirebaseError) {
-
     console.log(error);
 
     let message: string;
-
     switch (error.code) {
       case 'auth/wrong-password':
         message = 'Contraseña incorrecta';
@@ -138,13 +118,10 @@ export class LoginPasswordComponent {
     toast.present();
   }
 
-
   togglePasswordMode() {
-
     if (this.passwordInputType == 'text') {
       this.passwordInputType = 'password';
       this.passwordInputIcon = 'eye'
-
     } else {
       this.passwordInputType = 'text';
       this.passwordInputIcon = 'eye-off'
@@ -158,12 +135,9 @@ export class LoginPasswordComponent {
       });
   }
 
-
   createToolbarAnimation() {
-
     return createAnimation()
       .addElement(this.ionToolbar.el)
       .fromTo('opacity', '0', '1');
   }
-
 }
