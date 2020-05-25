@@ -1,0 +1,9 @@
+ion-app {
+  background-color: #000;
+  transition-property: background-color;
+  transition-delay: 1s;
+
+  &.loading {
+    background-color: var(--ion-color-primary);
+  }
+}

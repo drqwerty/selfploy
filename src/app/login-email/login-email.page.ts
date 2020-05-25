@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, NgZone, ChangeDetectorRef } from '@angular/core';
 import { NavController, ModalController, Platform, LoadingController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { LoginPasswordComponent } from '../login-password/login-password.component';
@@ -34,6 +34,7 @@ export class LoginEmailPage {
     private formBuilder: FormBuilder,
     private loadingController: LoadingController,
     private authService: AuthService,
+    private changeRef: ChangeDetectorRef,
   ) {
 
     this.nextButtonText = 'Siguiente';
@@ -115,6 +116,7 @@ export class LoginEmailPage {
   updateNextButtonStatus(disabled = this.emailForm.invalid) {
 
     this.goNextDisabled = disabled;
+    this.changeRef.detectChanges();  // because value not updated on view
   }
 
 
@@ -140,9 +142,9 @@ export class LoginEmailPage {
     if (this.animation != null) return;
 
     const contentAnimation = createAnimation()
-        .addElement(this.content.nativeElement)
-        .fromTo('opacity', '0', '1')
-        .fromTo('transform', 'translateY(-5px)', 'translateY(0px)');
+      .addElement(this.content.nativeElement)
+      .fromTo('opacity', '0', '1')
+      .fromTo('transform', 'translateY(-5px)', 'translateY(0px)');
 
     this.animation = createAnimation()
       .duration(200)

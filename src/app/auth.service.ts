@@ -17,24 +17,11 @@ declare var FB;
 })
 export class AuthService {
 
-  authState = new BehaviorSubject(null);
-
   constructor(
     private AFauth: AngularFireAuth,
     private storageService: StorageService,
     private firestoreService: FirestoreService,
   ) { }
-
-
-  updateAuthState() {
-
-    return new Promise(resolve => {
-      this.storageService.getUserProfile().then(data => {
-        this.authState.next(data.value != null);
-        resolve(this.authState.value);
-      })
-    })
-  }
 
 
   loginWithEmailAndPassword(email: string, password: string) {
@@ -57,7 +44,6 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       signInPromise
         .then(userCrendential => {
-          this.authState.next(true);
           this.firestoreService.loadUserProfile(userCrendential.user.uid).then(documentSnapshot => {
             this.storageService.saveUserProfile(documentSnapshot.data().d);
             resolve(userCrendential);
@@ -114,30 +100,18 @@ export class AuthService {
   }
 
 
-  async signOut() {
-
-    await GoogleAuth.signOut();
-  }
-
-
   logout() {
 
-    this.authState.next(false);
-    this.AFauth.signOut();
+    this.storageService.removeUserProfile();
 
-    // this.AFauth.user.toPromise().then(a => console.log('aaaaaaaaaaaaaaaaa'))
+    this.AFauth.currentUser.then(({ providerData }) => {
+      this.AFauth.signOut();
 
-    // this.AFauth.onAuthStateChanged(a => console.log('stateChanged', a))
+      const providerId = providerData[0].providerId;
 
-    this.AFauth.currentUser.then(a => {
-      console.log(a.providerData);
+      if (providerId === 'facebook.com') Plugins.FacebookLogin.logout();
+      if (providerId === 'google.com') GoogleAuth.signOut();
     })
-
-    // TODO: choose method
-    // GoogleAuth.signOut();
-    // Plugins.FacebookLogin.logout()
-
-    // this.storageService.removeUserProfile();
   }
 
 
@@ -172,7 +146,6 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       signUpPromise
         .then(userCrendential => {
-          this.authState.next(true);
           Promise.all([
             this.storageService.saveUserProfile(user),
             this.firestoreService.createUserProfile(userCrendential.user.uid, user),
@@ -180,11 +153,5 @@ export class AuthService {
         })
         .catch(reason => reject(reason));
     })
-  }
-
-
-  isAuthenticated() {
-
-    return this.authState.value;
   }
 }

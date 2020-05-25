@@ -31,6 +31,7 @@ export class LoginRegisterComponent {
 
   toolbarAnimation: Animation;
   loading: HTMLIonLoadingElement;
+  rootModal: HTMLIonModalElement;
 
   slidesLength: number;
   slideOpts = {
@@ -69,6 +70,8 @@ export class LoginRegisterComponent {
     private toastController: ToastController,
     private firestoreService: FirestoreService,
   ) {
+
+    modalController.getTop().then(modal => this.rootModal = modal);
 
     this.nameForm = this.formBuilder.group({
       name: new FormControl('', [
@@ -129,7 +132,7 @@ export class LoginRegisterComponent {
         this.modalController.dismiss({ animate: true });
 
       } else {
-        this.updateNextButtonState(activeIndex - 1);
+        this.updateNextButtonState(activeIndex, 'backward');
         this.slides.lockSwipeToPrev(false)
           .then(() => {
             this.slides.slidePrev();
@@ -151,7 +154,7 @@ export class LoginRegisterComponent {
         modal.present();
 
       } else {
-        this.updateNextButtonState(activeIndex + 1);
+        this.updateNextButtonState(activeIndex, 'forward');
         this.slides.lockSwipeToNext(false)
           .then(() => {
             this.slides.slideNext();
@@ -192,12 +195,12 @@ export class LoginRegisterComponent {
   }
 
 
-  nameFormValid() {
+  nameFormValid(difference = 0) {
 
-    // hay que verificar que solo se ejecuta en la vista del nombre porque
-    // si se inicia con una rr.ss, al actualizar el nombre se lanza
+    // si se inicia con las rr.ss, se actualiza el next button de la primera slide
     this.slides.getActiveIndex().then(index => {
-      if (index === 1) {
+
+      if (index + difference === 1) {
         this.goNextDisabled = this.nameForm.invalid;
         if (!this.goNextDisabled) this.user.name = this.nameForm.value.name;
       }
@@ -212,15 +215,18 @@ export class LoginRegisterComponent {
   }
 
 
-  updateNextButtonState(activeIndex: number) {
+  updateNextButtonState(activeIndex: number, direction: 'forward' | 'backward') {
 
-    switch (activeIndex) {
+    const difference = direction == 'forward' ? 1 : -1;
+    const nextSlideIndex = activeIndex + difference;
+    
+    switch (nextSlideIndex) {
       case 0:
         this.goNextDisabled = this.user.role == undefined;
         break;
 
       case 1:
-        this.nameFormValid();
+        this.nameFormValid(difference);
         break;
 
       case 2:
@@ -251,48 +257,33 @@ export class LoginRegisterComponent {
 
   signUpWithEmailAndPassword() {
 
-    this.presentLoading();
-
-    this.authService
-      .signUpWithEmailAndPassword(this.user, this.passwordForm.value.password)
-      .then(
-        () => this.goToMainPage(),
-        reason => this.presentErrorInToast(reason)
-      )
-      .catch(reason => console.log(reason))
-      .then(() => this.loading.dismiss());
+    this.signUp(this.authService.signUpWithEmailAndPassword(this.user, this.passwordForm.value.password));
   }
 
 
-  async signUpWithGoogle() {
+  signUpWithGoogle() {
 
-    this.presentLoading();
-
-    this.authService
-      .signUpWithGoogle(this.user, this.token)
-      .then(
-        () => this.goToMainPage(),
-        reason => this.presentErrorInToast(reason)
-      )
-      .catch(reason => console.log(reason))
-      .then(() => this.loading.dismiss());
-
+    this.signUp(this.authService.signUpWithGoogle(this.user, this.token));
   }
 
 
-  async signUpWithFacebook() {
+  signUpWithFacebook() {
+
+    this.signUp(this.authService.signUpWithFacebook(this.user, this.token));
+  }
+
+
+  signUp(signUpMethod: Promise<any>) {
 
     this.presentLoading();
 
-    this.authService
-      .signUpWithFacebook(this.user, this.token)
+    signUpMethod
       .then(
         () => this.goToMainPage(),
         reason => this.presentErrorInToast(reason)
       )
       .catch(reason => console.log(reason))
-      .then(() => this.loading.dismiss());
-
+      .finally(() => this.loading.dismiss());
   }
 
 
@@ -304,11 +295,10 @@ export class LoginRegisterComponent {
 
   goToMainPage() {
 
-    this.navController.navigateRoot('tabs', { animated: false })
-      .then(() => this.modalController.getTop().then(modal => {
-        modal.leaveAnimation = ModalAnimationFadeLeave;
-        setTimeout(() => this.modalController.dismiss());
-      }));
+    this.rootModal.leaveAnimation = ModalAnimationFadeLeave;
+
+    this.navController.navigateRoot('tabs', { animated: false });
+    setTimeout(() => this.rootModal.dismiss());
   }
 
 
