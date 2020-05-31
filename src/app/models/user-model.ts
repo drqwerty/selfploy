@@ -6,7 +6,7 @@ export enum UserRole {
 export class User {
   email: string;
   role: UserRole;
-  profilePictureUrl: string;
+  profilePic: string;
   name: string;
   token: string;
 }

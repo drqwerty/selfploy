@@ -53,6 +53,7 @@ export class AuthService {
         return {
           email: googleUser.email,
           name: googleUser.displayName ?? googleUser.name,
+          profilePic: googleUser.imageUrl.substring(0, googleUser.imageUrl.lastIndexOf('=')) + '=s320',
           socialAccount: 'google',
           token: googleUser.authentication.idToken,
         };
@@ -68,14 +69,18 @@ export class AuthService {
               '/me',
               'GET',
               {
-                fields: 'id,name,email',
-                access_token: response.accessToken.token
+                fields: 'id,name,email,picture.width(320).height(320)',
+                access_token: response.accessToken.token,
               },
-              userData => resolve({
-                ...userData,
-                socialAccount: 'facebook',
-                token: response.accessToken.token,
-              })
+              userData => {
+                const { picture, ...user } = userData;
+                resolve({
+                  ...user,
+                  profilePic: picture.data.url,
+                  socialAccount: 'facebook',
+                  token: response.accessToken.token,
+                })
+              }
             );
           } else {
             reject({ token: null })

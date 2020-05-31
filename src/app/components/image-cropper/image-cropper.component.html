@@ -1,0 +1,26 @@
+<ion-content>
+  <image-cropper
+  [autoCrop]="false"
+  [resizeToWidth]="320"
+  [imageBase64]="image"
+  [maintainAspectRatio]="true"
+  format="jpeg"
+  (cropperReady)="cropperReady()"
+  (imageCropped)="imageCropped($event)"
+></image-cropper>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar mode="ios" class="ion-padding">
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" color="light">
+        Cancelar
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="acept()" color="light">
+        Aceptar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

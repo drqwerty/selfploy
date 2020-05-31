@@ -10,6 +10,7 @@ import { LoginEmailPage } from './login-email.page';
 import { LoginPasswordComponent } from '../../components/login-password/login-password.component';
 import { LoginRegisterComponent } from '../../components/login-register/login-register.component';
 import { TermsAndConditionsComponent } from '../../components/terms-and-conditions/terms-and-conditions.component';
+import { CameraSourceActionSheetComponent } from 'src/app/components/camera-source-action-sheet/camera-source-action-sheet.component';
 
 @NgModule({
   imports: [
@@ -23,12 +24,12 @@ import { TermsAndConditionsComponent } from '../../components/terms-and-conditio
     LoginEmailPage,
     LoginPasswordComponent,
     LoginRegisterComponent,
+    CameraSourceActionSheetComponent,
     TermsAndConditionsComponent,
   ],
   entryComponents: [
     LoginPasswordComponent,
     LoginRegisterComponent,
-    TermsAndConditionsComponent,
   ]
 })
 export class LoginEmailPageModule { }

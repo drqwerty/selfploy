@@ -61,7 +61,7 @@ export const ModalAnimationSlideEasing = 'ease';
 export const ModalAnimationSlideEnter = (baseEl: any, duration = ModalAnimationSlideDuration, delay = 0) => {
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.modal-wrapper'))
-    .beforeAddClass(['transparent', 'no-shadow'])
+    .beforeAddClass(['background-transparent', 'no-shadow'])
     .delay(delay)
     .fromTo('transform', 'translateX(100%)', 'translateX(0)')
     .fromTo('opacity', '1', '1')

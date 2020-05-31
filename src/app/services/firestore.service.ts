@@ -12,8 +12,9 @@ export class FirestoreService {
   ) { }
 
   createUserProfile(uid: string, user: User) {
+    const {token, ...userWithoutToken} = user;
     return this.db.collection('users').doc(uid).set({
-      d: Object.assign({}, user),
+      d: userWithoutToken,
     });
   }
 

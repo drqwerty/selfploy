@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input } from '@angular/core';
-import { IonToolbar, ModalController, IonSlides, IonInput, NavController, IonContent, LoadingController, ToastController } from '@ionic/angular';
+import { IonToolbar, ModalController, IonSlides, IonInput, NavController, IonContent, LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../../animations/page-transitions';
 import { User, UserRole } from '../../models/user-model';
@@ -9,6 +9,7 @@ import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast
 import { FirebaseError } from 'firebase';
 import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
 import { FirestoreService } from '../../services/firestore.service';
+import { CameraSourceActionSheetComponent } from '../camera-source-action-sheet/camera-source-action-sheet.component';
 
 @Component({
   selector: 'app-login-register',
@@ -19,8 +20,11 @@ export class LoginRegisterComponent {
 
   @Input() email: string;
   @Input() name: string;
+  @Input() profilePic: string;
   @Input() socialAccount: 'none' | 'google' | 'facebook' = 'none';
   @Input() token: string;
+
+  profilePicWithoutCrop: any;
 
   @ViewChild(IonContent) ionContent: any;
   @ViewChild(IonToolbar) ionToolbar: any;
@@ -58,7 +62,8 @@ export class LoginRegisterComponent {
   user: User;
   nameForm: FormGroup;
   passwordForm: FormGroup;
-  profileImage = '';
+
+  removePictureToast: HTMLIonToastElement;
 
 
   constructor(
@@ -103,6 +108,7 @@ export class LoginRegisterComponent {
 
     this.slides.length().then(length => this.slidesLength = length);
     this.user.email = this.email;
+    this.user.profilePic = this.profilePic;
     this.user.token = this.token;
   }
 
@@ -137,6 +143,7 @@ export class LoginRegisterComponent {
 
     this.slides.getActiveIndex().then(async activeIndex => {
       if (this.socialAccount != 'none' && activeIndex === this.slidesLength - 2 || activeIndex === this.slidesLength - 1) {
+        await this.removePictureToast?.dismiss();
         const modal = await this.createTermsAndConditionsModal();
         modal.present();
       } else {
@@ -192,7 +199,7 @@ export class LoginRegisterComponent {
   updateNextButtonState(activeIndex: number, direction: 'forward' | 'backward') {
     const difference = direction == 'forward' ? 1 : -1;
     const nextSlideIndex = activeIndex + difference;
-    
+
     switch (nextSlideIndex) {
       case 0:
         this.goNextDisabled = this.user.role == undefined;
@@ -219,6 +226,49 @@ export class LoginRegisterComponent {
     buttonSelected.text = 'light';
     buttonNotSelected.button = 'light';
     buttonNotSelected.text = 'primary';
+  }
+
+  async showCameraSourcePrompt() {
+    this.removePictureToast?.dismiss();
+    const modal = await this.modalController.create({
+      component: CameraSourceActionSheetComponent,
+      cssClass: 'action-sheet',
+      componentProps: {
+        showRemoveButton: this.profilePic != null,
+        profilePic: this.profilePicWithoutCrop,
+      }
+    });
+
+    console.log(this.profilePicWithoutCrop);
+    
+
+    modal.onWillDismiss().then(({ data }) => {
+      this.profilePicWithoutCrop = data.profilePicWithoutCrop;
+      if (data?.image) this.profilePic = data.image;
+      else if (data?.remove) this.removeProfileImage();
+    });
+
+    modal.present();
+  }
+
+  async removeProfileImage() {
+    const profileImageTemp = this.profilePic;
+    this.profilePic = null;
+
+    this.removePictureToast = await this.toastController.create({
+      message: 'Foto eliminada',
+      duration: 3000,
+      mode: 'ios',
+      enterAnimation: ToastAnimationEnter,
+      leaveAnimation: ToastAnimationLeave,
+      position: 'bottom',
+      buttons: [{
+        side: 'end',
+        text: 'Deshacer',
+        handler: () => { this.profilePic = profileImageTemp; }
+      }]
+    });
+    this.removePictureToast.present();
   }
 
   signUpWithEmailAndPassword() {

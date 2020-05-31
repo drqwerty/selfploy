@@ -40,6 +40,14 @@
   --border-radius: 15px;
 }
 
+.background-transparent {
+  background-color: transparent !important;
+}
+
+.no-shadow {
+  box-shadow: none !important;
+}
+
 .swiper-scrollbar {
   visibility: hidden;
 }
@@ -65,14 +73,41 @@ ion-checkbox {
   --size: 22px;
 
 }
-   :host(.checkbox-icon) {
-      padding: 5px;
-    }
+
+:host(.checkbox-icon) {
+  padding: 5px;
+}
 
 ion-modal {
   &.modal-fullscreen .modal-wrapper {
     height: 100%;
     width: 100%;
+  }
+
+  &.action-sheet {
+    --height: auto;
+
+    ion-backdrop {
+      --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
+    }
+
+    .modal-wrapper {
+      position: absolute;
+      bottom: 0;
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+      --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+
+      .ion-page {
+        position: relative;
+        contain: content;
+
+        ion-list ion-item {
+          --padding-top: 4px;
+          --padding-bottom: 4px;
+        }
+      }
+    }
   }
 
   &.modal-terms-and-conditions {
@@ -93,6 +128,71 @@ ion-modal {
       width: 80%;
       max-width: 420px;
       border-radius: 10px;
+    }
+  }
+}
+
+image-cropper {
+
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  --cropper-overlay-color: #000;
+  --cropper-outline-color: rgba(0, 0, 0, 0.5);
+
+  .cropper {
+    .resize {
+
+      &.top,
+      &.left,
+      &.bottom,
+      &.right {
+        display: none !important;
+      }
+
+      &.topright,
+      &.bottomright,
+      &.bottomleft,
+      &.topleft {
+        opacity: 1 !important;
+
+        .square {
+          border-radius: 100% !important;
+          background-color: #fff !important;
+          height: 10px !important;
+          width: 10px !important;
+        }
+      }
+
+      --position: -13px;
+
+      &.topright,
+      &.topleft {
+        top: var(--position) !important;
+      }
+
+      &.bottomright,
+      &.bottomleft {
+        bottom: var(--position) !important;
+      }
+
+      &.bottomleft,
+      &.topleft {
+        left: var(--position) !important;
+      }
+
+      &.topright,
+      &.bottomright {
+        right: var(--position) !important;
+      }
+    }
+
+    &:after {
+      border: 1px solid #fff !important;
+      opacity: 1 !important;
     }
   }
 }
@@ -172,13 +272,4 @@ ion-modal {
 
 .login-toast {
   text-align: center;
-}
-
-
-.transparent {
-  background-color: transparent !important;
-}
-
-.no-shadow {
-  box-shadow: none !important;
 }

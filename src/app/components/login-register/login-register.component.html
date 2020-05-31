@@ -58,11 +58,11 @@
           <div class="profile-img-wrapper">
 
             <div class="profile-img">
-              <img [src]="profileImage">
+              <img [src]="profilePic">
             </div>
 
             <div class="camera-button-wrapper">
-              <ion-fab-button size="small" color="light" mode="ios">
+              <ion-fab-button size="small" color="light" mode="ios" (click)="showCameraSourcePrompt()">
                 <ion-icon name="camera-outline"></ion-icon>
               </ion-fab-button>
             </div>

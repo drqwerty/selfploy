@@ -7,7 +7,7 @@ export const ToastAnimationEnter = (baseEl: any, duration = ToastAnimationDurati
   const bottom = "calc(-10px - var(--ion-safe-area-bottom, 0px))";
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.toast-wrapper'))
-    .beforeAddClass(['transparent', 'no-shadow'])
+    .beforeAddClass(['background-transparent', 'no-shadow'])
     .delay(delay)
     .fromTo('transform', `translateY(${bottom})`, 'translateY(-150%)')
     .fromTo('opacity', '0', '1')
