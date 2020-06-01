@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { NavController, Platform } from '@ionic/angular';
 import { createAnimation } from '@ionic/core';
+
 
 import { Plugins, StatusBarStyle } from '@capacitor/core';
 const { StatusBar } = Plugins;
@@ -11,18 +12,15 @@ const { StatusBar } = Plugins;
   templateUrl: './categories.page.html',
   styleUrls: ['./categories.page.scss'],
 })
-export class CategoriesPage implements OnInit {
+export class CategoriesPage {
 
   constructor(
     private AF: AuthService,
     private nav: NavController,
-    private platform: Platform
+    private platform: Platform,
   ) { }
 
   firstTime = true;
-
-  ngOnInit() {
-  }
 
   ionViewWillEnter() {
     if (!this.firstTime) StatusBar.setStyle({ style: StatusBarStyle.Light });

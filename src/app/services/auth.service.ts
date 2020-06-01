@@ -9,8 +9,19 @@ import { Plugins } from '@capacitor/core';
 const { GoogleAuth } = Plugins;
 import * as firebase from 'firebase';
 import { FirestoreService } from './firestore.service';
+import { FirebaseStorage } from './firebase-storage.service';
 
 declare var FB;
+
+const fromURLtoBase64 = (url: string) =>
+  fetch(url)
+    .then(response => response.blob())
+    .then(blob => new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    }))
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +32,7 @@ export class AuthService {
     private AFauth: AngularFireAuth,
     private storageService: StorageService,
     private firestoreService: FirestoreService,
+    private fStorage: FirebaseStorage,
   ) { }
 
   loginWithEmailAndPassword(email: string, password: string) {
@@ -34,26 +46,27 @@ export class AuthService {
     return this.loadAndSaveUserProfile(this.AFauth.signInWithCredential(credential));
   }
 
-  loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
-    return new Promise((resolve, reject) => {
-      signInPromise
-        .then(userCrendential => {
-          this.firestoreService.loadUserProfile(userCrendential.user.uid).then(documentSnapshot => {
-            this.storageService.saveUserProfile(documentSnapshot.data().d);
-            resolve(userCrendential);
-          })
-        })
-        .catch(reason => reject(reason));
-    });
+  async loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
+    try {
+      const userCrendential = await signInPromise;
+      const documentSnapshot = await this.firestoreService.loadUserProfile(userCrendential.user.uid);
+      const user: User = documentSnapshot.data().d;
+      if (user.hasProfilePic) user.profilePic = await this.fStorage.getUserProfilePic(userCrendential.user.uid);
+      await this.storageService.saveUserProfile(user);
+      return userCrendential;
+    } catch (reason) {
+      throw new Error(reason);
+    }
   }
 
   getGoogleUser() {
     return GoogleAuth.signIn()
-      .then(googleUser => {
+      .then(async googleUser => {
+        const profilePic = await fromURLtoBase64(googleUser.imageUrl.substring(0, googleUser.imageUrl.lastIndexOf('=')) + '=s320');
         return {
           email: googleUser.email,
           name: googleUser.displayName ?? googleUser.name,
-          profilePic: googleUser.imageUrl.substring(0, googleUser.imageUrl.lastIndexOf('=')) + '=s320',
+          profilePic,
           socialAccount: 'google',
           token: googleUser.authentication.idToken,
         };
@@ -72,11 +85,12 @@ export class AuthService {
                 fields: 'id,name,email,picture.width(320).height(320)',
                 access_token: response.accessToken.token,
               },
-              userData => {
+              async userData => {
                 const { picture, ...user } = userData;
+                const profilePic = await fromURLtoBase64(picture.data.url);
                 resolve({
                   ...user,
-                  profilePic: picture.data.url,
+                  profilePic,
                   socialAccount: 'facebook',
                   token: response.accessToken.token,
                 })

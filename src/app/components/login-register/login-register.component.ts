@@ -37,7 +37,7 @@ export class LoginRegisterComponent {
   loading: HTMLIonLoadingElement;
   rootModal: HTMLIonModalElement;
 
-  slidesLength: number;
+  slidesLength = 4;
   slideOpts = {
     initialSlide: 0,
     pagination: false,
@@ -106,7 +106,6 @@ export class LoginRegisterComponent {
         .play();
     }
 
-    this.slides.length().then(length => this.slidesLength = length);
     this.user.email = this.email;
     this.user.profilePic = this.profilePic;
     this.user.token = this.token;
@@ -164,6 +163,7 @@ export class LoginRegisterComponent {
     });
     modal.onWillDismiss().then(({ data }) => {
       if (data?.terms && data?.gprd) {
+        this.user.hasProfilePic = this.user.profilePic != null;
         switch (this.socialAccount) {
           case 'none':
             this.signUpWithEmailAndPassword();
@@ -234,17 +234,14 @@ export class LoginRegisterComponent {
       component: CameraSourceActionSheetComponent,
       cssClass: 'action-sheet',
       componentProps: {
-        showRemoveButton: this.profilePic != null,
-        profilePic: this.profilePicWithoutCrop,
+        showRemoveButton: this.user.profilePic != null,
+        profilePic: this.profilePicWithoutCrop ?? this.user.profilePic,
       }
     });
 
-    console.log(this.profilePicWithoutCrop);
-    
-
     modal.onWillDismiss().then(({ data }) => {
       this.profilePicWithoutCrop = data.profilePicWithoutCrop;
-      if (data?.image) this.profilePic = data.image;
+      if (data?.image) this.user.profilePic = data.image;
       else if (data?.remove) this.removeProfileImage();
     });
 
@@ -252,8 +249,8 @@ export class LoginRegisterComponent {
   }
 
   async removeProfileImage() {
-    const profileImageTemp = this.profilePic;
-    this.profilePic = null;
+    const profileImageTemp = this.user.profilePic;
+    this.user.profilePic = null;
 
     this.removePictureToast = await this.toastController.create({
       message: 'Foto eliminada',
@@ -265,7 +262,7 @@ export class LoginRegisterComponent {
       buttons: [{
         side: 'end',
         text: 'Deshacer',
-        handler: () => { this.profilePic = profileImageTemp; }
+        handler: () => { this.user.profilePic = profileImageTemp; }
       }]
     });
     this.removePictureToast.present();

@@ -9,4 +9,5 @@ export class User {
   profilePic: string;
   name: string;
   token: string;
+  hasProfilePic: boolean;
 }

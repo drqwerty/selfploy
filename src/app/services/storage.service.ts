@@ -12,10 +12,11 @@ export class StorageService {
 
   constructor() { }
 
-  saveUserProfile(user: any) {
+  async saveUserProfile(user: User) {
+    const { token, ...essentialUserData } = user;
     return Storage.set({
       key: 'user',
-      value: JSON.stringify(Object.assign({}, user))
+      value: JSON.stringify(Object.assign({}, essentialUserData))
     })
   }
 

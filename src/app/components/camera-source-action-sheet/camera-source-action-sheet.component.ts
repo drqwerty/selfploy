@@ -17,7 +17,7 @@ export class CameraSourceActionSheetComponent {
   @Input() imageWithoutCrop: string;
 
   modalRoot: HTMLIonModalElement;
-  modal: HTMLIonModalElement;
+  modalCropper: HTMLIonModalElement;
   loading: HTMLIonLoadingElement;
 
 
@@ -40,7 +40,7 @@ export class CameraSourceActionSheetComponent {
   async editImage() {
     this.modalRoot.classList.add('ion-invisible');
     await this.createCropperModal({ image: this.profilePic, });
-    this.modal.present();
+    this.modalCropper.present();
   }
 
   removeImage() {
@@ -59,10 +59,10 @@ export class CameraSourceActionSheetComponent {
         source,
         resultType: CameraResultType.Base64,
       });
-      this.profilePic = 'data:image/png;base64,' + base64String
-      this.modal.componentProps = { image: this.profilePic, };
+      this.profilePic = 'data:image/jpeg;base64,' + base64String
+      this.modalCropper.componentProps = { image: this.profilePic, };
       this.loading.present();
-      this.modal.present();
+      this.modalCropper.present();
     } catch {
       this.removeElements();
     }
@@ -71,17 +71,17 @@ export class CameraSourceActionSheetComponent {
   removeElements() {
     this.modalRoot.dismiss();
     this.loading.remove();
-    this.modal.remove();
+    this.modalCropper.remove();
     console.log('catch');
   }
 
   async createCropperModal(componentProps?) {
-    this.modal = await this.modalController.create({
+    this.modalCropper = await this.modalController.create({
       component: ImageCropperComponent,
       animated: false,
       componentProps,
     });
-    this.modal.onWillDismiss().then(({ data }) => this.modalRoot.dismiss({ profilePicWithoutCrop: this.profilePic, ...data }));
+    this.modalCropper.onWillDismiss().then(({ data }) => this.modalRoot.dismiss({ profilePicWithoutCrop: this.profilePic, ...data }));
   }
 
 }
