@@ -11,6 +11,7 @@ import { LoginPasswordComponent } from '../../components/login-password/login-pa
 import { LoginRegisterComponent } from '../../components/login-register/login-register.component';
 import { TermsAndConditionsComponent } from '../../components/terms-and-conditions/terms-and-conditions.component';
 import { CameraSourceActionSheetComponent } from 'src/app/components/camera-source-action-sheet/camera-source-action-sheet.component';
+import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { CameraSourceActionSheetComponent } from 'src/app/components/camera-sour
     IonicModule,
     LoginEmailPageRoutingModule,
     ReactiveFormsModule,
+    StatusBarModule,
   ],
   declarations: [
     LoginEmailPage,

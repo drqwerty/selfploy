@@ -7,14 +7,18 @@ import { IonicModule } from '@ionic/angular';
 import { CategoriesPageRoutingModule } from './categories-routing.module';
 
 import { CategoriesPage } from './categories.page';
+import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CategoriesPageRoutingModule
+    CategoriesPageRoutingModule,
+    StatusBarModule,
   ],
-  declarations: [CategoriesPage]
+  declarations: [
+    CategoriesPage,
+  ]
 })
-export class CategoriesPageModule {}
+export class CategoriesPageModule { }

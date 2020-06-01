@@ -13,6 +13,7 @@ import { ImageCropperComponent } from 'src/app/components/image-cropper/image-cr
 import { LoginRegisterComponent } from 'src/app/components/login-register/login-register.component';
 import { TermsAndConditionsComponent } from 'src/app/components/terms-and-conditions/terms-and-conditions.component';
 import { CameraSourceActionSheetComponent } from 'src/app/components/camera-source-action-sheet/camera-source-action-sheet.component';
+import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { CameraSourceActionSheetComponent } from 'src/app/components/camera-sour
     MainPageRoutingModule,
     ImageCropperModule,
     ReactiveFormsModule,
+    StatusBarModule,
   ],
   declarations: [
     MainPage,

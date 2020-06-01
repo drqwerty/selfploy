@@ -20,6 +20,7 @@ public class MainActivity extends BridgeActivity {
       // Ex: add(TotallyAwesomePlugin.class);
       add(GoogleAuth.class);
       add(FacebookLogin.class);
+      add(StatusBarPlugin.class);
     }});
   }
 }

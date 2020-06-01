@@ -1,0 +1,7 @@
+:host {
+  order: -2;
+}
+
+#status-bar {
+  height: var(--status-bar-height, 0);
+}

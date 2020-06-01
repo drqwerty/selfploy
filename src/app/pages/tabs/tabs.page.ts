@@ -2,6 +2,9 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { createAnimation, Animation } from '@ionic/core';
 import { Platform } from '@ionic/angular';
 
+import { Plugins, StatusBarStyle } from '@capacitor/core';
+const { StatusBar } = Plugins;
+
 @Component({
   selector: 'app-tabs',
   templateUrl: './tabs.page.html',
@@ -49,7 +52,8 @@ export class TabsPage {
         .duration(600)
         .addAnimation(animations)
         .easing('ease-out')
-        .play();
+        .play()
+        .then(() => StatusBar.setStyle({ style: StatusBarStyle.Light }));
     }, 500);
   }
 }
