@@ -33,7 +33,9 @@
       border-radius: inherit;
       text-align: center;
 
-      span {
+      .number {
+        font-family: Poppins;
+        font-weight: 200;
         color: #fff;
         position: absolute;
         left: 50%;
@@ -52,6 +54,12 @@
     flex-direction: row;
     justify-content: space-evenly;
     text-align: center;
+
+    .number {
+      font-family: Poppins;
+      font-weight: 500; 
+      margin-bottom: 4px;
+    }
 
     .image-space {
       width: 130px;

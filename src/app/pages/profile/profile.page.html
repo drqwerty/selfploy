@@ -18,14 +18,14 @@
     <div class="image-profile">
       <img [src]="user?.profilePic">
       <div *ngIf="user?.role === userRol.professional" class="stars">
-        <span>4.5</span>
+        <span class="number">4.5</span>
       </div>
     </div>
 
     <div *ngIf="user?.role === userRol.professional" class="stats">
       <div class="works">
         <ion-text color="primary">
-          <h1>24</h1>
+          <h1 class="number">24</h1>
         </ion-text>
         <ion-text color="tertiary">
           Trabajos
@@ -34,7 +34,7 @@
       <div class="image-space"></div>
       <div class="opinions">
         <ion-text color="primary">
-          <h1>13</h1>
+          <h1 class="number">13</h1>
         </ion-text>
         <ion-text color="tertiary">
           Opiniones
