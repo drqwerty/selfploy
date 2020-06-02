@@ -8,12 +8,17 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
 
+import { FivAppBarModule, FivFabModule, FivIconModule } from '@fivethree/core';
+
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TabsPageRoutingModule
+    TabsPageRoutingModule,
+    FivAppBarModule,
+    FivFabModule,
+    FivIconModule,
   ],
   declarations: [TabsPage]
 })

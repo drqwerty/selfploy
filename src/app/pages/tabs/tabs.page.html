@@ -5,12 +5,30 @@
 
 
 <ion-tabs>
-  <ion-tab-bar slot="bottom" class="ion-no-border">
+  <!-- <ion-tab-bar slot="bottom" class="ion-no-border">
 
     <ion-tab-button *ngFor="let tab of tabs" [tab]="tab.path">
       <div class="background-button-selected"></div>
       <ion-icon [name]="tab.icon"></ion-icon>
     </ion-tab-button>
 
-  </ion-tab-bar>
+  </ion-tab-bar> -->
+
+  <fiv-app-bar slot="bottom" titleMode="hide">
+
+    <fiv-fab fivAppBarFab="right">
+      <fiv-icon name="document-text-outline"></fiv-icon>
+    </fiv-fab>
+
+    <fiv-app-bar-tab left *ngFor="let tab of tabs" [tab]="tab.path" [href]="tab.path">
+      <fiv-icon [name]="tab.icon"></fiv-icon>
+    </fiv-app-bar-tab>
+
+  </fiv-app-bar>
+
+  <fiv-app-bar slot="bottom" titleMode="hide" class="border">
+    <fiv-fab fivAppBarFab="right" class="ion-invisible">
+    </fiv-fab>
+  </fiv-app-bar>
+
 </ion-tabs>

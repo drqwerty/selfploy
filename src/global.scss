@@ -27,6 +27,48 @@
 
 @import "theme/fonts.scss";
 
+fiv-app-bar {
+  --fiv-appbar-background-color: #fff !important;
+  --fiv-icon-color: #666666;
+
+  &.border {
+    --fiv-appbar-background-color: #f0f0f0 !important;
+    --fiv-radius: 70px !important;
+    z-index: 4999;
+  }
+
+  .appbar-rect {
+    z-index: -1;
+    box-shadow: 0px 0 5px 0px rgba(0, 0, 0, .1) !important;
+
+    // .tab {
+    //   fiv-icon::after {
+    //     content: '';
+    //     opacity: .2;
+    //     background-color: var(--ion-color-primary);
+    //     color: white;
+    //     width: 40px;
+    //     height: 40px;
+    //     display: inline-block;
+    //     position: absolute;
+    //     left: 50%;
+    //     top: 45%;
+    //     transform: translate(-50%, -50%) scale(.4);
+    //     border-radius: 40%;
+    //     transition: transform ease-out .2s, opacity ease-out .3s;
+    //     opacity: 0;
+    //   }
+
+    //   &.active {
+    //     fiv-icon::after {
+    //       opacity: .2;
+    //       transform: translate(-50%, -50%) scale(1);
+    //     }
+    //   }
+    // }
+  }
+}
+
 .no-transform {
   transform: none !important;
 }

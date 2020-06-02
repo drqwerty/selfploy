@@ -17,6 +17,8 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AuthGuardService } from './services/auth-guard.service';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -28,6 +30,7 @@ import { AuthGuardService } from './services/auth-guard.service';
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     StatusBar,
