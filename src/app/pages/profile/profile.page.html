@@ -1,9 +1,93 @@
+<status-bar [color]="brackgroundColor"></status-bar>
+
 <ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-title color="tertiary">Perfil</ion-title>
+  <ion-toolbar [color]="brackgroundColor">
+    <ion-title color="light">Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onClick()">
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [color]="brackgroundColor">
 
+  <div class="ion-padding content">
+
+    <div class="image-profile">
+      <img [src]="user?.profilePic">
+      <div *ngIf="user?.role === userRol.professional" class="stars">
+        <span>4.5</span>
+      </div>
+    </div>
+
+    <div *ngIf="user?.role === userRol.professional" class="stats">
+      <div class="works">
+        <ion-text color="primary">
+          <h1>24</h1>
+        </ion-text>
+        <ion-text color="tertiary">
+          Trabajos
+        </ion-text>
+      </div>
+      <div class="image-space"></div>
+      <div class="opinions">
+        <ion-text color="primary">
+          <h1>13</h1>
+        </ion-text>
+        <ion-text color="tertiary">
+          Opiniones
+        </ion-text>
+      </div>
+    </div>
+
+    <div class="header">
+      <div class="name">
+        <ion-text color="tertiary">
+          <h1> {{user?.name}}</h1>
+        </ion-text>
+      </div>
+      <div *ngIf="user?.role === userRol.professional" class="jobs">
+        <ion-text color="primary">
+          <h6>Fontanero</h6>
+        </ion-text>
+      </div>
+    </div>
+
+
+    <div class="info">
+      <ion-list lines="none">
+        <div *ngIf="user?.role === userRol.professional" class="professional-info">
+          <ion-item>
+            <ion-label>
+              <h2>Especialización</h2>
+              <h3>Baños</h3>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h2>Horario</h2>
+              <h3>Mañanas</h3>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h2>Sobre mí</h2>
+              <h3>A veces hago cosas</h3>
+            </ion-label>
+          </ion-item>
+        </div>
+        <ion-item>
+          <ion-label>
+            <h2>Ubicación</h2>
+            <h3>Tacoronte</h3>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+
+    <!-- {{user | json}} -->
+  </div>
 </ion-content>

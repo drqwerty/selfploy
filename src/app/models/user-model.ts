@@ -1,6 +1,6 @@
 export enum UserRole {
   client = 0,
-  profesional = 1
+  professional = 1
 }
 
 export class User {

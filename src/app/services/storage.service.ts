@@ -20,8 +20,9 @@ export class StorageService {
     })
   }
 
-  getUserProfile() {
-    return Storage.get({ key: 'user' });
+  async getUserProfile(): Promise<User> {
+    const user = await Storage.get({ key: 'user' });
+    return JSON.parse(user.value);
   }
 
   removeUserProfile() {
