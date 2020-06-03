@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/auth";
-import { User } from '../models/user-model';
+import { User, UserRole } from '../models/user-model';
 import { BehaviorSubject } from 'rxjs';
 import { StorageService } from './storage.service';
 
@@ -133,6 +133,7 @@ export class AuthService {
   }
 
   createAndSaveUserProfile(user: User, signUpPromise: Promise<firebase.auth.UserCredential>) {
+    user.profileCompleted = user.role === UserRole.client;
     return new Promise((resolve, reject) => {
       signUpPromise
         .then(userCrendential => {

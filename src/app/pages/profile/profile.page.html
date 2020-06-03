@@ -4,8 +4,8 @@
   <ion-toolbar [color]="brackgroundColor">
     <ion-title color="light">Perfil</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onClick()">
-        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      <ion-button (click)="presentPopover($event)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

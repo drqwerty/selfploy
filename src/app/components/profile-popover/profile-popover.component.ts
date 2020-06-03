@@ -1,0 +1,64 @@
+import { Component } from '@angular/core';
+import { AlertController, Platform, PopoverController, NavController } from '@ionic/angular';
+import { playLogoutAnimation } from "../../animations/log-in-out-transition";
+import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
+
+import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { AuthService } from 'src/app/services/auth.service';
+const { StatusBar } = Plugins;
+
+@Component({
+  selector: 'app-profile-popover',
+  templateUrl: './profile-popover.component.html',
+  styleUrls: ['./profile-popover.component.scss'],
+})
+export class ProfilePopoverComponent {
+
+  currentPopover: HTMLIonPopoverElement;
+
+  constructor(
+    private popoverController: PopoverController,
+    private AF: AuthService,
+    private alertController: AlertController,
+    private platform: Platform,
+    private nav: NavController,
+  ) { 
+    popoverController.getTop().then(el => this.currentPopover = el)
+  }
+
+  async editProfile() {
+    this.currentPopover.animated = false;
+    await this.popoverController.dismiss();
+    tabBarAnimateOut();
+    this.nav.navigateForward('tabs/profile/edit')
+  }
+
+  async logout() {
+    const alert = await this.alertController.create({
+      cssClass: 'logout-confirm',
+      header: 'Cerrar sesión',
+      message: 'Se cerrará la sesión actual, ¿quieres continuar?',
+      buttons: [
+        {
+          text: 'No, ¡espera!',
+          role: 'cancel',
+        }, {
+          cssClass: 'confirm-button',
+          text: 'Cerrar sesión',
+          handler: async () => {
+            await this.popoverController.dismiss();
+            StatusBar.setStyle({ style: StatusBarStyle.Dark });
+            // this.AF.logout();
+            await playLogoutAnimation(this.platform.height());
+            this.nav.navigateRoot('main', { animated: false });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+
+
+}

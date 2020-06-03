@@ -27,6 +27,34 @@
 
 @import "theme/fonts.scss";
 
+.popover-content {
+  --width: auto;
+  border-radius: 10px !important;
+
+  ion-item {
+    --padding-end: 30px;
+  }
+}
+
+.logout-confirm {
+  .alert-wrapper {
+    border-radius: 10px !important;
+  }
+
+  button {
+    text-transform: none !important;
+    margin-bottom: 10px !important;
+
+    &.confirm-button {
+      background-color: var(--ion-color-danger);
+      padding: 10px 15px;
+      border-radius: 10px;
+      color: white;
+      margin: 0px 14px 10px;
+    }
+  }
+}
+
 fiv-app-bar {
   --fiv-appbar-background-color: #fff !important;
   --fiv-icon-color: #666666;

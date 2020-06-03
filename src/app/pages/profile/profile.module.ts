@@ -8,6 +8,7 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module';
+import { ProfilePopoverComponent } from 'src/app/components/profile-popover/profile-popover.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,9 @@ import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module
     ProfilePageRoutingModule,
     StatusBarModule,
   ],
-  declarations: [ProfilePage]
+  declarations: [
+    ProfilePage,
+    ProfilePopoverComponent,
+  ]
 })
 export class ProfilePageModule {}
