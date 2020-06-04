@@ -11,4 +11,6 @@ export class User {
   token: string;
   hasProfilePic: boolean;
   profileCompleted: boolean;
+  companyName: string;
+  about: string;
 }

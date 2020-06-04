@@ -1,29 +1,168 @@
 <status-bar color="#fff"></status-bar>
 
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>profile-edit</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
         <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="goBack()" color="primary" class="no-transform">
+        Guardar
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <p>Et alias quia fugiat. Non ea qui dolor recusandae perspiciatis. Excepturi laboriosam repellendus voluptatem nesciunt qui velit ipsam.</p>
-  <p>Ut dolorum non sed quaerat ut. Dolorum nesciunt omnis cumque non perferendis. Sit fugit quod quas ut. Voluptatum id illo quae dignissimos accusamus atque quia. Qui voluptatem non.</p>
-  <p>Eos reiciendis magnam rerum dolor facilis commodi. Voluptatem ut quo quis error. Sit officiis et repudiandae illo ad. Inventore ab asperiores et quis qui. Accusamus qui iusto possimus voluptatem officia aliquam illo.</p>
-  <p>Optio vel quam assumenda tenetur. Nihil doloremque perspiciatis numquam qui. Atque voluptatem animi et mollitia dolore sunt numquam aut quia. Qui fugit harum vitae qui veniam ut corrupti impedit. Et voluptatem iusto.</p>
-  <p>At accusantium fugiat explicabo aut deserunt. Nemo autem doloribus sequi in dolores expedita deserunt necessitatibus corporis. Iusto rerum laboriosam. Dolorum pariatur enim iste ullam eligendi exercitationem. Sit nemo sed similique quo. Aut vero minima dolores sit quod dicta quis est.</p>
-  <p>Eos inventore dicta ut quia officiis blanditiis provident quo quis. Dolores nam maxime non itaque aut saepe quo vitae ut. Dolorem a sit non illo exercitationem animi.</p>
-  <p>Aut qui molestiae repellat enim qui ut deserunt. Repellendus molestiae labore suscipit quia ex ad perspiciatis. Esse expedita ut et adipisci doloribus omnis. Odit voluptatibus dolores corrupti sed. Dolorem ut accusamus. Rerum ea facilis voluptatem aut voluptatem laboriosam.</p>
-  <p>Et alias quia fugiat. Non ea qui dolor recusandae perspiciatis. Excepturi laboriosam repellendus voluptatem nesciunt qui velit ipsam.</p>
-  <p>Ut dolorum non sed quaerat ut. Dolorum nesciunt omnis cumque non perferendis. Sit fugit quod quas ut. Voluptatum id illo quae dignissimos accusamus atque quia. Qui voluptatem non.</p>
-  <p>Eos reiciendis magnam rerum dolor facilis commodi. Voluptatem ut quo quis error. Sit officiis et repudiandae illo ad. Inventore ab asperiores et quis qui. Accusamus qui iusto possimus voluptatem officia aliquam illo.</p>
-  <p>Optio vel quam assumenda tenetur. Nihil doloremque perspiciatis numquam qui. Atque voluptatem animi et mollitia dolore sunt numquam aut quia. Qui fugit harum vitae qui veniam ut corrupti impedit. Et voluptatem iusto.</p>
-  <p>At accusantium fugiat explicabo aut deserunt. Nemo autem doloribus sequi in dolores expedita deserunt necessitatibus corporis. Iusto rerum laboriosam. Dolorum pariatur enim iste ullam eligendi exercitationem. Sit nemo sed similique quo. Aut vero minima dolores sit quod dicta quis est.</p>
-  <p>Eos inventore dicta ut quia officiis blanditiis provident quo quis. Dolores nam maxime non itaque aut saepe quo vitae ut. Dolorem a sit non illo exercitationem animi.</p>
-  <p>Aut qui molestiae repellat enim qui ut deserunt. Repellendus molestiae labore suscipit quia ex ad perspiciatis. Esse expedita ut et adipisci doloribus omnis. Odit voluptatibus dolores corrupti sed. Dolorem ut accusamus. Rerum ea facilis voluptatem aut voluptatem laboriosam.</p>
+<ion-content>
+
+  <div class="img">
+    <div class="profile-img-wrapper">
+
+      <div class="profile-img">
+        <img *ngIf="user?.profilePic" [src]="user?.profilePic">
+      </div>
+
+      <div class="camera-button-wrapper">
+        <ion-fab-button size="small" color="light" mode="ios" (click)="showCameraSourcePrompt()">
+          <ion-icon name="camera-outline"></ion-icon>
+        </ion-fab-button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <ion-list class="user-data-edit" lines="none">
+
+    <ion-item button (click)="editName()">
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          {{headerName}}
+        </ion-text>
+      </ion-label>
+      <ion-input readonly type="text" [value]="user?.name"></ion-input>
+    </ion-item>
+
+    <div class="border"></div>
+
+
+    <ion-item>
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          Correo
+        </ion-text>
+      </ion-label>
+      <ion-input readonly type="email" inputmode="email" [value]="user?.email"></ion-input>
+    </ion-item>
+
+    <div class="border"></div>
+
+
+    <ion-item>
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          Contraseña
+        </ion-text>
+      </ion-label>
+      <ion-input readonly type="password" value="super password"></ion-input>
+    </ion-item>
+
+    <div class="border"></div>
+
+
+    <ion-item button (click)="editCompany()">
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          {{headerCompany}} - <span>Opcional</span>
+        </ion-text>
+      </ion-label>
+      <ion-input readonly type="text" [value]="user?.companyName"></ion-input>
+    </ion-item>
+
+    <div class="border"></div>
+
+
+    <ion-item button>
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          Servicios
+        </ion-text>
+      </ion-label>
+      <ion-input readonly type="text"></ion-input>
+    </ion-item>
+
+    <div class="border"></div>
+
+
+    <ion-item>
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          Horario
+        </ion-text>
+      </ion-label>
+      <ion-list class="checkbox-list">
+        <ion-item>
+          <ion-checkbox slot="start"></ion-checkbox>
+          <ion-label color="tertiary">Mañana</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-checkbox slot="start"></ion-checkbox>
+          <ion-label color="tertiary">Tarde</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-checkbox slot="start"></ion-checkbox>
+          <ion-label>
+            <ion-label color="tertiary">Noche</ion-label>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-checkbox slot="start"></ion-checkbox>
+          <ion-label>
+            <ion-label color="tertiary">Flexible</ion-label>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-item>
+
+
+    <ion-item button (click)="editAbout()">
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          {{headerAbout}} - <span>Opcional</span>
+        </ion-text>
+      </ion-label>
+      <ion-textarea readonly type="text" [value]="user?.about"></ion-textarea>
+    </ion-item>
+
+    <div class="border"></div>
+
+
+    <ion-item button>
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          Localización
+        </ion-text>
+      </ion-label>
+      <ion-input readonly type="text"></ion-input>
+    </ion-item>
+
+    <div class="border"></div>
+
+
+    <ion-item button>
+      <ion-label position="stacked">
+        <ion-text color="tertiary">
+          Ámbito de actuación
+        </ion-text>
+      </ion-label>
+      <ion-input readonly type="text"></ion-input>
+    </ion-item>
+
+    <div class="border"></div>
+
+
+  </ion-list>
+
 </ion-content>

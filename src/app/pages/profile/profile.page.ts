@@ -36,7 +36,6 @@ export class ProfilePage {
     const popover = await this.popoverController.create({
       component: ProfilePopoverComponent,
       event: ev,
-      translucent: true
     });
     return await popover.present();
   }

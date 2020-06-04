@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { User, UserRole } from '../models/user-model';
-import { BehaviorSubject } from 'rxjs';
 import { StorageService } from './storage.service';
 
 import "@codetrix-studio/capacitor-google-auth";
@@ -22,6 +21,7 @@ const fromURLtoBase64 = (url: string) =>
       reader.onerror = reject
       reader.readAsDataURL(blob)
     }))
+    .catch(() => url)
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +62,9 @@ export class AuthService {
   getGoogleUser() {
     return GoogleAuth.signIn()
       .then(async googleUser => {
-        const profilePic = await fromURLtoBase64(googleUser.imageUrl.substring(0, googleUser.imageUrl.lastIndexOf('=')) + '=s320');
+        const imageUrl = googleUser.imageUrl.substring(0, googleUser.imageUrl.lastIndexOf('=')) + '=s320';
+        const profilePic = await fromURLtoBase64(imageUrl);
+        // const profilePic = imageUrl;
         return {
           email: googleUser.email,
           name: googleUser.displayName ?? googleUser.name,

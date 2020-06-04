@@ -1,0 +1,34 @@
+<ion-list class="input-edit">
+  <ion-item>
+    <ion-label position="stacked">
+      <ion-text color="tertiary">
+        {{title}}
+      </ion-text>
+    </ion-label>
+
+    <form [formGroup]="form" (ngSubmit)="accept()">
+      <ion-input *ngIf="type === 'input'; else textArea" type="text" formControlName="value"></ion-input>
+
+      <ng-template #textArea>
+        <ion-textarea formControlName="value"></ion-textarea>
+      </ng-template>
+
+    </form>
+  </ion-item>
+
+  <div class="border"></div>
+
+</ion-list>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        Cancelar
+      </ion-button>
+      <ion-button [disabled]="form.invalid" (click)="accept()" class="confirm-button">
+        Guardar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

@@ -35,7 +35,7 @@ export class ImageCropperComponent {
     this.modalController.dismiss();
   }
 
-  acept() {
+  accept() {
     this.imageCropper.crop()
     this.modalController.dismiss({
       image: this.croppedImage

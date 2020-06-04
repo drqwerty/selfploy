@@ -13,13 +13,13 @@ const { Camera } = Plugins;
 export class CameraSourceActionSheetComponent {
 
   @Input() showRemoveButton: boolean;
-  @Input() profilePic: any;
+  @Input() profilePic: string;
   @Input() imageWithoutCrop: string;
 
   modalRoot: HTMLIonModalElement;
   modalCropper: HTMLIonModalElement;
   loading: HTMLIonLoadingElement;
-
+  showEditButton = false;
 
 
   constructor(
@@ -27,6 +27,10 @@ export class CameraSourceActionSheetComponent {
     private loadingController: LoadingController
   ) {
     modalController.getTop().then(modal => this.modalRoot = modal);
+  }
+
+  ionViewWillEnter() {
+    this.showEditButton = this.profilePic?.startsWith('data');
   }
 
   addImage() {

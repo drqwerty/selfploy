@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { TabsPage } from './tabs.page';
+import { ProfileCompletedGuardService } from 'src/app/services/profile-completed-guard.service';
 
 const routes: Routes = [
   {
@@ -11,23 +12,27 @@ const routes: Routes = [
       { path: '', redirectTo: 'profile' },
       {
         path: 'categories',
-        loadChildren: () => import('../categories/categories.module').then(m => m.CategoriesPageModule)
+        loadChildren: () => import('../categories/categories.module').then(m => m.CategoriesPageModule),
+        canActivate: [ProfileCompletedGuardService],
       },
       {
         path: 'request-list',
-        loadChildren: () => import('../request-list/request-list.module').then(m => m.RequestListPageModule)
+        loadChildren: () => import('../request-list/request-list.module').then(m => m.RequestListPageModule),
+        canActivate: [ProfileCompletedGuardService],
       },
       {
         path: 'favorites',
-        loadChildren: () => import('../favorites/favorites.module').then(m => m.FavoritesPageModule)
+        loadChildren: () => import('../favorites/favorites.module').then(m => m.FavoritesPageModule),
+        canActivate: [ProfileCompletedGuardService],
       },
       {
         path: 'profile',
-        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule),
+        canActivate: [ProfileCompletedGuardService],
       },
       {
         path: 'profile/edit',
-        loadChildren: () => import('../profile-edit/profile-edit.module').then( m => m.ProfileEditPageModule)
+        loadChildren: () => import('../profile-edit/profile-edit.module').then(m => m.ProfileEditPageModule),
       },
     ]
   },

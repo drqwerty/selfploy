@@ -27,6 +27,33 @@
 
 @import "theme/fonts.scss";
 
+
+.no-transform {
+  transform: none !important;
+  text-transform: none !important;
+}
+
+.ion-invisible {
+  visibility: hidden;
+}
+
+.border-radius {
+  border-radius: 15px;
+  --border-radius: 15px;
+}
+
+.background-transparent {
+  background-color: transparent !important;
+}
+
+.no-shadow {
+  box-shadow: none !important;
+}
+
+.swiper-scrollbar {
+  visibility: hidden;
+}
+
 .popover-content {
   --width: auto;
   border-radius: 10px !important;
@@ -97,31 +124,6 @@ fiv-app-bar {
   }
 }
 
-.no-transform {
-  transform: none !important;
-}
-
-.ion-invisible {
-  visibility: hidden;
-}
-
-.border-radius {
-  border-radius: 15px;
-  --border-radius: 15px;
-}
-
-.background-transparent {
-  background-color: transparent !important;
-}
-
-.no-shadow {
-  box-shadow: none !important;
-}
-
-.swiper-scrollbar {
-  visibility: hidden;
-}
-
 ion-list ion-item {
   // --inner-padding-end: 0;
 }
@@ -157,6 +159,11 @@ ion-modal {
   &.action-sheet {
     --height: auto;
 
+    &.border-top-radius .modal-wrapper {
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
     ion-backdrop {
       --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
     }
@@ -164,8 +171,6 @@ ion-modal {
     .modal-wrapper {
       position: absolute;
       bottom: 0;
-      border-top-left-radius: 0px;
-      border-top-right-radius: 0px;
       --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
 
       .ion-page {
