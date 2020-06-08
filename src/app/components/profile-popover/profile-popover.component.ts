@@ -48,7 +48,7 @@ export class ProfilePopoverComponent {
           handler: async () => {
             await this.popoverController.dismiss();
             StatusBar.setStyle({ style: StatusBarStyle.Dark });
-            // this.AF.logout();
+            this.AF.logout();
             await playLogoutAnimation(this.platform.height());
             this.nav.navigateRoot('main', { animated: false });
           }

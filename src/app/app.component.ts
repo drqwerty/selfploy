@@ -29,7 +29,7 @@ export class AppComponent {
 
   ) {
     registerWebPlugin(FacebookLogin);
-    // this.initializeApp();
+    this.initializeApp();
   }
 
   initializeApp() {
