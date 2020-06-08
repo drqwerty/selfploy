@@ -3,7 +3,7 @@ import { NavController, ModalController, LoadingController, ToastController } fr
 import { createAnimation, Animation } from '@ionic/core';
 import { AuthService } from '../../services/auth.service';
 import { LoginRegisterComponent } from '../../components/login-register/login-register.component';
-import { ModalAnimationFadeWithMoveConentEnter, ModalAnimationFadeWithMoveConentLeave } from '../../animations/page-transitions';
+import { ModalAnimationFadeWithMoveContentEnter, ModalAnimationFadeWithMoveContentLeave } from '../../animations/page-transitions';
 import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast-transitions';
 import { BehaviorSubject } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
@@ -97,8 +97,8 @@ export class MainPage {
     const modal = await this.modalController.create({
       component: LoginRegisterComponent,
       componentProps,
-      enterAnimation: ModalAnimationFadeWithMoveConentEnter,
-      leaveAnimation: ModalAnimationFadeWithMoveConentLeave,
+      enterAnimation: ModalAnimationFadeWithMoveContentEnter,
+      leaveAnimation: ModalAnimationFadeWithMoveContentLeave,
     });
     modal.onDidDismiss().then(() => this.playBackgroundAnimation(true));
     return modal;

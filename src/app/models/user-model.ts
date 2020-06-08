@@ -1,6 +1,13 @@
 export enum UserRole {
-  client = 0,
-  professional = 1
+  client,
+  professional,
+}
+
+export enum WorkingHours {
+  morning = 'mañana',
+  afternoon = 'tarde',
+  evening = 'noche',
+  flexible = 'flexible'
 }
 
 export class User {
@@ -13,4 +20,6 @@ export class User {
   profileCompleted: boolean;
   companyName: string;
   about: string;
+  services: any;
+  workingHours: WorkingHours[];
 }

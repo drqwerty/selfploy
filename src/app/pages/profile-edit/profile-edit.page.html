@@ -8,7 +8,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="goBack()" color="primary" class="no-transform">
+      <ion-button (click)="updateUser()" color="primary" class="no-transform">
         Guardar
       </ion-button>
     </ion-buttons>
@@ -44,7 +44,6 @@
       </ion-label>
       <ion-input readonly type="text" [value]="user?.name"></ion-input>
     </ion-item>
-
     <div class="border"></div>
 
 
@@ -56,7 +55,6 @@
       </ion-label>
       <ion-input readonly type="email" inputmode="email" [value]="user?.email"></ion-input>
     </ion-item>
-
     <div class="border"></div>
 
 
@@ -68,7 +66,6 @@
       </ion-label>
       <ion-input readonly type="password" value="super password"></ion-input>
     </ion-item>
-
     <div class="border"></div>
 
 
@@ -80,50 +77,34 @@
       </ion-label>
       <ion-input readonly type="text" [value]="user?.companyName"></ion-input>
     </ion-item>
-
     <div class="border"></div>
 
 
-    <ion-item button>
+    <ion-item button (click)="editServices()">
       <ion-label position="stacked">
         <ion-text color="tertiary">
           Servicios
         </ion-text>
       </ion-label>
-      <ion-input readonly type="text"></ion-input>
+      <div class="user-options-list ion-text-capitalize">
+        <ng-container *ngFor="let services of user?.services | keyvalue ">
+          <span *ngFor="let service of services.value" class="list-item">{{service}}</span>
+        </ng-container>
+      </div>
     </ion-item>
-
     <div class="border"></div>
 
 
-    <ion-item>
+    <ion-item (click)="editWorkingHours()">
       <ion-label position="stacked">
         <ion-text color="tertiary">
           Horario
         </ion-text>
       </ion-label>
-      <ion-list class="checkbox-list">
-        <ion-item>
-          <ion-checkbox slot="start"></ion-checkbox>
-          <ion-label color="tertiary">Mañana</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-checkbox slot="start"></ion-checkbox>
-          <ion-label color="tertiary">Tarde</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-checkbox slot="start"></ion-checkbox>
-          <ion-label>
-            <ion-label color="tertiary">Noche</ion-label>
-          </ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-checkbox slot="start"></ion-checkbox>
-          <ion-label>
-            <ion-label color="tertiary">Flexible</ion-label>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+      <div class="user-options-list ion-text-capitalize">
+        <span *ngFor="let workingHour of user?.workingHours" class="list-item">{{workingHour}}</span>
+      </div>
+      
     </ion-item>
 
 
@@ -133,9 +114,8 @@
           {{headerAbout}} - <span>Opcional</span>
         </ion-text>
       </ion-label>
-      <ion-textarea readonly type="text" [value]="user?.about"></ion-textarea>
+      <ion-textarea rows="1" autosize readonly type="text" [value]="user?.about"></ion-textarea>
     </ion-item>
-
     <div class="border"></div>
 
 
@@ -147,7 +127,6 @@
       </ion-label>
       <ion-input readonly type="text"></ion-input>
     </ion-item>
-
     <div class="border"></div>
 
 
@@ -159,7 +138,6 @@
       </ion-label>
       <ion-input readonly type="text"></ion-input>
     </ion-item>
-
     <div class="border"></div>
 
 

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AuthService } from './auth.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({
@@ -13,10 +12,11 @@ export class AuthGuardService implements CanActivate {
     private AFAuth: AngularFireAuth) { }
 
   canActivate(route: ActivatedRouteSnapshot) {
-    return this.AFAuth.currentUser.then(authenticated => {
-      if (authenticated) return true;
-      this.router.navigateByUrl('main');
-      return false;
-    })
+    // return this.AFAuth.currentUser.then(authenticated => {
+    //   if (authenticated) return true;
+    //   this.router.navigateByUrl('main');
+    //   return false;
+    // })
+    return true;
   }
 }

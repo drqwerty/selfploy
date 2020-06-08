@@ -70,28 +70,18 @@
 
   .border {
     margin: 0 16px;
-    border-color: var(--ion-color-primary);
+    // border-color: var(--ion-color-primary);
+    border-color: #fff;
     border-style: solid;
     border-width: 0;
-    border-top-width: 1px;
+    border-top-width: 5px;
   }
 
+  .user-options-list {
+    padding: 8px 20px 8px 10px;
 
-  .checkbox-list {
-    width: 100%;
-
-    ion-item {
-      margin-top: 0;
-
-      ion-checkbox {
-        margin-top: 12px;
-        margin-bottom: 12px;
-      }
-
-      ion-label {
-        margin-top: 0;
-        margin-bottom: 0;
-      }
+    .list-item:not(:last-child)::after {
+      content: ', ';
     }
   }
 

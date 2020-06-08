@@ -10,7 +10,7 @@
       <ion-input *ngIf="type === 'input'; else textArea" type="text" formControlName="value"></ion-input>
 
       <ng-template #textArea>
-        <ion-textarea formControlName="value"></ion-textarea>
+        <ion-textarea rows="1" autosize [maxRows]="6" formControlName="value"></ion-textarea>
       </ng-template>
 
     </form>
@@ -20,7 +20,7 @@
 
 </ion-list>
 
-<ion-footer class="ion-no-border">
+<ion-footer class="ion-no-border buttons-cancel-confirm">
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button (click)="cancel()">

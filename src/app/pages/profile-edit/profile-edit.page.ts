@@ -10,6 +10,10 @@ import { CameraSourceActionSheetComponent } from 'src/app/components/camera-sour
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 const { StatusBar } = Plugins;
 
+import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
+import { ServicePickerComponent } from 'src/app/components/service-picker/service-picker.component';
+import { WorkingHoursPickerComponent } from 'src/app/components/working-hours-picker/working-hours-picker.component';
+
 @Component({
   selector: 'app-profile-edit',
   templateUrl: './profile-edit.page.html',
@@ -53,6 +57,10 @@ export class ProfileEditPage {
     this.navController.pop();
   }
 
+  updateUser() {
+    this.storage.saveUserProfile(this.user);
+  }
+
   async showCameraSourcePrompt() {
     this.removePictureToast?.dismiss();
     const modal = await this.modalController.create({
@@ -91,62 +99,68 @@ export class ProfileEditPage {
     this.removePictureToast.present();
   }
 
-  async editName() {
-    const modal = await this.createInputBottomSheet(
-      this.headerName,
-      this.user.name,
-    );
+  editName() {
+    this.presentInputBottomSheet(this.headerName, 'name');
+  }
+
+  editCompany() {
+    this.presentInputBottomSheet(this.headerCompany, 'companyName');
+  }
+
+  editAbout() {
+    this.presentInputBottomSheet(this.headerAbout, 'about', 'text-area');
+  }
+
+  async editServices() {
+    const modal = await this.modalController.create({
+      component: ServicePickerComponent,
+      enterAnimation: ModalAnimationSlideWithOpacityEnter,
+      leaveAnimation: ModalAnimationSlideWithOpacityLeave,
+      componentProps: { userServices: this.user.services }
+    });
 
     modal.onWillDismiss().then(({ data }) => {
-      if (data) this.user.name = data.value
+      if (data) this.user.services = data.value;
     });
 
     modal.present();
   }
 
-  async editCompany() {
-    const modal = await this.createInputBottomSheet(
-      this.headerCompany,
-      this.user.companyName,
-    );
+  async editWorkingHours() {
+    const modal = await this.modalController.create({
+      component: WorkingHoursPickerComponent,
+      cssClass: 'modal-working-hours',
+      componentProps: { userWorkingHours: this.user.workingHours }
+    });
 
     modal.onWillDismiss().then(({ data }) => {
-      if (data) this.user.companyName = data.value
+      if (data) this.user.workingHours = data.value;
     });
 
     modal.present();
   }
 
-  async editAbout() {
-    const modal = await this.createInputBottomSheet(
-      this.headerAbout,
-      this.user.about,
-      'text-area',
-    );
-
-    modal.onWillDismiss().then(({ data }) => {
-      if (data) this.user.about = data.value
-    });
-
-    modal.present();
-  }
-
-  createInputBottomSheet(title, formState, type: 'input' | 'text-area' = 'input') {
-    return this.modalController.create({
+  async presentInputBottomSheet(title, userProperty, type: 'input' | 'text-area' = 'input') {
+    const modal = await this.modalController.create({
       component: InputBottomSheetComponent,
       cssClass: 'action-sheet border-top-radius',
       componentProps: {
         type,
         title,
         form: this.formBuilder.group({
-          value: new FormControl(formState, [
+          value: new FormControl(this.user[userProperty], [
             Validators.required,
             Validators.minLength(3),
           ]),
         })
       },
     });
-  }
 
+    modal.onWillDismiss().then(({ data }) => {
+      if (data) this.user[userProperty] = data.value
+    });
+
+    modal.present();
+  }
 
 }

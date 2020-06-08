@@ -1,0 +1,19 @@
+  <ion-list lines="none">
+    <ion-item *ngFor="let workingHour of workingHours">
+      <ion-checkbox slot="start" [(ngModel)]="workingHour.checked"></ion-checkbox>
+      <ion-label class="ion-text-capitalize" color="tertiary">{{workingHour.name}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-footer class="buttons-cancel-confirm">
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button (click)="cancel()">
+          Cancelar
+        </ion-button>
+        <ion-button [disabled]="false" (click)="accept()" class="confirm-button">
+          Guardar
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>

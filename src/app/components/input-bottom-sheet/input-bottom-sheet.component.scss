@@ -33,19 +33,3 @@
     border-top-width: 1px;
   }
 }
-
-ion-footer {
-  ion-button {
-    text-transform: none;
-    margin: 10px 14px 10px 0;
-    height: 36px;
-
-    &.confirm-button {
-      background-color: var(--ion-color-primary);
-      border-radius: 10px;
-      --padding-start: 20px;
-      --padding-end: 20px;
-      --color: white;
-    }
-  }
-}

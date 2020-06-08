@@ -15,7 +15,7 @@ import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
-import { AuthGuardService } from './services/auth-guard.service';
+import { AuthGuardService } from './guards/auth-guard.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 

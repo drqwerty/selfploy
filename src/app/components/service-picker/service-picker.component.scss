@@ -1,0 +1,21 @@
+.item-category {
+  padding-top: 0;
+  padding-bottom: 0;
+
+  ion-checkbox {
+    position: relative;
+  }
+}
+
+.item-service {
+  padding-top: 0;
+  padding-bottom: 0;
+
+  ion-item {
+    --padding-start: 28px;
+  }
+}
+
+.collapsed {
+  height: 0;
+}

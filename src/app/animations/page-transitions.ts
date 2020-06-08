@@ -56,6 +56,7 @@ export const SlideAnimation = (_: HTMLElement, opts: any) => {
 };
 
 export const ModalAnimationSlideDuration = 400;
+export const ModalAnimationSlideWithOpacityDuration = 300;
 export const ModalAnimationSlideEasing = 'ease';
 
 export const ModalAnimationSlideEnter = (baseEl: any, duration = ModalAnimationSlideDuration, delay = 0) => {
@@ -78,6 +79,33 @@ export const ModalAnimationSlideLeave = (baseEl: any) => {
   return ModalAnimationSlideEnter(baseEl).direction('reverse');
 };
 
+export const ModalAnimationSlideWithOpacityEnter = (baseEl: any, reverse = false) => {
+
+  const leaving = createAnimation()
+    .addElement(document.querySelector('app-tabs.ion-page'))
+    .fromTo('transform', 'translateX(0%)', 'translateX(-50%)')
+    .duration(ModalAnimationSlideWithOpacityDuration)
+    .fromTo('opacity', '1', '0.3')
+    .easing('ease-out')
+    ;
+    
+    const wrapperAnimation = createAnimation()
+    .addElement(baseEl.querySelector('.modal-wrapper'))
+    .beforeAddClass(['background-transparent', 'no-shadow'])
+    .fromTo('transform', 'translateX(100%)', 'translateX(0)')
+    .fromTo('opacity', '1', '1')
+    .duration(ModalAnimationSlideWithOpacityDuration)
+    .easing('ease-out')
+    ;
+
+  return createAnimation()
+    .addAnimation([leaving, wrapperAnimation]);
+};
+
+export const ModalAnimationSlideWithOpacityLeave = (baseEl: any) => {
+  return ModalAnimationSlideWithOpacityEnter(baseEl, true).direction('reverse');
+};
+
 export const ModalAnimationFadeEnter = (baseEl: any, duration = ModalAnimationSlideDuration) => {
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.modal-wrapper'))
@@ -96,7 +124,7 @@ export const ModalAnimationFadeLeave = (baseEl: any) => {
   return ModalAnimationFadeEnter(baseEl).direction('reverse');
 };
 
-export const ModalAnimationFadeWithMoveConentEnter = (baseEl: any, duration = ModalAnimationSlideDuration) => {
+export const ModalAnimationFadeWithMoveContentEnter = (baseEl: any, duration = ModalAnimationSlideDuration) => {
   const wrapperAnimation = createAnimation()
     .addElement(baseEl.querySelector('.modal-wrapper'))
     .beforeAddClass(['no-transform'])
@@ -117,6 +145,6 @@ export const ModalAnimationFadeWithMoveConentEnter = (baseEl: any, duration = Mo
     .addAnimation([wrapperAnimation, contentAnimation]);
 };
 
-export const ModalAnimationFadeWithMoveConentLeave = (baseEl: any) => {
-  return ModalAnimationFadeWithMoveConentEnter(baseEl).direction('reverse');
+export const ModalAnimationFadeWithMoveContentLeave = (baseEl: any) => {
+  return ModalAnimationFadeWithMoveContentEnter(baseEl).direction('reverse');
 };

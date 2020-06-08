@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { TabsPage } from './tabs.page';
-import { ProfileCompletedGuardService } from 'src/app/services/profile-completed-guard.service';
+import { ProfileCompletedGuardService } from 'src/app/guards/profile-completed-guard.service';
 
 const routes: Routes = [
   {
