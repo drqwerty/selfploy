@@ -86,9 +86,9 @@
           Servicios
         </ion-text>
       </ion-label>
-      <div class="user-options-list ion-text-capitalize">
+      <div class="user-options-list">
         <ng-container *ngFor="let services of user?.services | keyvalue ">
-          <span *ngFor="let service of services.value" class="list-item">{{service}}</span>
+          <span upperCaseFirstLetter *ngFor="let service of services.value" class="list-item">{{service}}</span>
         </ng-container>
       </div>
     </ion-item>
@@ -101,8 +101,8 @@
           Horario
         </ion-text>
       </ion-label>
-      <div class="user-options-list ion-text-capitalize">
-        <span *ngFor="let workingHour of user?.workingHours" class="list-item">{{workingHour}}</span>
+      <div class="user-options-list">
+        <span upperCaseFirstLetter *ngFor="let workingHour of user?.workingHours" class="list-item">{{workingHour}}</span>
       </div>
     </ion-item>
 
