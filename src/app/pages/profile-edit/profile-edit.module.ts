@@ -13,6 +13,8 @@ import { ServicePickerComponent } from 'src/app/components/service-picker/servic
 import { WorkingHoursPickerComponent } from 'src/app/components/working-hours-picker/working-hours-picker.component';
 
 import {AutosizeModule} from 'ngx-autosize';
+import { MapLocationModule } from 'src/app/components/map-location/map-location.module';
+import { MapRangeModule } from 'src/app/components/map-range/map-range.module';
 
 @NgModule({
   imports: [
@@ -23,6 +25,8 @@ import {AutosizeModule} from 'ngx-autosize';
     StatusBarModule,
     InputBottomSheetModule,
     AutosizeModule,
+    MapLocationModule,
+    MapRangeModule,
   ],
   declarations: [
     ProfileEditPage,

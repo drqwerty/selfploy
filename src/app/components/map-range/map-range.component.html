@@ -1,0 +1,50 @@
+<status-bar color="#fff"></status-bar>
+
+<ion-content>
+
+  <ion-fab vertical="top" horizontal="start" slot="fixed">
+    <ion-fab-button size="small" (click)="goBack()" color="light" class="ion-margin-top">
+      <ion-icon name="chevron-back-outline" color="tertiary"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <img class="gradient top absolute" src="../../../assets/background-drawings/gradient.png">
+  <div id="map">
+  </div>
+  <img class="gradient bottom absolute" src="../../../assets/background-drawings/gradient.png">
+
+</ion-content>
+
+
+<ion-footer class="ion-no-border buttons-cancel-confirm">
+
+
+  <ion-toolbar>
+    <ion-list lines="none" class="ion-no-padding">
+      <ion-item>
+        <ion-label>
+          <ion-text color="tertiary">
+            <h2 class="font-weight-600">Ámbito de actuación</h2>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-range mode="ios" [min]="min" [max]="max" pin color="primary" [(ngModel)]="radiusKm" (ionChange)="updateCircleRadius()">
+        </ion-range>
+      </ion-item>
+    </ion-list>
+  </ion-toolbar>
+
+
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="goBack()">
+        Cancelar
+      </ion-button>
+      <ion-button [disabled]="radiusKm == 0" (click)="accept()" class="confirm-button">
+        Guardar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

@@ -1,3 +1,5 @@
+import { LatLng } from 'leaflet';
+
 export enum UserRole {
   client,
   professional,
@@ -22,4 +24,9 @@ export class User {
   about: string;
   services: any;
   workingHours: WorkingHours[];
+  hideLocationAccuracy: boolean;
+  addressFull: string;
+  addressCity: string;
+  coordinates: LatLng;
+  radiusKm: number;
 }

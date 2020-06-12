@@ -31,7 +31,7 @@ export class ServicePickerComponent {
   
   accept() {
     this.getServicesSelected();
-    this.modalController.dismiss({ value: this.userServices });
+    this.modalController.dismiss(this.userServices);
   }
 
   cancel() {

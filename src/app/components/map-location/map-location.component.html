@@ -1,0 +1,66 @@
+<status-bar color="#fff"></status-bar>
+
+<ion-content>
+
+  <ion-fab vertical="top" horizontal="start" slot="fixed">
+    <ion-fab-button size="small" (click)="goBack()" color="light" class="ion-margin-top">
+      <ion-icon name="chevron-back-outline" color="tertiary"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" (click)="search()" color="light" class="ion-margin-vertical">
+      <ion-icon name="search-outline" color="tertiary"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button size="small" (click)="locate()" color="light" class="ion-margin-top">
+      <ion-icon name="locate-outline" [color]="myLocationColor"></ion-icon>
+      <div #innerLocationCircle [class.ion-invisible]="locationStatus == undefined" class="location-button-inner-circle"
+        [class]="myLocationColor"></div>
+    </ion-fab-button>
+  </ion-fab>
+
+
+  <img class="gradient top absolute" src="../../../assets/background-drawings/gradient.png">
+  <div id="map">
+    <img src="../../../assets/marker-location-picker.svg"
+      style="position: absolute; z-index: 500; right: 50%; bottom: 50%;">
+  </div>
+
+  <div class="current-address">
+    <img class="gradient bottom" src="../../../assets/background-drawings/gradient.png">
+    <div class="ion-padding-horizontal ion-padding-top" style="background-color: white;">
+      <p class="ion-no-margin">Localización actual</p>
+        <h6 class="ion-no-margin" style="color: var(--ion-color-primary);">{{addressFull}}</h6>
+    </div>
+  </div>
+
+</ion-content>
+
+
+<ion-footer class="ion-no-border buttons-cancel-confirm">
+
+  <ion-toolbar>
+    <ion-list lines="none" class="ion-no-padding">
+      <ion-item>
+        <ion-label (click)="hideLocationAccuracy = !hideLocationAccuracy">
+          <ion-text color="tertiary">
+            <h2 class="font-weight-600">Ocultar localización precisa</h2>
+          </ion-text>
+          <p class="font-weight-600">(Recomendado)</p>
+        </ion-label>
+        <ion-toggle [(ngModel)]="hideLocationAccuracy"></ion-toggle>
+      </ion-item>
+    </ion-list>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="goBack()">
+        Cancelar
+      </ion-button>
+      <ion-button [disabled]="addressFull == ''" (click)="accept()" class="confirm-button">
+        Guardar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

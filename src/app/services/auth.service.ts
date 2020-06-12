@@ -6,7 +6,7 @@ import { StorageService } from './storage.service';
 import "@codetrix-studio/capacitor-google-auth";
 import { Plugins } from '@capacitor/core';
 const { GoogleAuth } = Plugins;
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import { FirestoreService } from './firestore.service';
 import { FirebaseStorage } from './firebase-storage.service';
 
@@ -49,8 +49,7 @@ export class AuthService {
   async loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
     try {
       const userCrendential = await signInPromise;
-      const documentSnapshot = await this.firestoreService.loadUserProfile(userCrendential.user.uid);
-      const user: User = documentSnapshot.data().d;
+      const user = await this.firestoreService.getUserProfile(userCrendential.user.uid);
       if (user.hasProfilePic) user.profilePic = await this.fStorage.getUserProfilePic(userCrendential.user.uid);
       await this.storageService.saveUserProfile(user);
       return userCrendential;

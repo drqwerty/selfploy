@@ -104,7 +104,6 @@
       <div class="user-options-list ion-text-capitalize">
         <span *ngFor="let workingHour of user?.workingHours" class="list-item">{{workingHour}}</span>
       </div>
-      
     </ion-item>
 
 
@@ -118,25 +117,25 @@
     </ion-item>
     <div class="border"></div>
 
-
-    <ion-item button>
+    
+    <ion-item button (click)="editLocation()">
       <ion-label position="stacked">
         <ion-text color="tertiary">
           Localización
         </ion-text>
       </ion-label>
-      <ion-input readonly type="text"></ion-input>
+      <ion-textarea rows="1" autosize readonly type="text" [value]="user?.hideLocationAccuracy ? user?.addressCity: user?.addressFull"></ion-textarea>
     </ion-item>
     <div class="border"></div>
 
 
-    <ion-item button>
+    <ion-item button (click)="editRange()">
       <ion-label position="stacked">
         <ion-text color="tertiary">
           Ámbito de actuación
         </ion-text>
       </ion-label>
-      <ion-input readonly type="text"></ion-input>
+      <ion-input readonly type="text" [value]="user?.radiusKm ? user?.radiusKm + ' km' : ''"></ion-input>
     </ion-item>
     <div class="border"></div>
 

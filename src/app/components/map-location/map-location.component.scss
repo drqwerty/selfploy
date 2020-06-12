@@ -1,0 +1,50 @@
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+.gradient {
+  z-index: 1000;
+  width: 100%;
+  height: 10px;
+
+  &.absolute {
+    position: absolute;
+  }
+
+  &.top {
+    top: 0;
+    transform: scaleY(-1)
+  }
+
+  &.bottom {
+    top: 0;
+    display: block;
+  }
+}
+
+ion-fab-button {
+  .location-button-inner-circle {
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 100%;
+    background-color: var(--ion-color-tertiary);
+
+    &.primary {
+      background-color: var(--ion-color-primary);
+    }
+  }
+}
+
+.current-address {
+  position: absolute;
+  bottom: 0;
+  z-index: 500;
+  width: 100%;
+
+  p {
+    font-size: 14px;
+    padding-bottom: 8px;
+  }
+}

@@ -41,7 +41,7 @@ export class WorkingHoursPickerComponent {
 
   accept() {
     this.getWorkingHoursSelected();
-    this.modalController.dismiss({ value: this.userWorkingHours });
+    this.modalController.dismiss(this.userWorkingHours);
   }
 
   cancel() {
@@ -49,8 +49,6 @@ export class WorkingHoursPickerComponent {
   }
 
   setWorkingHoursSelected() {
-    console.log(this.userWorkingHours);
-    
     this.workingHours.forEach(workingHour =>
       workingHour.checked = this.userWorkingHours.includes(workingHour.name)
     );
