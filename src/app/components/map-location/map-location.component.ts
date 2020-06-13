@@ -52,7 +52,6 @@ export class MapLocationComponent {
   ionViewWillEnter() {
     this.createMyLocationAnimation();
     StatusBar.setStyle({ style: StatusBarStyle.Light });
-
     this.locationSearched.subscribe(val => this.map.flyToBounds(val));
   }
 

@@ -129,7 +129,7 @@
     <div class="border"></div>
 
 
-    <ion-item button (click)="editRange()">
+    <ion-item button (click)="editRange()" [disabled]="user?.addressFull == null || user?.addressFull == ''">
       <ion-label position="stacked">
         <ion-text color="tertiary">
           Ámbito de actuación

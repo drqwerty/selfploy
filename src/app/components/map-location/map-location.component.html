@@ -30,7 +30,7 @@
     <img class="gradient bottom" src="../../../assets/background-drawings/gradient.png">
     <div class="ion-padding-horizontal ion-padding-top" style="background-color: white;">
       <p class="ion-no-margin">Localización actual</p>
-        <h6 class="ion-no-margin" style="color: var(--ion-color-primary);">{{addressFull}}</h6>
+      <h6 class="ion-no-margin" style="color: var(--ion-color-primary);">{{addressFull}}</h6>
     </div>
   </div>
 
@@ -41,7 +41,7 @@
 
   <ion-toolbar>
     <ion-list lines="none" class="ion-no-padding">
-      <ion-item>
+      <ion-item [disabled]="addressFull == null || addressFull == ''">
         <ion-label (click)="hideLocationAccuracy = !hideLocationAccuracy">
           <ion-text color="tertiary">
             <h2 class="font-weight-600">Ocultar localización precisa</h2>
@@ -58,7 +58,7 @@
       <ion-button (click)="goBack()">
         Cancelar
       </ion-button>
-      <ion-button [disabled]="addressFull == ''" (click)="accept()" class="confirm-button">
+      <ion-button [disabled]="addressFull == null || addressFull == ''" (click)="accept()" class="confirm-button">
         Guardar
       </ion-button>
     </ion-buttons>
