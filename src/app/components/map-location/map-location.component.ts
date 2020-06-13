@@ -4,9 +4,7 @@ import { Map as leafletMap, tileLayer, control, Control, LatLng, LatLngBounds } 
 import 'leaflet.locatecontrol';
 import * as Geocoding from 'esri-leaflet-geocoder';
 import { Animation, createAnimation } from '@ionic/core';
-
 import { environment } from "src/environments/environment";
-
 import { Plugins, StatusBarStyle, PermissionType } from '@capacitor/core';
 import { MapSearchComponent } from '../map-search/map-search.component';
 import { Animations } from 'src/app/animations/animations';
@@ -36,6 +34,7 @@ export class MapLocationComponent {
   map: leafletMap;
   lc: Control.Locate;
   geocodeService: any;
+  goToLocationOnFound = false;
   locationSearched: Subject<LatLngBounds> = new Subject();
 
   animation: Animation;
@@ -60,6 +59,7 @@ export class MapLocationComponent {
   ionViewDidEnter() {
     this.loadMap();
     this.loadMapEvents();
+    this.locate(false);
   }
 
   ionViewDidLeave() {
@@ -90,10 +90,12 @@ export class MapLocationComponent {
     this.lc = control
       .locate({
         locateOptions: {
-          setView: true,
+          setView: false,
           maxZoom: 18,
           enableHighAccuracy: true,
         },
+        showPopup: false,
+        setView: true,
       })
       .addTo(this.map);
     this.lc.getContainer().classList.add('ion-hide');
@@ -106,6 +108,7 @@ export class MapLocationComponent {
       this.skipMapEvents();
       this.animation.stop();
       this.setColorMyLocationButton('primary');
+      if (this.goToLocationOnFound) setTimeout(() => this.lc.start());
     });
 
     this.map.on('zoomstart', () => this.setColorMyLocationButton('tertiary'));
@@ -133,30 +136,44 @@ export class MapLocationComponent {
     });
     await this.animations.addElement(this.fab.el, 'light').startAnimation();
     modal.present();
-    // console.log(this.sitios);
   }
 
-  async locate() {
+  async locate(requestPersmission = true) {
+    if (requestPersmission) this.goToLocationOnFound = true;
+    if (this.locationStatus === 'searching') return;
+
     // in android forces the location to be requested again if it had already been requested
     // without this, the second time a map is loaded it takes up to a minute to "find" the user's location
     if (this.platform.is('capacitor') && this.platform.is('android')) Geolocation.getCurrentPosition();
 
     const { state } = await Permissions.query({ name: PermissionType.Geolocation });
+    switch (state) {
+      case 'granted':
+        this.startGeolocationAndUpdateButton();
+        break;
+      case 'denied':
+        if (requestPersmission) Geolocation.requestPermissions().then(() => this.startGeolocationAndUpdateButton());
+        break;
+      case 'prompt':
+        if (requestPersmission) navigator.geolocation.getCurrentPosition(() => this.startGeolocationAndUpdateButton());
+    }
+  }
 
-    if (state == 'denied') Geolocation.requestPermissions().then(() => this.lc.start());
-    else this.lc.start();
-
-    if (this.locationStatus == 'found') {
+  async startGeolocationAndUpdateButton() {
+    const { state } = await Permissions.query({ name: PermissionType.Geolocation });
+    if (state !== 'granted') return;
+    if (this.locationStatus === 'found') {
       this.skipMapEvents();
       this.setColorMyLocationButton('primary');
     } else {
       this.locationStatus = 'searching';
       this.animation.play();
     }
+    this.lc.start();
   }
 
   setColorMyLocationButton(color: 'primary' | 'tertiary') {
-    if (color == 'primary') this.myLocationColor = 'primary';
+    if (color == 'primary' && this.goToLocationOnFound) this.myLocationColor = 'primary';
     else if (!this.skipEvents) this.myLocationColor = 'tertiary';
   }
 
