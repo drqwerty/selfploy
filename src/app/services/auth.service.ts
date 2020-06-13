@@ -29,21 +29,21 @@ const fromURLtoBase64 = (url: string) =>
 export class AuthService {
 
   constructor(
-    private AFauth: AngularFireAuth,
+    private aFAuth: AngularFireAuth,
     private storageService: StorageService,
     private firestoreService: FirestoreService,
     private fStorage: FirebaseStorage,
   ) { }
 
   loginWithEmailAndPassword(email: string, password: string) {
-    return this.loadAndSaveUserProfile(this.AFauth.signInWithEmailAndPassword(email, password));
+    return this.loadAndSaveUserProfile(this.aFAuth.signInWithEmailAndPassword(email, password));
   }
 
   loginWithSocialAccount(token: string, socialAccount: 'google.com' | 'facebook.com') {
     const credential = socialAccount === 'google.com' ?
       firebase.auth.GoogleAuthProvider.credential(token) :
       firebase.auth.FacebookAuthProvider.credential(token);
-    return this.loadAndSaveUserProfile(this.AFauth.signInWithCredential(credential));
+    return this.loadAndSaveUserProfile(this.aFAuth.signInWithCredential(credential));
   }
 
   async loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
@@ -107,8 +107,8 @@ export class AuthService {
 
   logout() {
     this.storageService.removeUserProfile();
-    this.AFauth.currentUser.then(({ providerData }) => {
-      this.AFauth.signOut();
+    this.aFAuth.currentUser.then(({ providerData }) => {
+      this.aFAuth.signOut();
       const providerId = providerData[0].providerId;
       if (providerId === 'facebook.com') Plugins.FacebookLogin.logout();
       if (providerId === 'google.com') GoogleAuth.signOut();
@@ -116,21 +116,21 @@ export class AuthService {
   }
 
   checkEmail(email: string) {
-    return this.AFauth.fetchSignInMethodsForEmail(email);
+    return this.aFAuth.fetchSignInMethodsForEmail(email);
   }
 
   signUpWithEmailAndPassword(user: User, password: string) {
-    return this.createAndSaveUserProfile(user, this.AFauth.createUserWithEmailAndPassword(user.email, password));
+    return this.createAndSaveUserProfile(user, this.aFAuth.createUserWithEmailAndPassword(user.email, password));
   }
 
   signUpWithGoogle(user: User, token: string) {
     const credential = firebase.auth.GoogleAuthProvider.credential(token);
-    return this.createAndSaveUserProfile(user, this.AFauth.signInWithCredential(credential));
+    return this.createAndSaveUserProfile(user, this.aFAuth.signInWithCredential(credential));
   }
 
   signUpWithFacebook(user: User, token: string) {
     const credential = firebase.auth.FacebookAuthProvider.credential(token);
-    return this.createAndSaveUserProfile(user, this.AFauth.signInWithCredential(credential));
+    return this.createAndSaveUserProfile(user, this.aFAuth.signInWithCredential(credential));
   }
 
   createAndSaveUserProfile(user: User, signUpPromise: Promise<firebase.auth.UserCredential>) {

@@ -24,7 +24,7 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private router: Router,
-    private AFauth: AngularFireAuth,
+    private aFAuth: AngularFireAuth,
     private zone: NgZone,
 
   ) {
@@ -52,7 +52,7 @@ export class AppComponent {
   }
 
   async authObserver() {
-    const unsubscribe = await this.AFauth.onAuthStateChanged(authenticated => {
+    const unsubscribe = await this.aFAuth.onAuthStateChanged(authenticated => {
 
       if (this.firstLogin) {
         this.firstLogin = false;

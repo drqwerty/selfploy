@@ -18,7 +18,7 @@ export class ProfilePopoverComponent {
 
   constructor(
     private popoverController: PopoverController,
-    private AF: AuthService,
+    private auth: AuthService,
     private alertController: AlertController,
     private platform: Platform,
     private nav: NavController,
@@ -48,7 +48,7 @@ export class ProfilePopoverComponent {
           handler: async () => {
             await this.popoverController.dismiss();
             StatusBar.setStyle({ style: StatusBarStyle.Dark });
-            this.AF.logout();
+            this.auth.logout();
             await playLogoutAnimation(this.platform.height());
             this.nav.navigateRoot('main', { animated: false });
           }

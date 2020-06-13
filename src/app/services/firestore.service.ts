@@ -20,7 +20,7 @@ export class FirestoreService {
   constructor(
     private db: AngularFirestore,
     private fStorage: FirebaseStorage,
-    private AFauth: AngularFireAuth,
+    private aFAuth: AngularFireAuth,
   ) {
     this.geofirestore = new GeoFirestore(db.firestore);
   }
@@ -42,7 +42,7 @@ export class FirestoreService {
   }
 
   async updateUserProfile(user: User) {
-    const currentUser = await this.AFauth.currentUser;
+    const currentUser = await this.aFAuth.currentUser;
     const { token, profilePic, coordinates, ...essentialUserData } = user;
 
     return this.geofirestore.collection('users').doc(currentUser.uid).update({
