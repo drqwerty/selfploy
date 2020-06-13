@@ -18,6 +18,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AuthGuardService } from './guards/auth-guard.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Animations } from './animations/animations';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +38,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     AuthGuardService,
+    Animations,
   ],
   bootstrap: [AppComponent]
 })

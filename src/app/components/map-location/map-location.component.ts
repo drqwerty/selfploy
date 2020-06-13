@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
-import { Map as leafletMap, tileLayer, control, Control, LatLng } from 'leaflet';
+import { Map as leafletMap, tileLayer, control, Control, LatLng, LatLngBounds } from 'leaflet';
 import 'leaflet.locatecontrol';
 import * as Geocoding from 'esri-leaflet-geocoder';
 import { Animation, createAnimation } from '@ionic/core';
@@ -8,6 +8,9 @@ import { Animation, createAnimation } from '@ionic/core';
 import { environment } from "src/environments/environment";
 
 import { Plugins, StatusBarStyle, PermissionType } from '@capacitor/core';
+import { MapSearchComponent } from '../map-search/map-search.component';
+import { Animations } from 'src/app/animations/animations';
+import { Subject } from 'rxjs';
 const { StatusBar, Geolocation, Permissions } = Plugins;
 
 @Component({
@@ -28,10 +31,12 @@ export class MapLocationComponent {
 
 
   @ViewChild('innerLocationCircle') animationElement: ElementRef;
+  @ViewChild('fab') fab: any;
 
   map: leafletMap;
   lc: Control.Locate;
   geocodeService: any;
+  locationSearched: Subject<LatLngBounds> = new Subject();
 
   animation: Animation;
   locationStatus: 'searching' | 'found' | undefined;
@@ -42,11 +47,14 @@ export class MapLocationComponent {
   constructor(
     private modalController: ModalController,
     private platform: Platform,
+    private animations: Animations,
   ) { }
 
   ionViewWillEnter() {
     this.createMyLocationAnimation();
     StatusBar.setStyle({ style: StatusBarStyle.Light });
+
+    this.locationSearched.subscribe(val => this.map.flyToBounds(val));
   }
 
   ionViewDidEnter() {
@@ -55,6 +63,7 @@ export class MapLocationComponent {
   }
 
   ionViewDidLeave() {
+    this.locationSearched.complete();
     this.lc.stop();
   }
 
@@ -91,25 +100,6 @@ export class MapLocationComponent {
     this.geocodeService = (Geocoding as any).geocodeService();
   }
 
-  async locate() {
-    // in android forces the location to be requested again if it had already been requested
-    // without this, the second time a map is loaded it takes up to a minute to "find" the user's location
-    if (this.platform.is('capacitor') && this.platform.is('android')) Geolocation.getCurrentPosition();
-
-    const { state } = await Permissions.query({ name: PermissionType.Geolocation });
-
-    if (state == 'denied') Geolocation.requestPermissions().then(() => this.lc.start());
-    else this.lc.start();
-
-    if (this.locationStatus == 'found') {
-      this.skipMapEvents();
-      this.setColorMyLocationButton('primary');
-    } else {
-      this.locationStatus = 'searching';
-      this.animation.play();
-    }
-  }
-
   loadMapEvents() {
     this.map.on('locationfound', () => {
       this.locationStatus = 'found';
@@ -132,8 +122,37 @@ export class MapLocationComponent {
     });
   }
 
-  search() {
+  async search() {
+    const modal = await this.modalController.create({
+      component: MapSearchComponent,
+      animated: false,
+      componentProps: {
+        locationSearched: this.locationSearched,
+        mapCenter: this.map.getCenter(),
+      }
+    });
+    await this.animations.addElement(this.fab.el, 'light').startAnimation();
+    modal.present();
     // console.log(this.sitios);
+  }
+
+  async locate() {
+    // in android forces the location to be requested again if it had already been requested
+    // without this, the second time a map is loaded it takes up to a minute to "find" the user's location
+    if (this.platform.is('capacitor') && this.platform.is('android')) Geolocation.getCurrentPosition();
+
+    const { state } = await Permissions.query({ name: PermissionType.Geolocation });
+
+    if (state == 'denied') Geolocation.requestPermissions().then(() => this.lc.start());
+    else this.lc.start();
+
+    if (this.locationStatus == 'found') {
+      this.skipMapEvents();
+      this.setColorMyLocationButton('primary');
+    } else {
+      this.locationStatus = 'searching';
+      this.animation.play();
+    }
   }
 
   setColorMyLocationButton(color: 'primary' | 'tertiary') {

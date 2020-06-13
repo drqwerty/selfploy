@@ -71,6 +71,13 @@
   }
 }
 
+ion-searchbar.search-locations {
+  input {
+    font-weight: 500 !important;
+    font-size: 20px !important;
+  }
+}
+
 .buttons-cancel-confirm {
   ion-button {
     text-transform: none;

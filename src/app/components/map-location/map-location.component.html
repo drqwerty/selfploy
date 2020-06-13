@@ -3,13 +3,13 @@
 <ion-content>
 
   <ion-fab vertical="top" horizontal="start" slot="fixed">
-    <ion-fab-button size="small" (click)="goBack()" color="light" class="ion-margin-top">
+    <ion-fab-button size="small" (click)="goBack()" color="light">
       <ion-icon name="chevron-back-outline" color="tertiary"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
   <ion-fab vertical="top" horizontal="end" slot="fixed">
-    <ion-fab-button size="small" (click)="search()" color="light" class="ion-margin-vertical">
+    <ion-fab-button #fab size="small" (click)="search()" color="light">
       <ion-icon name="search-outline" color="tertiary"></ion-icon>
     </ion-fab-button>
     <ion-fab-button size="small" (click)="locate()" color="light" class="ion-margin-top">

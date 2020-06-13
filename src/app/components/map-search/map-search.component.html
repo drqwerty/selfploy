@@ -1,0 +1,25 @@
+<status-bar color="#fff"></status-bar>
+
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-searchbar class="search-locations" (ionChange)="searchQuery($event)" placeholder="Busca un lugar"></ion-searchbar>
+  <div class="border-bottom"></div>
+
+  <ion-list lines="none">
+    <ion-item *ngFor="let item of suggestions" button (click)="getGeopoint(item)">
+      <ion-icon name="location-sharp" color="medium" class="ion-margin-end"></ion-icon>
+      <ion-label>{{item.text}}</ion-label>
+    </ion-item>
+  </ion-list>
+  
+</ion-content>

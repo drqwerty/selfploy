@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MapLocationComponent } from './map-location.component';
 import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module';
 import { FormsModule } from '@angular/forms';
+import { MapSearchComponent } from '../map-search/map-search.component';
 
 
 
@@ -16,6 +17,7 @@ import { FormsModule } from '@angular/forms';
   ],
   declarations: [
     MapLocationComponent,
+    MapSearchComponent,
   ],
   exports: [
     MapLocationComponent,

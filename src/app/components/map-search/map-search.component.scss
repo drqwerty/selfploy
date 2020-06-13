@@ -1,0 +1,11 @@
+ion-searchbar {
+  --box-shadow: none;
+  --color: var(--ion-color-tertiary);
+  --icon-color: var(--ion-color-tertiary);
+}
+
+.border-bottom {
+  margin: 0 20px 0 60px;
+  border-top: 2px solid var(--ion-color-primary);
+  transform: translateY(-10px);
+}
