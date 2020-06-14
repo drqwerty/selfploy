@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Map as leafletMap, tileLayer, icon, circle, marker, LatLng, Circle } from 'leaflet';
+import { Map as leafletMap, tileLayer, icon, circle, marker, LatLng, Circle, Marker } from 'leaflet';
 import { environment } from "src/environments/environment";
 
 
@@ -17,17 +17,18 @@ export class MapPreviewComponent {
 
   private map: leafletMap;
   private circleRadius: Circle;
+  private marker: Marker;
 
   constructor() { }
 
   initMap() {
-    if (this.map) return;
     this.loadMap();
     this.createCircleRadius();
     this.createMarker();
   }
 
   private loadMap() {
+    if (this.map) return;
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
 
     this.map = new leafletMap('map-preview', { zoomControl: false, attributionControl: false }).setView(this.coordinates, 9);
@@ -37,29 +38,38 @@ export class MapPreviewComponent {
   private createCircleRadius() {
     if (!this.radiusKm) return;
 
-    const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
+    if (this.circleRadius) {
+      this.circleRadius.setLatLng(this.coordinates).setRadius(this.radiusKm * 1000);
 
-    this.circleRadius = circle(this.coordinates, {
-      color,
-      fillOpacity: 0.3,
-      radius: this.radiusKm * 1000,
-      stroke: false,
-    });
+    } else {
+      const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
+      this.circleRadius = circle(this.coordinates, {
+        color,
+        fillOpacity: 0.3,
+        radius: this.radiusKm * 1000,
+        stroke: false,
+      });
+      this.circleRadius.addTo(this.map);
+    }
 
-    this.circleRadius.addTo(this.map);
     if (this.radiusKm != 0) this.map.fitBounds(this.circleRadius.getBounds());
   }
 
   private createMarker() {
-    if (this.hideMarker) return;
+    if (!this.marker) {
+      this.marker = marker(this.coordinates, {
+        opacity: this.hideMarker ? 0 : 1,
+        icon: icon({
+          iconUrl: '../../../assets/marker-icon.svg',
+          iconSize: [26, 40],
+          iconAnchor: [13, 40],
+        })
+      }).addTo(this.map);
 
-    marker(this.coordinates, {
-      icon: icon({
-        iconUrl: '../../../assets/marker-icon.svg',
-        iconSize: [26, 40],
-        iconAnchor: [13, 40],
-      })
-    }).addTo(this.map);
+    } else {
+      this.marker.setLatLng(this.coordinates);
+      this.marker.setOpacity(this.hideMarker ? 0 : 1);
+    }
   }
 
 }

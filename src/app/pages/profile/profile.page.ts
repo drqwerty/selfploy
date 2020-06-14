@@ -6,6 +6,7 @@ import { Plugins, StatusBarStyle } from '@capacitor/core';
 import { PopoverController } from '@ionic/angular';
 import { ProfilePopoverComponent } from 'src/app/components/profile-popover/profile-popover.component';
 import { MapPreviewComponent } from 'src/app/components/map-preview/map-preview.component';
+import { DataService } from 'src/app/providers/data.service';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -24,10 +25,11 @@ export class ProfilePage {
   constructor(
     private storage: StorageService,
     private popoverController: PopoverController,
+    private data: DataService,
   ) {
     storage.getUserProfile().then(user => {
-      this.brackgroundColor = user.role === this.userRol.client ? 'secondary' : 'primary';
-      this.user = user;
+      this.user = data.user = user;
+      this.brackgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
     });
   }
 
@@ -36,7 +38,7 @@ export class ProfilePage {
   }
 
   ionViewDidEnter() {
-    this.mapPreview.initMap();
+    this.mapPreview?.initMap();
   }
 
   async presentPopover(ev: any) {

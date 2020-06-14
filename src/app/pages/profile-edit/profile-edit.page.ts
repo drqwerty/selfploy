@@ -17,6 +17,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import { MapLocationComponent } from 'src/app/components/map-location/map-location.component';
 import { MapRangeComponent } from 'src/app/components/map-range/map-range.component';
+import { DataService } from 'src/app/providers/data.service';
 
 @Component({
   selector: 'app-profile-edit',
@@ -47,6 +48,7 @@ export class ProfileEditPage {
     private formBuilder: FormBuilder,
     private firestoreService: FirestoreService,
     private fStorage: FirebaseStorage,
+    private data: DataService,
   ) {
     const goBackSubscription = platform.backButton.subscribe(() => {
       goBackSubscription.unsubscribe();
@@ -55,7 +57,7 @@ export class ProfileEditPage {
   }
 
   ionViewWillEnter() {
-    this.storage.getUserProfile().then(user => this.user = user);
+    this.user = this.data.user;
     tabBarAnimateOut();
     StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
