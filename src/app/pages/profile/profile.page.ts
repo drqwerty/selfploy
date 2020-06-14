@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
 import { User, UserRole } from 'src/app/models/user-model';
 
 import { Plugins, StatusBarStyle } from '@capacitor/core';
 import { PopoverController } from '@ionic/angular';
 import { ProfilePopoverComponent } from 'src/app/components/profile-popover/profile-popover.component';
+import { MapPreviewComponent } from 'src/app/components/map-preview/map-preview.component';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -13,6 +14,8 @@ const { StatusBar } = Plugins;
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage {
+
+  @ViewChild(MapPreviewComponent) mapPreview: MapPreviewComponent;
 
   userRol = UserRole;
   user: User;
@@ -30,6 +33,10 @@ export class ProfilePage {
 
   ionViewWillEnter() {
     StatusBar.setStyle({ style: StatusBarStyle.Dark })
+  }
+
+  ionViewDidEnter() {
+    this.mapPreview.initMap();
   }
 
   async presentPopover(ev: any) {

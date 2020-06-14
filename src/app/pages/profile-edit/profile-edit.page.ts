@@ -14,6 +14,7 @@ import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeav
 import { ServicePickerComponent } from 'src/app/components/service-picker/service-picker.component';
 import { WorkingHoursPickerComponent } from 'src/app/components/working-hours-picker/working-hours-picker.component';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import { MapLocationComponent } from 'src/app/components/map-location/map-location.component';
 import { MapRangeComponent } from 'src/app/components/map-range/map-range.component';
 
@@ -27,6 +28,7 @@ export class ProfileEditPage {
   user: User;
   userRol = UserRole;
 
+  updateImageProfile = false;
   profilePicWithoutCrop: any;
   removePictureToast: HTMLIonToastElement;
 
@@ -44,6 +46,7 @@ export class ProfileEditPage {
     private loadingController: LoadingController,
     private formBuilder: FormBuilder,
     private firestoreService: FirestoreService,
+    private fStorage: FirebaseStorage,
   ) {
     const goBackSubscription = platform.backButton.subscribe(() => {
       goBackSubscription.unsubscribe();
@@ -73,9 +76,11 @@ export class ProfileEditPage {
     // (await this.loadingController.create()).present();
 
     try {
+      if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(this.user.profilePic);
       await this.firestoreService.updateUserProfile(this.user)
       this.storage.saveUserProfile(this.user);
       message = 'Perfil actualizado';
+      this.updateImageProfile = false;
     } catch (error) {
       message = 'Ha ocurrido un error, inténtalo de nuevo';
     }
@@ -106,6 +111,7 @@ export class ProfileEditPage {
 
     modal.onWillDismiss().then(({ data }) => {
       this.profilePicWithoutCrop = data?.profilePicWithoutCrop;
+      this.updateImageProfile = data?.image;
       if (data?.image) this.user.profilePic = data.image;
       else if (data?.remove) this.removeProfileImage();
     });

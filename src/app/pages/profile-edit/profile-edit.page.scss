@@ -84,10 +84,6 @@
   .user-options-list {
     padding: 8px 20px 8px 10px;
     min-height: 35px;
-
-    .list-item:not(:last-child)::after {
-      content: ', ';
-    }
   }
 
 

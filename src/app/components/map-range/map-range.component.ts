@@ -55,7 +55,7 @@ export class MapRangeComponent {
   loadMap() {
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
 
-    this.map = new leafletMap('map', { zoomControl: false, attributionControl: false }).setView(this.coordinates, 15);
+    this.map = new leafletMap('map-range', { zoomControl: false, attributionControl: false }).setView(this.coordinates, 15);
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
   }
 

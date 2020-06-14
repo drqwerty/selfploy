@@ -87,7 +87,7 @@ export class MapLocationComponent {
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
 
     const zoom = this.addressCity == null ? 9 : 16;
-    this.map = new leafletMap('map', { zoomControl: false, attributionControl: false }).setView(this.coordinates, zoom);
+    this.map = new leafletMap('map-location', { zoomControl: false, attributionControl: false }).setView(this.coordinates, zoom);
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
 
     this.lc = control

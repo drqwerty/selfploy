@@ -13,7 +13,7 @@
 
 <ion-content [color]="brackgroundColor">
 
-  <div class="ion-padding content">
+  <div class="ion-padding content nav-bar-space">
 
     <div class="image-profile">
       <img [src]="user?.profilePic">
@@ -50,7 +50,10 @@
       </div>
       <div *ngIf="user?.role === userRol.professional" class="jobs">
         <ion-text color="primary">
-          <h6>Fontanero</h6>
+          <h6>
+            <span class="separate-childs-with-commas" upperCaseFirstLetter
+              *ngFor="let category of user?.services | keyvalue ">{{category.key}}</span>
+          </h6>
         </ion-text>
       </div>
     </div>
@@ -58,36 +61,60 @@
 
     <div class="info">
       <ion-list lines="none">
+
         <div *ngIf="user?.role === userRol.professional" class="professional-info">
-          <ion-item>
+          <ion-item *ngIf="user?.companyName">
+            <ion-label>
+              <h2>Empresa</h2>
+              <h3 class="ion-text-wrap">{{user.companyName}}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user?.services">
             <ion-label>
               <h2>Especialización</h2>
-              <h3>Baños</h3>
+              <h3 class="ion-text-wrap">
+                <ng-container *ngFor="let category of user.services | keyvalue ">
+                  <span upperCaseFirstLetter *ngFor="let service of category.value"
+                    class="separate-childs-with-commas">{{service}}</span>
+                </ng-container>
+              </h3>
             </ion-label>
           </ion-item>
-          <ion-item>
+
+          <ion-item *ngIf="user?.workingHours">
             <ion-label>
               <h2>Horario</h2>
-              <h3>Mañanas</h3>
+              <h3>
+                <span class="separate-childs-with-commas" upperCaseFirstLetter
+                  *ngFor="let workingHour of user.workingHours">{{workingHour}}</span>
+              </h3>
             </ion-label>
           </ion-item>
-          <ion-item>
+
+          <ion-item *ngIf="user?.about">
             <ion-label>
               <h2>Sobre mí</h2>
-              <h3>A veces hago cosas</h3>
+              <h3 class="break-spaces">{{user.about}}</h3>
             </ion-label>
           </ion-item>
         </div>
-        <ion-item>
-          <ion-label>
-            <h2>Ubicación</h2>
-            <h3>Tacoronte</h3>
-          </ion-label>
-        </ion-item>
+
+        <ng-container *ngIf="user?.addressFull">
+          <ion-item>
+            <ion-label>
+              <h2>Ubicación</h2>
+              <h3 class="break-spaces">{{user?.hideLocationAccuracy ? user?.addressCity: user?.addressFull}}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-card mode="ios">
+            <map-preview [coordinates]="user?.coordinates" [radiusKm]="user?.radiusKm" [hideMarker]="user?.hideLocationAccuracy"></map-preview>
+          </ion-card>
+
+        </ng-container>
       </ion-list>
     </div>
 
-
-    <!-- {{user | json}} -->
   </div>
 </ion-content>

@@ -291,10 +291,6 @@ export class LoginRegisterComponent {
       .finally(() => this.loading.dismiss());
   }
 
-  createUserProfile(value: firebase.auth.UserCredential) {
-    return this.firestoreService.createUserProfile(value.user.uid, this.user);
-  }
-
   goToMainPage() {
     this.rootModal.leaveAnimation = ModalAnimationFadeLeave;
     this.navController.navigateRoot('tabs', { animated: false });

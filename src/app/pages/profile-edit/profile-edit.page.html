@@ -87,8 +87,8 @@
         </ion-text>
       </ion-label>
       <div class="user-options-list">
-        <ng-container *ngFor="let services of user?.services | keyvalue ">
-          <span upperCaseFirstLetter *ngFor="let service of services.value" class="list-item">{{service}}</span>
+        <ng-container *ngFor="let category of user?.services | keyvalue ">
+          <span upperCaseFirstLetter *ngFor="let service of category.value" class="separate-childs-with-commas">{{service}}</span>
         </ng-container>
       </div>
     </ion-item>
@@ -102,7 +102,7 @@
         </ion-text>
       </ion-label>
       <div class="user-options-list">
-        <span upperCaseFirstLetter *ngFor="let workingHour of user?.workingHours" class="list-item">{{workingHour}}</span>
+        <span upperCaseFirstLetter *ngFor="let workingHour of user?.workingHours" class="separate-childs-with-commas">{{workingHour}}</span>
       </div>
     </ion-item>
 

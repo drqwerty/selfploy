@@ -15,7 +15,7 @@ import { WorkingHoursPickerComponent } from 'src/app/components/working-hours-pi
 import {AutosizeModule} from 'ngx-autosize';
 import { MapLocationModule } from 'src/app/components/map-location/map-location.module';
 import { MapRangeModule } from 'src/app/components/map-range/map-range.module';
-import { UpperCaseFirstLetterDirective } from 'src/app/directives/uppercase-first-letter.directive';
+import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
 
 @NgModule({
   imports: [
@@ -28,12 +28,12 @@ import { UpperCaseFirstLetterDirective } from 'src/app/directives/uppercase-firs
     AutosizeModule,
     MapLocationModule,
     MapRangeModule,
+    UpperCaseFirstLetterModule,
   ],
   declarations: [
     ProfileEditPage,
     ServicePickerComponent,
     WorkingHoursPickerComponent,
-    UpperCaseFirstLetterDirective,
   ],
 })
 export class ProfileEditPageModule {}
