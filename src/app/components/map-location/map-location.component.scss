@@ -48,3 +48,53 @@ ion-fab-button {
     padding-bottom: 8px;
   }
 }
+
+.tooltip-container {
+  display: inline-block;
+  position: absolute;
+  z-index: 500;
+  right: 50%;
+  bottom: 50%;
+
+  .top {
+    text-align: center;
+    min-width: 222px;
+    top: -20px;
+    left: 100%;
+    transform: translate(-50%, -90%);
+    padding: 10px 20px;
+    color: #eeeeee;
+    background-color: #000000;
+    font-weight: normal;
+    font-size: 14px;
+    border-radius: 8px;
+    position: absolute;
+    box-sizing: border-box;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    display: none;
+
+    &.show {
+      display: block;
+    }
+
+    i {
+      position: absolute;
+      top: calc(100% - 1px);
+      left: 50%;
+      margin-left: -12px;
+      width: 24px;
+      height: 12px;
+      overflow: hidden;
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        background-color: #000000;
+      }
+    }
+  }
+}

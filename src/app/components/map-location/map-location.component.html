@@ -22,8 +22,13 @@
 
   <img class="gradient top absolute" src="../../../assets/background-drawings/gradient.png">
   <div id="map">
-    <img src="../../../assets/marker-location-picker.svg"
-      style="position: absolute; z-index: 500; right: 50%; bottom: 50%;">
+    <div class="tooltip-container">
+      <img src="../../../assets/marker-location-picker.svg">
+      <div #tooltip class="top">
+        Haz zoom y mueve el mapa debajo del marcador
+        <i></i>
+      </div>
+    </div>
   </div>
 
   <div class="current-address">

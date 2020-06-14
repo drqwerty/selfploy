@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input, Renderer2 } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
 import { Map as leafletMap, tileLayer, control, Control, LatLng, LatLngBounds } from 'leaflet';
 import 'leaflet.locatecontrol';
@@ -29,6 +29,7 @@ export class MapLocationComponent {
 
 
   @ViewChild('innerLocationCircle') animationElement: ElementRef;
+  @ViewChild('tooltip') tooltip: ElementRef;
   @ViewChild('fab') fab: any;
 
   map: leafletMap;
@@ -37,7 +38,8 @@ export class MapLocationComponent {
   goToLocationOnFound = false;
   locationSearched: Subject<LatLngBounds> = new Subject();
 
-  animation: Animation;
+  tooltipAnimation: Animation;
+  locationButtonAnimation: Animation;
   locationStatus: 'searching' | 'found' | undefined;
   skipEvents = false;
   myLocationColor: 'tertiary' | 'primary' = 'tertiary';
@@ -47,6 +49,7 @@ export class MapLocationComponent {
     private modalController: ModalController,
     private platform: Platform,
     private animations: Animations,
+    private renderer: Renderer2,
   ) { }
 
   ionViewWillEnter() {
@@ -59,6 +62,7 @@ export class MapLocationComponent {
     this.loadMap();
     this.loadMapEvents();
     this.locate(false);
+    this.showTooltipIfNeeded();
   }
 
   ionViewDidLeave() {
@@ -105,13 +109,19 @@ export class MapLocationComponent {
     this.map.on('locationfound', () => {
       this.locationStatus = 'found';
       this.skipMapEvents();
-      this.animation.stop();
+      this.locationButtonAnimation.stop();
       this.setColorMyLocationButton('primary');
       if (this.goToLocationOnFound) setTimeout(() => this.lc.start());
     });
 
-    this.map.on('zoomstart', () => this.setColorMyLocationButton('tertiary'));
-    this.map.on('dragstart', () => this.setColorMyLocationButton('tertiary'));
+    this.map.on('zoomstart', () => {
+      this.setColorMyLocationButton('tertiary');
+      this.tooltipToggleVisibily(false);
+    });
+    this.map.on('dragstart', () => {
+      this.setColorMyLocationButton('tertiary');
+      this.tooltipToggleVisibily(false);
+    });
 
     this.map.on('moveend', () => {
       this.coordinates = this.map.getCenter();
@@ -166,7 +176,7 @@ export class MapLocationComponent {
       this.setColorMyLocationButton('primary');
     } else {
       this.locationStatus = 'searching';
-      this.animation.play();
+      this.locationButtonAnimation.play();
     }
     this.lc.start();
   }
@@ -181,14 +191,41 @@ export class MapLocationComponent {
     setTimeout(() => this.skipEvents = false, 250);
   }
 
+  showTooltipIfNeeded() {
+    if (this.addressFull == null || this.addressFull == '') {
+      this.createTooltipAnimation();
+      this.tooltipToggleVisibily(true);
+    }
+  }
+
+  async tooltipToggleVisibily(show: boolean) {
+    if (show) {
+      this.tooltipAnimation.play();
+    } else if (this.tooltipAnimation) {
+      await this.tooltipAnimation.direction('reverse').duration(300).afterRemoveClass('show').play();
+      this.tooltipAnimation = null;
+    }
+  }
+
   createMyLocationAnimation() {
-    this.animation = createAnimation()
+    this.locationButtonAnimation = createAnimation()
       .addElement(this.animationElement.nativeElement)
       .duration(1000)
       .easing('ease-out')
       .iterations(Infinity)
       .direction('alternate')
       .fromTo('transform', 'scale(1)', 'scale(.7)');
+  }
+
+  createTooltipAnimation() {
+    this.tooltipAnimation = createAnimation()
+      .addElement(this.tooltip.nativeElement)
+      .beforeAddClass('show')
+      .delay(400)
+      .duration(400)
+      .easing('ease')
+      .fromTo('opacity', 0, 1)
+      .fromTo('transform', 'translate(-50%, -100%)', 'translate(-50%, -90%)');
   }
 
 }
