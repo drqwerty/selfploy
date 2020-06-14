@@ -21,7 +21,7 @@
     <div class="image-profile-wrapper">
 
       <div class="image-profile">
-        <img *ngIf="user?.profilePic" [src]="user?.profilePic">
+        <img *ngIf="tempUser?.profilePic" [src]="tempUser?.profilePic">
       </div>
 
       <div class="camera-button-wrapper">
@@ -42,7 +42,7 @@
           {{headerName}}
         </ion-text>
       </ion-label>
-      <ion-input readonly type="text" [value]="user?.name"></ion-input>
+      <ion-input readonly type="text" [value]="tempUser?.name"></ion-input>
     </ion-item>
     <div class="border"></div>
 
@@ -53,7 +53,7 @@
           Correo
         </ion-text>
       </ion-label>
-      <ion-input readonly type="email" inputmode="email" [value]="user?.email"></ion-input>
+      <ion-input readonly type="email" inputmode="email" [value]="tempUser?.email"></ion-input>
     </ion-item>
     <div class="border"></div>
 
@@ -75,7 +75,7 @@
           {{headerCompany}} - <span>Opcional</span>
         </ion-text>
       </ion-label>
-      <ion-input readonly type="text" [value]="user?.companyName"></ion-input>
+      <ion-input readonly type="text" [value]="tempUser?.companyName"></ion-input>
     </ion-item>
     <div class="border"></div>
 
@@ -87,7 +87,7 @@
         </ion-text>
       </ion-label>
       <div class="user-options-list">
-        <ng-container *ngFor="let category of user?.services | keyvalue ">
+        <ng-container *ngFor="let category of tempUser?.services | keyvalue ">
           <span upperCaseFirstLetter *ngFor="let service of category.value" class="separate-childs-with-commas">{{service}}</span>
         </ng-container>
       </div>
@@ -102,7 +102,7 @@
         </ion-text>
       </ion-label>
       <div class="user-options-list">
-        <span upperCaseFirstLetter *ngFor="let workingHour of user?.workingHours" class="separate-childs-with-commas">{{workingHour}}</span>
+        <span upperCaseFirstLetter *ngFor="let workingHour of tempUser?.workingHours" class="separate-childs-with-commas">{{workingHour}}</span>
       </div>
     </ion-item>
 
@@ -113,7 +113,7 @@
           {{headerAbout}} - <span>Opcional</span>
         </ion-text>
       </ion-label>
-      <ion-textarea rows="1" autosize readonly type="text" [value]="user?.about"></ion-textarea>
+      <ion-textarea rows="1" autosize readonly type="text" [value]="tempUser?.about"></ion-textarea>
     </ion-item>
     <div class="border"></div>
 
@@ -124,18 +124,18 @@
           Localización
         </ion-text>
       </ion-label>
-      <ion-textarea rows="1" autosize readonly type="text" [value]="user?.hideLocationAccuracy ? user?.addressCity: user?.addressFull"></ion-textarea>
+      <ion-textarea rows="1" autosize readonly type="text" [value]="tempUser?.hideLocationAccuracy ? tempUser?.addressCity: tempUser?.addressFull"></ion-textarea>
     </ion-item>
     <div class="border"></div>
 
 
-    <ion-item button (click)="editRange()" [disabled]="user?.addressFull == null || user?.addressFull == ''">
+    <ion-item button (click)="editRange()" [disabled]="tempUser?.addressFull == null || tempUser?.addressFull == ''">
       <ion-label position="stacked">
         <ion-text color="tertiary">
           Ámbito de actuación
         </ion-text>
       </ion-label>
-      <ion-input readonly type="text" [value]="user?.radiusKm ? user?.radiusKm + ' km' : ''"></ion-input>
+      <ion-input readonly type="text" [value]="tempUser?.radiusKm ? tempUser?.radiusKm + ' km' : ''"></ion-input>
     </ion-item>
     <div class="border"></div>
 

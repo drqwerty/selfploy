@@ -36,7 +36,6 @@ export class MapLocationComponent {
   lc: Control.Locate;
   geocodeService: any;
   goToLocationOnFound = false;
-  locationSearched: Subject<LatLngBounds> = new Subject();
 
   tooltipAnimation: Animation;
   locationButtonAnimation: Animation;
@@ -55,7 +54,6 @@ export class MapLocationComponent {
   ionViewWillEnter() {
     this.createMyLocationAnimation();
     StatusBar.setStyle({ style: StatusBarStyle.Light });
-    this.locationSearched.subscribe(val => this.map.flyToBounds(val));
   }
 
   ionViewDidEnter() {
@@ -66,7 +64,6 @@ export class MapLocationComponent {
   }
 
   ionViewDidLeave() {
-    this.locationSearched.complete();
     this.lc.stop();
   }
 
@@ -139,25 +136,38 @@ export class MapLocationComponent {
       component: MapSearchComponent,
       animated: false,
       componentProps: {
-        locationSearched: this.locationSearched,
         mapCenter: this.map.getCenter(),
       }
     });
+    modal.onWillDismiss().then(({ data }) => {
+
+      if (data) {
+        this.map.flyToBounds(data);
+        this.forceRefreshHeight();
+      }
+    })
+    
     await this.animations.addElement(this.fab.el, 'light').startAnimation();
     modal.present();
+  }
+  
+  // in android the view maintains the height of the keyboard when it leaves
+  forceRefreshHeight() {
+    const el = this.renderer.selectRootElement('app-map-location', true);
+    this.renderer.setStyle(el, 'height', '100%');
+    setTimeout(() => this.renderer.removeStyle(el, 'height'), 200);
   }
 
   async locate(requestPersmission = true) {
     if (requestPersmission) this.goToLocationOnFound = true;
     if (this.locationStatus === 'searching') return;
 
-    // in android forces the location to be requested again if it had already been requested
-    // without this, the second time a map is loaded it takes up to a minute to "find" the user's location
-    if (this.platform.is('capacitor') && this.platform.is('android')) Geolocation.getCurrentPosition();
-
     const { state } = await Permissions.query({ name: PermissionType.Geolocation });
     switch (state) {
       case 'granted':
+        // in android forces the location to be requested again if it had already been requested
+        // without this, the second time a map is loaded it takes up to a minute to "find" the user's location
+        if (this.platform.is('capacitor') && this.platform.is('android')) Geolocation.getCurrentPosition();
         this.startGeolocationAndUpdateButton();
         break;
       case 'denied':

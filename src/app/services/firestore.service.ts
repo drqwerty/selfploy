@@ -36,8 +36,8 @@ export class FirestoreService {
 
   async getUserProfile(uid: string) {
     const user: User = (await this.db.collection('users').doc(uid).get().toPromise()).data().d;
-    const coordinates = user.coordinates as unknown as firestore.GeoPoint;
-    user.coordinates = new LatLng(coordinates.latitude, coordinates.longitude);
+    const coordinates: firestore.GeoPoint = user.coordinates as any;
+    if (coordinates) user.coordinates = new LatLng(coordinates.latitude, coordinates.longitude);
     return user;
   }
 

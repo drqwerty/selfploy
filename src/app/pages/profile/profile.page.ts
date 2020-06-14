@@ -34,6 +34,7 @@ export class ProfilePage {
   }
 
   ionViewWillEnter() {
+    if (this.user && this.user !== this.data.user) this.user = this.data.user;
     StatusBar.setStyle({ style: StatusBarStyle.Dark })
   }
 

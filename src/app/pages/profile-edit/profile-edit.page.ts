@@ -7,7 +7,7 @@ import { User, UserRole } from 'src/app/models/user-model';
 import { StorageService } from 'src/app/services/storage.service';
 import { InputBottomSheetComponent } from 'src/app/components/input-bottom-sheet/input-bottom-sheet.component';
 import { CameraSourceActionSheetComponent } from 'src/app/components/camera-source-action-sheet/camera-source-action-sheet.component';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, ValidatorFn } from '@angular/forms';
 const { StatusBar } = Plugins;
 
 import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
@@ -26,7 +26,7 @@ import { DataService } from 'src/app/providers/data.service';
 })
 export class ProfileEditPage {
 
-  user: User;
+  tempUser: User;
   userRol = UserRole;
 
   updateImageProfile = false;
@@ -57,7 +57,8 @@ export class ProfileEditPage {
   }
 
   ionViewWillEnter() {
-    this.user = this.data.user;
+    this.tempUser = new User();
+    Object.assign(this.tempUser, this.data.user);
     tabBarAnimateOut();
     StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
@@ -78,10 +79,11 @@ export class ProfileEditPage {
     // (await this.loadingController.create()).present();
 
     try {
-      if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(this.user.profilePic);
-      await this.firestoreService.updateUserProfile(this.user)
-      this.storage.saveUserProfile(this.user);
+      if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(this.tempUser.profilePic);
+      await this.firestoreService.updateUserProfile(this.tempUser)
+      this.storage.saveUserProfile(this.tempUser);
       message = 'Perfil actualizado';
+      Object.assign(this.data.user, this.tempUser);
       this.updateImageProfile = false;
     } catch (error) {
       message = 'Ha ocurrido un error, inténtalo de nuevo';
@@ -106,24 +108,27 @@ export class ProfileEditPage {
       component: CameraSourceActionSheetComponent,
       cssClass: 'action-sheet',
       componentProps: {
-        showRemoveButton: this.user.profilePic != null,
-        profilePic: this.profilePicWithoutCrop ?? this.user.profilePic,
+        showRemoveButton: this.tempUser.profilePic != null,
+        profilePic: this.profilePicWithoutCrop ?? this.tempUser.profilePic,
       }
     });
 
     modal.onWillDismiss().then(({ data }) => {
       this.profilePicWithoutCrop = data?.profilePicWithoutCrop;
       this.updateImageProfile = data?.image;
-      if (data?.image) this.user.profilePic = data.image;
-      else if (data?.remove) this.removeProfileImage();
+      if (data?.image) {
+        this.tempUser.hasProfilePic = true;
+        this.tempUser.profilePic = data.image;
+      } else if (data?.remove) { this.removeProfileImage(); }
     });
 
     modal.present();
   }
 
   async removeProfileImage() {
-    const profileImageTemp = this.user.profilePic;
-    this.user.profilePic = null;
+    const profileImageTemp = this.tempUser.profilePic;
+    this.tempUser.profilePic = null;
+    this.tempUser.hasProfilePic = false;
 
     this.removePictureToast = await this.toastController.create({
       message: 'Foto eliminada',
@@ -133,7 +138,10 @@ export class ProfileEditPage {
       buttons: [{
         side: 'end',
         text: 'Deshacer',
-        handler: () => { this.user.profilePic = profileImageTemp; }
+        handler: () => {
+          this.tempUser.profilePic = profileImageTemp;
+          this.tempUser.hasProfilePic = true;
+        }
       }]
     });
     this.removePictureToast.present();
@@ -144,11 +152,11 @@ export class ProfileEditPage {
   }
 
   editCompany() {
-    this.presentInputBottomSheet(this.headerCompany, 'companyName');
+    this.presentInputBottomSheet(this.headerCompany, 'companyName', true);
   }
 
   editAbout() {
-    this.presentInputBottomSheet(this.headerAbout, 'about', 'text-area');
+    this.presentInputBottomSheet(this.headerAbout, 'about', true, 'text-area');
   }
 
   async editServices() {
@@ -156,11 +164,11 @@ export class ProfileEditPage {
       component: ServicePickerComponent,
       enterAnimation: ModalAnimationSlideWithOpacityEnter,
       leaveAnimation: ModalAnimationSlideWithOpacityLeave,
-      componentProps: { userServices: this.user.services }
+      componentProps: { userServices: this.tempUser.services }
     });
 
     modal.onWillDismiss().then(({ data }) => {
-      if (data) this.user.services = data;
+      if (data) this.tempUser.services = data;
     });
 
     modal.present();
@@ -170,11 +178,11 @@ export class ProfileEditPage {
     const modal = await this.modalController.create({
       component: WorkingHoursPickerComponent,
       cssClass: 'modal-working-hours',
-      componentProps: { userWorkingHours: this.user.workingHours }
+      componentProps: { userWorkingHours: this.tempUser.workingHours }
     });
 
     modal.onWillDismiss().then(({ data }) => {
-      if (data) this.user.workingHours = data;
+      if (data) this.tempUser.workingHours = data;
     });
 
     modal.present();
@@ -186,19 +194,19 @@ export class ProfileEditPage {
       enterAnimation: ModalAnimationSlideWithOpacityEnter,
       leaveAnimation: ModalAnimationSlideWithOpacityLeave,
       componentProps: {
-        hideLocationAccuracy: this.user.hideLocationAccuracy,
-        addressFull: this.user.addressFull,
-        addressCity: this.user.addressCity,
-        coordinates: this.user.coordinates,
+        hideLocationAccuracy: this.tempUser.hideLocationAccuracy,
+        addressFull: this.tempUser.addressFull,
+        addressCity: this.tempUser.addressCity,
+        coordinates: this.tempUser.coordinates,
       }
     });
 
     modal.onWillDismiss().then(({ data }) => {
       if (data) {
-        this.user.hideLocationAccuracy = data.hideLocationAccuracy;
-        this.user.addressFull = data.addressFull;
-        this.user.addressCity = data.addressCity;
-        this.user.coordinates = data.coordinates;
+        this.tempUser.hideLocationAccuracy = data.hideLocationAccuracy;
+        this.tempUser.addressFull = data.addressFull;
+        this.tempUser.addressCity = data.addressCity;
+        this.tempUser.coordinates = data.coordinates;
       }
     });
 
@@ -211,22 +219,25 @@ export class ProfileEditPage {
       enterAnimation: ModalAnimationSlideWithOpacityEnter,
       leaveAnimation: ModalAnimationSlideWithOpacityLeave,
       componentProps: {
-        coordinates: this.user.coordinates,
-        radiusKm: this.user.radiusKm,
+        coordinates: this.tempUser.coordinates,
+        radiusKm: this.tempUser.radiusKm,
       }
     });
 
     modal.onWillDismiss().then(({ data }) => {
       if (data) {
         console.log(data);
-        this.user.radiusKm = data
+        this.tempUser.radiusKm = data
       }
     });
 
     modal.present();
   }
 
-  async presentInputBottomSheet(title, userProperty, type: 'input' | 'text-area' = 'input') {
+  async presentInputBottomSheet(title, userProperty, optional = false, type: 'input' | 'text-area' = 'input') {
+
+    const validators = optional ? [] : [Validators.required, Validators.minLength(3)];
+
     const modal = await this.modalController.create({
       component: InputBottomSheetComponent,
       cssClass: 'action-sheet border-top-radius',
@@ -234,16 +245,13 @@ export class ProfileEditPage {
         type,
         title,
         form: this.formBuilder.group({
-          value: new FormControl(this.user[userProperty], [
-            Validators.required,
-            Validators.minLength(3),
-          ]),
+          value: new FormControl(this.tempUser[userProperty], validators),
         })
       },
     });
 
     modal.onWillDismiss().then(({ data }) => {
-      if (data) this.user[userProperty] = data.value
+      if (data) this.tempUser[userProperty] = data.value;
     });
 
     modal.present();

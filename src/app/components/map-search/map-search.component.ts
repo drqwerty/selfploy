@@ -37,18 +37,29 @@ export class MapSearchComponent {
     this.modalController.dismiss();
   }
 
+  async goToLocation(bounds) {
+    await this.animations.startReverseAnimation();
+    this.modalController.dismiss(bounds);
+  }
+
   searchQuery({ detail }) {
     this.geocodeService.suggest().text(detail.value).nearby(this.mapCenter).run((error, results) =>
       this.suggestions = results?.suggestions ?? []
     )
   }
 
-  getGeopoint(result) {
-    this.geocodeService.geocode().text(result.text).key(result.magicKey).run((err, result) => {
-      if (err) return;
-      this.locationSearched.next(result.results[0].bounds);
-      this.goBack();
-    });
+  async getGeopoint(result) {
+    
+    try {
+      const bounds = await new Promise((resolve, reject) =>
+        this.geocodeService.geocode().text(result.text).key(result.magicKey).run((err, result) => {
+          if (err) reject();
+          const latLngBounds: LatLngBounds = result.results[0].bounds;
+          resolve(latLngBounds);
+        }));
+      this.goToLocation(bounds);
+
+    } catch { }
   }
 
 }
