@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform, ModalController, ToastController } from '@ionic/angular';
+import { NavController, Platform, ModalController, ToastController, LoadingController } from '@ionic/angular';
 import { tabBarAnimateIn, tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 
 import { Plugins, StatusBarStyle } from '@capacitor/core';
@@ -41,6 +41,7 @@ export class ProfileEditPage {
     private storage: StorageService,
     private modalController: ModalController,
     private toastController: ToastController,
+    private loadingController: LoadingController,
     private formBuilder: FormBuilder,
     private firestoreService: FirestoreService,
   ) {
@@ -65,11 +66,31 @@ export class ProfileEditPage {
     this.navController.pop();
   }
 
-  updateUser() {
-    this.storage.saveUserProfile(this.user);
-    this.firestoreService.updateUserProfile(this.user)
-      .then(t => console.log('t', t))
-      .catch(c => console.log('c', c));
+  async updateUser() {
+
+    let message, toast;
+
+    // (await this.loadingController.create()).present();
+
+    try {
+      await this.firestoreService.updateUserProfile(this.user)
+      this.storage.saveUserProfile(this.user);
+      message = 'Perfil actualizado';
+    } catch (error) {
+      message = 'Ha ocurrido un error, inténtalo de nuevo';
+    }
+
+    await Promise.all([
+      // this.loadingController.dismiss(),
+      this.toastController.create({
+        message,
+        duration: 2000,
+        mode: 'ios',
+        cssClass: 'ion-text-center',
+      }).then(htmlToast => toast = htmlToast),
+    ]);
+
+    toast.present();
   }
 
   async showCameraSourcePrompt() {
@@ -151,7 +172,7 @@ export class ProfileEditPage {
     modal.present();
   }
 
-  async editLocation() { 
+  async editLocation() {
     const modal = await this.modalController.create({
       component: MapLocationComponent,
       enterAnimation: ModalAnimationSlideWithOpacityEnter,
@@ -176,7 +197,7 @@ export class ProfileEditPage {
     modal.present();
   }
 
-  async editRange() { 
+  async editRange() {
     const modal = await this.modalController.create({
       component: MapRangeComponent,
       enterAnimation: ModalAnimationSlideWithOpacityEnter,

@@ -45,9 +45,13 @@ export class FirestoreService {
     const currentUser = await this.aFAuth.currentUser;
     const { token, profilePic, coordinates, ...essentialUserData } = user;
 
-    return this.geofirestore.collection('users').doc(currentUser.uid).update({
-      coordinates: new GeoPoint(coordinates.lat, coordinates.lng),
-      ...essentialUserData
-    });
+    const dataToUpdate = coordinates == null
+      ? essentialUserData
+      : {
+        coordinates: new GeoPoint(coordinates.lat, coordinates.lng),
+        ...essentialUserData
+      }
+
+    return this.geofirestore.collection('users').doc(currentUser.uid).update(dataToUpdate);
   }
 }
