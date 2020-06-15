@@ -29,7 +29,10 @@ export class ProfilePage {
     private nav: NavController,
     private data: DataService,
   ) {
-    storage.getUserProfile().then(user => this.user = data.user = user);
+    storage.getUserProfile().then(user => {
+      this.user = data.user = user;
+      this.backgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
+    });
   }
 
   ionViewWillEnter() {
