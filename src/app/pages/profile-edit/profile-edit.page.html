@@ -86,6 +86,7 @@
           {{headerServices}}
         </ion-text>
       </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
       <div class="user-options-list">
         <ng-container *ngFor="let category of tempUser?.services | keyvalue ">
           <span upperCaseFirstLetter *ngFor="let service of category.value" class="separate-childs-with-commas">{{service}}</span>
@@ -124,6 +125,7 @@
           Localización
         </ion-text>
       </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
       <ion-textarea rows="1" autosize readonly type="text" [value]="tempUser?.hideLocationAccuracy ? tempUser?.addressCity: tempUser?.addressFull"></ion-textarea>
     </ion-item>
     <div class="border"></div>
@@ -135,6 +137,7 @@
           Ámbito de actuación
         </ion-text>
       </ion-label>
+      <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
       <ion-input readonly type="text" [value]="tempUser?.radiusKm ? tempUser?.radiusKm + ' km' : ''"></ion-input>
     </ion-item>
     <div class="border"></div>
