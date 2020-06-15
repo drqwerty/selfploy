@@ -22,7 +22,7 @@ export class ProfilePopoverComponent {
     private alertController: AlertController,
     private platform: Platform,
     private nav: NavController,
-  ) { 
+  ) {
     popoverController.getTop().then(el => this.currentPopover = el)
   }
 
@@ -30,7 +30,7 @@ export class ProfilePopoverComponent {
     this.currentPopover.animated = false;
     await this.popoverController.dismiss();
     tabBarAnimateOut();
-    this.nav.navigateForward('tabs/profile/edit')
+    this.nav.navigateForward('tabs/profile/edit', { state: { forceCompleteProfile: false } });
   }
 
   async logout() {

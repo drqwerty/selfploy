@@ -19,12 +19,18 @@ import { MapLocationComponent } from 'src/app/components/map-location/map-locati
 import { MapRangeComponent } from 'src/app/components/map-range/map-range.component';
 import { DataService } from 'src/app/providers/data.service';
 
+import * as _ from 'lodash';
+import { ActivatedRoute, Router } from '@angular/router';
+
 @Component({
   selector: 'app-profile-edit',
   templateUrl: './profile-edit.page.html',
   styleUrls: ['./profile-edit.page.scss'],
 })
 export class ProfileEditPage {
+
+  forceCompleteProfile = false;
+
 
   tempUser: User;
   userRol = UserRole;
@@ -51,47 +57,72 @@ export class ProfileEditPage {
     private firestoreService: FirestoreService,
     private fStorage: FirebaseStorage,
     private data: DataService,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
     const goBackSubscription = platform.backButton.subscribe(() => {
-      goBackSubscription.unsubscribe();
-      tabBarAnimateIn();
-    })
+      if (this.tempUser.profileCompleted) {
+        goBackSubscription.unsubscribe();
+        tabBarAnimateIn();
+      }
+    });
+    route.queryParams.subscribe(() =>
+      this.forceCompleteProfile = router.getCurrentNavigation().extras.state?.forceCompleteProfile ?? true
+    );
   }
 
   ionViewWillEnter() {
-    this.tempUser = new User();
-    // Object.assign(this.tempUser, this.data.user);
-    this.storage.getUserProfile().then(user => this.tempUser = user);
+    this.getUser();
     tabBarAnimateOut();
     StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
-  
-  ionViewDidEnter() {
-    this.editServices();
-    // this.editLocation();
+
+  async getUser() {
+    this.tempUser = new User();
+    if (!this.data.user) this.data.user = await this.storage.getUserProfile();
+    Object.assign(this.tempUser, this.data.user);
   }
 
   goBack() {
     tabBarAnimateIn();
-    this.navController.pop();
+    this.navController.navigateBack('tabs')
   }
 
   async updateUser() {
 
-    let message, toast;
+    let message: string;
 
     // (await this.loadingController.create()).present();
 
     try {
+      this.tempUser.profileCompleted = this.profileIsComplete();
       if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(this.tempUser.profilePic);
       await this.firestoreService.updateUserProfile(this.tempUser)
       this.storage.saveUserProfile(this.tempUser);
       message = 'Perfil actualizado';
+      if (!this.tempUser.profileCompleted) message += '\naunque faltan algunos datos...';
       Object.assign(this.data.user, this.tempUser);
       this.updateImageProfile = false;
     } catch (error) {
       message = 'Ha ocurrido un error, inténtalo de nuevo';
     }
+
+    const toast = await this.presentToast(message);
+    this.leavePageIfPossible(toast);
+  }
+
+  profileIsComplete() {
+    if (this.tempUser.role === UserRole.professional && !this.tempUser.profileCompleted) {
+      const properties = ["services", "workingHours", "coordinates", "radiusKm"];
+      for (const property of properties) {
+        if (_.isEmpty(this.tempUser[property]) && !_.isNumber(this.tempUser[property])) return false;
+      }
+    }
+    return true;
+  }
+
+  private async presentToast(message: string) {
+    let toast: HTMLIonToastElement;
 
     await Promise.all([
       // this.loadingController.dismiss(),
@@ -104,6 +135,11 @@ export class ProfileEditPage {
     ]);
 
     toast.present();
+    return toast;
+  }
+
+  private leavePageIfPossible(toast: HTMLIonToastElement) {
+    if (this.forceCompleteProfile && this.tempUser.profileCompleted) toast.onWillDismiss().then(() => this.goBack());
   }
 
   async showCameraSourcePrompt() {

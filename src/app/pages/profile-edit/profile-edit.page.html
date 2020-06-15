@@ -2,7 +2,7 @@
 
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="!forceCompleteProfile">
       <ion-button (click)="goBack()">
         <ion-icon color="tertiary" slot="icon-only" name="chevron-back-outline"></ion-icon>
       </ion-button>
@@ -16,6 +16,10 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-text color="tertiary" class="title" *ngIf="forceCompleteProfile">
+    <h1>Cuéntanos un <span>poco más de ti</span></h1>
+  </ion-text>
 
   <div class="img">
     <div class="image-profile-wrapper">

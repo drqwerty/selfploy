@@ -341,22 +341,6 @@ image-cropper {
     }
   }
 
-  .title {
-    h1 {
-      text-align: center;
-      color: #fff;
-      font-size: 1.9rem;
-      font-weight: 600;
-      margin-top: 20px;
-      margin-bottom: 50px;
-
-      span::before {
-        content: "\A";
-        white-space: pre;
-      }
-    }
-  }
-
   .user-interaction {
     font-size: 1rem;
     height: 48px;
@@ -391,4 +375,19 @@ image-cropper {
 
 .login-toast {
   text-align: center;
+}
+
+.title {
+  h1 {
+    text-align: center;
+    font-size: 1.9rem;
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 50px;
+
+    span::before {
+      content: "\A";
+      white-space: pre;
+    }
+  }
 }

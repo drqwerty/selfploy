@@ -134,8 +134,7 @@ export class AuthService {
   }
 
   createAndSaveUserProfile(user: User, signUpPromise: Promise<firebase.auth.UserCredential>) {
-    // user.profileCompleted = user.role === UserRole.client;
-    user.profileCompleted = true;
+    user.profileCompleted = user.role === UserRole.client;
     return new Promise((resolve, reject) => {
       signUpPromise
         .then(userCrendential => {
