@@ -16,7 +16,7 @@ export const getIonPageElement = (element: HTMLElement) => {
 const rootTransition = createAnimation();
 
 export const SlideAnimation = (_: HTMLElement, opts: any) => {
-  const duration = 300;
+  const duration = 400;
 
   const backDirection = opts.direction === 'back';
   const enteringEl = opts.enteringEl;
@@ -33,10 +33,10 @@ export const SlideAnimation = (_: HTMLElement, opts: any) => {
 
   if (!backDirection) {
     enterTransition
-      .easing('ease-out')
+      .easing('ease-in')
       .fromTo('transform', 'translateX(100%)', 'translateX(0)');
     leavingTransition
-      .easing('ease-out')
+      .easing('ease-in')
       .fromTo('transform', 'translateX(0%)', 'translateX(-50%)')
       .fromTo('opacity', '1', '0.3');
 

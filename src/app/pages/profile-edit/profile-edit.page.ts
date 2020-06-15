@@ -133,7 +133,7 @@ export class ProfileEditPage {
     try {
       this.tempUser.profileCompleted = this.profileIsComplete();
       if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(this.tempUser.profilePic);
-      await this.firestoreService.updateUserProfile(this.tempUser)
+      await this.firestoreService.updateUserProfile(this.tempUser);
       this.storage.saveUserProfile(this.tempUser);
       message = 'Perfil actualizado';
       if (!this.tempUser.profileCompleted) message += '\naunque faltan algunos datos...';
@@ -150,10 +150,9 @@ export class ProfileEditPage {
 
   profileIsComplete() {
     if (this.tempUser.role === UserRole.professional && !this.tempUser.profileCompleted) {
-      const properties = ["services", "workingHours", "coordinates", "radiusKm"];
-      for (const property of properties) {
-        if (_.isEmpty(this.tempUser[property]) && !_.isNumber(this.tempUser[property])) return false;
-      }
+      const properties = ["services", "workingHours", "coordinates"];
+      for (const property of properties) if (_.isEmpty(this.tempUser[property])) return false;
+      if (!this.tempUser.radiusKm) return false;
     }
     return true;
   }
@@ -340,6 +339,42 @@ export class ProfileEditPage {
     });
 
     modal.present();
+  }
+
+  async showMakeMeClientAlert() {
+    const alert = await this.alertController.create({
+      cssClass: 'custom-alert danger',
+      header: 'Se eliminarán los siguientes datos:',
+      message: `
+      -Tu perfil como profesional.<br><br>
+      -Los datos de tu perfil relacionados con el profesional.<br><br>
+      -Encargos aceptados como profesional.<br><br>
+      ¿Quieres continuar?
+      `,
+      buttons: [
+        {
+          text: 'No, ¡espera!',
+          role: 'cancel',
+        }, {
+          cssClass: 'confirm-button',
+          text: 'Sí, hazme solo cliente',
+          handler: () => this.makeMeClient(),
+        }
+      ]
+    });
+
+    alert.present();
+  }
+
+  makeMeClient() {
+    this.forceCompleteProfile = false;
+    this.tempUser.role = this.userRol.client;
+    this.tempUser.about = '';
+    this.tempUser.companyName = '';
+    this.tempUser.radiusKm = 0;
+    this.tempUser.services = {};
+    this.tempUser.workingHours = [];
+    this.updateUser();
   }
 
 }

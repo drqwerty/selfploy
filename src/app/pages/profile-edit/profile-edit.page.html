@@ -148,6 +148,12 @@
     </ion-item>
     <div class="border"></div>
 
+    <div *ngIf="tempUser?.role === userRol.professional && !clientToProfessional" class="ion-margin change-rol-wrapper">
+      <ion-button (click)="showMakeMeClientAlert()" expand="block" mode="ios" class="ion-margin-top" color="danger">
+        <ion-text color="light">Eliminar perfil profesional</ion-text>
+      </ion-button>
+    </div>
+
 
   </ion-list>
 
