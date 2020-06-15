@@ -60,12 +60,14 @@ export class ProfileEditPage {
 
   ionViewWillEnter() {
     this.tempUser = new User();
-    Object.assign(this.tempUser, this.data.user);
+    // Object.assign(this.tempUser, this.data.user);
+    this.storage.getUserProfile().then(user => this.tempUser = user);
     tabBarAnimateOut();
     StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
-
+  
   ionViewDidEnter() {
+    this.editServices();
     // this.editLocation();
   }
 

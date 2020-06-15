@@ -1,6 +1,8 @@
 export const Categories: Category[] = [
   {
     name: 'carpintería',
+    icon: '/assets/icon/categories/carpenter.svg',
+    color: '#F2A365',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -21,6 +23,8 @@ export const Categories: Category[] = [
   },
   {
     name: 'cerrajería',
+    icon: '/assets/icon/categories/locksmith.svg',
+    color: '#58A2BE',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -41,6 +45,8 @@ export const Categories: Category[] = [
   },
   {
     name: 'electricidad',
+    icon: '/assets/icon/categories/electrician.svg',
+    color: '#FFC95E',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -61,6 +67,8 @@ export const Categories: Category[] = [
   },
   {
     name: 'fontanería',
+    icon: '/assets/icon/categories/plumber.svg',
+    color: '#80D4F8',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -89,6 +97,8 @@ export const Categories: Category[] = [
   },
   {
     name: 'informática',
+    icon: '/assets/icon/categories/computing.svg',
+    color: '#80B9D2',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -113,6 +123,8 @@ export const Categories: Category[] = [
   },
   {
     name: 'limpieza',
+    icon: '/assets/icon/categories/cleaning.svg',
+    color: '#FF7B7B',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -141,6 +153,8 @@ export const Categories: Category[] = [
   },
   {
     name: 'mascotas',
+    icon: '/assets/icon/categories/pets.svg',
+    color: '#A0A0A0',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -160,27 +174,9 @@ export const Categories: Category[] = [
     ]
   },
   {
-    name: 'carpintería',
-    checked: false,
-    indeterminateState: false,
-    collapsed: true,
-    services: [
-      {
-        name: 'aluminio',
-        checked: false,
-      },
-      {
-        name: 'muebles',
-        checked: false,
-      },
-      {
-        name: 'carpintería general',
-        checked: false,
-      },
-    ]
-  },
-  {
     name: 'mudanzas',
+    icon: '/assets/icon/categories/removals.svg',
+    color: '#CFA17D',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -201,6 +197,8 @@ export const Categories: Category[] = [
   },
   {
     name: 'pintura',
+    icon: '/assets/icon/categories/painter.svg',
+    color: '#45B29C',
     checked: false,
     indeterminateState: false,
     collapsed: true,
@@ -223,6 +221,8 @@ export const Categories: Category[] = [
 
 export interface Category {
   name: string;
+  icon: string;
+  color: string;
   checked: boolean;
   indeterminateState: boolean;
   collapsed: boolean;
