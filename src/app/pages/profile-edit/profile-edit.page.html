@@ -2,13 +2,13 @@
 
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start" *ngIf="!forceCompleteProfile">
+    <ion-buttons slot="start" *ngIf="tempUser?.profileCompleted || clientToProfessional">
       <ion-button (click)="goBack()">
         <ion-icon color="tertiary" slot="icon-only" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="updateUser()" color="primary" class="no-transform">
+      <ion-button (click)="updateUser()" [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" class="no-transform">
         Guardar
       </ion-button>
     </ion-buttons>
@@ -46,7 +46,7 @@
           {{headerName}}
         </ion-text>
       </ion-label>
-      <ion-input readonly type="text" [value]="tempUser?.name"></ion-input>
+      <ion-input [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" readonly type="text" [value]="tempUser?.name"></ion-input>
     </ion-item>
     <div class="border"></div>
 
@@ -57,7 +57,7 @@
           Correo
         </ion-text>
       </ion-label>
-      <ion-input readonly type="email" inputmode="email" [value]="tempUser?.email"></ion-input>
+      <ion-input [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" readonly type="email" inputmode="email" [value]="tempUser?.email"></ion-input>
     </ion-item>
     <div class="border"></div>
 
@@ -68,59 +68,61 @@
           Contraseña
         </ion-text>
       </ion-label>
-      <ion-input readonly type="password" value="super password"></ion-input>
+      <ion-input [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" readonly type="password" value="super password"></ion-input>
     </ion-item>
     <div class="border"></div>
 
 
-    <ion-item button (click)="editCompany()">
-      <ion-label position="stacked">
-        <ion-text color="tertiary">
-          {{headerCompany}} - <span>Opcional</span>
-        </ion-text>
-      </ion-label>
-      <ion-input readonly type="text" [value]="tempUser?.companyName"></ion-input>
-    </ion-item>
-    <div class="border"></div>
-
-
-    <ion-item button (click)="editServices()">
-      <ion-label position="stacked">
-        <ion-text color="tertiary">
-          {{headerServices}}
-        </ion-text>
-      </ion-label>
-      <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
-      <div class="user-options-list">
-        <ng-container *ngFor="let category of tempUser?.services | keyvalue ">
-          <span upperCaseFirstLetter *ngFor="let service of category.value" class="separate-childs-with-commas">{{service}}</span>
-        </ng-container>
-      </div>
-    </ion-item>
-    <div class="border"></div>
-
-
-    <ion-item (click)="editWorkingHours()">
-      <ion-label position="stacked">
-        <ion-text color="tertiary">
-          {{headerWorkingHours}}
-        </ion-text>
-      </ion-label>
-      <div class="user-options-list">
-        <span upperCaseFirstLetter *ngFor="let workingHour of tempUser?.workingHours" class="separate-childs-with-commas">{{workingHour}}</span>
-      </div>
-    </ion-item>
-
-
-    <ion-item button (click)="editAbout()">
-      <ion-label position="stacked">
-        <ion-text color="tertiary">
-          {{headerAbout}} - <span>Opcional</span>
-        </ion-text>
-      </ion-label>
-      <ion-textarea rows="1" autosize readonly type="text" [value]="tempUser?.about"></ion-textarea>
-    </ion-item>
-    <div class="border"></div>
+    <ng-container *ngIf="tempUser?.role === userRol.professional">
+      <ion-item button (click)="editCompany()">
+        <ion-label position="stacked">
+          <ion-text color="tertiary">
+            {{headerCompany}} - <span>Opcional</span>
+          </ion-text>
+        </ion-label>
+        <ion-input readonly type="text" [value]="tempUser?.companyName"></ion-input>
+      </ion-item>
+      <div class="border"></div>
+  
+  
+      <ion-item button (click)="editServices()">
+        <ion-label position="stacked">
+          <ion-text color="tertiary">
+            {{headerServices}}
+          </ion-text>
+        </ion-label>
+        <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
+        <div class="user-options-list">
+          <ng-container *ngFor="let category of tempUser?.services | keyvalue ">
+            <span upperCaseFirstLetter *ngFor="let service of category.value" class="separate-childs-with-commas">{{service}}</span>
+          </ng-container>
+        </div>
+      </ion-item>
+      <div class="border"></div>
+  
+  
+      <ion-item (click)="editWorkingHours()">
+        <ion-label position="stacked">
+          <ion-text color="tertiary">
+            {{headerWorkingHours}}
+          </ion-text>
+        </ion-label>
+        <div class="user-options-list">
+          <span upperCaseFirstLetter *ngFor="let workingHour of tempUser?.workingHours" class="separate-childs-with-commas">{{workingHour}}</span>
+        </div>
+      </ion-item>
+  
+  
+      <ion-item button (click)="editAbout()">
+        <ion-label position="stacked">
+          <ion-text color="tertiary">
+            {{headerAbout}} - <span>Opcional</span>
+          </ion-text>
+        </ion-label>
+        <ion-textarea rows="1" autosize readonly type="text" [value]="tempUser?.about"></ion-textarea>
+      </ion-item>
+      <div class="border"></div>
+    </ng-container>
 
     
     <ion-item button (click)="editLocation()">
@@ -130,12 +132,12 @@
         </ion-text>
       </ion-label>
       <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
-      <ion-textarea rows="1" autosize readonly type="text" [value]="tempUser?.hideLocationAccuracy ? tempUser?.addressCity: tempUser?.addressFull"></ion-textarea>
+      <ion-textarea [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" rows="1" autosize readonly type="text" [value]="tempUser?.hideLocationAccuracy ? tempUser?.addressCity: tempUser?.addressFull"></ion-textarea>
     </ion-item>
     <div class="border"></div>
 
 
-    <ion-item button (click)="editRange()" [disabled]="tempUser?.addressFull == null || tempUser?.addressFull == ''">
+    <ion-item *ngIf="tempUser?.role === userRol.professional" button (click)="editRange()" [disabled]="tempUser?.addressFull == null || tempUser?.addressFull == ''">
       <ion-label position="stacked">
         <ion-text color="tertiary">
           Ámbito de actuación

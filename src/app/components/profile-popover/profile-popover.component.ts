@@ -35,7 +35,7 @@ export class ProfilePopoverComponent {
 
   async logout() {
     const alert = await this.alertController.create({
-      cssClass: 'logout-confirm',
+      cssClass: 'custom-alert logout',
       header: 'Cerrar sesión',
       message: 'Se cerrará la sesión actual, ¿quieres continuar?',
       buttons: [

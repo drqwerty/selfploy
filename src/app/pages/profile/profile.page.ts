@@ -3,10 +3,11 @@ import { StorageService } from 'src/app/services/storage.service';
 import { User, UserRole } from 'src/app/models/user-model';
 
 import { Plugins, StatusBarStyle } from '@capacitor/core';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, NavController } from '@ionic/angular';
 import { ProfilePopoverComponent } from 'src/app/components/profile-popover/profile-popover.component';
 import { MapPreviewComponent } from 'src/app/components/map-preview/map-preview.component';
 import { DataService } from 'src/app/providers/data.service';
+import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
 const { StatusBar } = Plugins;
 
 @Component({
@@ -20,21 +21,20 @@ export class ProfilePage {
 
   userRol = UserRole;
   user: User;
-  brackgroundColor: string;
+  backgroundColor: string;
 
   constructor(
     private storage: StorageService,
     private popoverController: PopoverController,
+    private nav: NavController,
     private data: DataService,
   ) {
-    storage.getUserProfile().then(user => {
-      this.user = data.user = user;
-      this.brackgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
-    });
+    storage.getUserProfile().then(user => this.user = data.user = user);
   }
 
   ionViewWillEnter() {
     if (this.user && this.user !== this.data.user) this.user = this.data.user;
+    this.backgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
     StatusBar.setStyle({ style: StatusBarStyle.Dark })
   }
 
@@ -48,6 +48,16 @@ export class ProfilePage {
       event: ev,
     });
     return await popover.present();
+  }
+
+  makeMeProfesional() {
+    tabBarAnimateOut();
+    this.nav.navigateForward('tabs/profile/edit', {
+      state: {
+        forceCompleteProfile: true,
+        clientToProfessional: true,
+      }
+    });
   }
 
 }

@@ -59,7 +59,7 @@
 
     .number {
       font-family: Poppins;
-      font-weight: 500; 
+      font-weight: 500;
       margin-bottom: 4px;
     }
 
@@ -102,6 +102,14 @@
 
     ion-card {
       box-shadow: none;
+    }
+  }
+
+  .change-rol-wrapper {
+    margin-top: 50px;
+
+    .change-rol-info {
+      font-size: 14px;
     }
   }
 }

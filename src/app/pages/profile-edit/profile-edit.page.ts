@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform, ModalController, ToastController, LoadingController } from '@ionic/angular';
+import { NavController, Platform, ModalController, ToastController, LoadingController, AlertController } from '@ionic/angular';
 import { tabBarAnimateIn, tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 
 import { Plugins, StatusBarStyle } from '@capacitor/core';
@@ -30,10 +30,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ProfileEditPage {
 
   forceCompleteProfile = false;
-
+  clientToProfessional = false;
 
   tempUser: User;
   userRol = UserRole;
+
+  pageAlreadyLeave = false;
 
   updateImageProfile = false;
   profilePicWithoutCrop: any;
@@ -59,6 +61,7 @@ export class ProfileEditPage {
     private data: DataService,
     private route: ActivatedRoute,
     private router: Router,
+    private alertController: AlertController,
   ) {
     const goBackSubscription = platform.backButton.subscribe(() => {
       if (this.tempUser.profileCompleted) {
@@ -66,9 +69,14 @@ export class ProfileEditPage {
         tabBarAnimateIn();
       }
     });
-    route.queryParams.subscribe(() =>
-      this.forceCompleteProfile = router.getCurrentNavigation().extras.state?.forceCompleteProfile ?? true
-    );
+    route.queryParams.subscribe(() => {
+      this.forceCompleteProfile = router.getCurrentNavigation().extras.state?.forceCompleteProfile ?? true;
+      this.clientToProfessional = router.getCurrentNavigation().extras.state?.clientToProfessional ?? false;
+    });
+  }
+
+  ionViewWillLeave() {
+    this.pageAlreadyLeave = true;
   }
 
   ionViewWillEnter() {
@@ -81,11 +89,39 @@ export class ProfileEditPage {
     this.tempUser = new User();
     if (!this.data.user) this.data.user = await this.storage.getUserProfile();
     Object.assign(this.tempUser, this.data.user);
+    if (this.clientToProfessional) {
+      this.tempUser.role = this.userRol.professional;
+      this.tempUser.profileCompleted = false;
+    }
   }
 
   goBack() {
-    tabBarAnimateIn();
-    this.navController.navigateBack('tabs')
+    if (this.clientToProfessional) {
+      this.notificateNotUpgradeProfile()
+    } else {
+      tabBarAnimateIn();
+      this.navController.navigateBack('tabs');
+    }
+  }
+
+  async notificateNotUpgradeProfile() {
+    const alert = await this.alertController.create({
+      cssClass: 'custom-alert not-upgrade',
+      header: 'No se guardarán los cambios',
+      message: 'Seguirás teniendo un perfil de cliente, ¿quieres continuar?',
+      buttons: [
+        {
+          text: 'No, ¡espera!',
+          role: 'cancel',
+        }, {
+          cssClass: 'confirm-button',
+          text: 'Prefiero seguir como cliente',
+          handler: () => this.navController.navigateBack('tabs'),
+        }
+      ]
+    });
+
+    alert.present();
   }
 
   async updateUser() {
@@ -103,6 +139,7 @@ export class ProfileEditPage {
       if (!this.tempUser.profileCompleted) message += '\naunque faltan algunos datos...';
       Object.assign(this.data.user, this.tempUser);
       this.updateImageProfile = false;
+      this.clientToProfessional = false;
     } catch (error) {
       message = 'Ha ocurrido un error, inténtalo de nuevo';
     }
@@ -139,7 +176,9 @@ export class ProfileEditPage {
   }
 
   private leavePageIfPossible(toast: HTMLIonToastElement) {
-    if (this.forceCompleteProfile && this.tempUser.profileCompleted) toast.onWillDismiss().then(() => this.goBack());
+    if (this.forceCompleteProfile && this.tempUser.profileCompleted) toast.onWillDismiss().then(() => {
+      if (!this.pageAlreadyLeave) this.goBack();
+    });
   }
 
   async showCameraSourcePrompt() {

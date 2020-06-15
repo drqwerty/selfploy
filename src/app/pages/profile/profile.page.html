@@ -1,7 +1,7 @@
-<status-bar [color]="brackgroundColor"></status-bar>
+<status-bar [color]="backgroundColor"></status-bar>
 
 <ion-header class="ion-no-border">
-  <ion-toolbar [color]="brackgroundColor">
+  <ion-toolbar [color]="backgroundColor">
     <ion-title color="light">Perfil</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="presentPopover($event)">
@@ -11,7 +11,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [color]="brackgroundColor">
+<ion-content [color]="backgroundColor">
 
   <div class="ion-padding content nav-bar-space">
 
@@ -62,7 +62,7 @@
     <div class="info">
       <ion-list lines="none">
 
-        <div *ngIf="user?.role === userRol.professional" class="professional-info">
+        <ng-container *ngIf="user?.role === userRol.professional" class="professional-info">
           <ion-item *ngIf="user?.companyName">
             <ion-label>
               <h2>Empresa</h2>
@@ -98,7 +98,7 @@
               <h3 class="break-spaces">{{user.about}}</h3>
             </ion-label>
           </ion-item>
-        </div>
+        </ng-container>
 
         <ng-container *ngIf="user?.addressFull">
           <ion-item>
@@ -108,7 +108,7 @@
             </ion-label>
           </ion-item>
 
-          <ion-card mode="ios">
+          <ion-card mode="ios" *ngIf="user?.role === userRol.professional">
             <map-preview [coordinates]="user?.coordinates" [radiusKm]="user?.radiusKm" [hideMarker]="user?.hideLocationAccuracy"></map-preview>
           </ion-card>
 
@@ -116,5 +116,16 @@
       </ion-list>
     </div>
 
+    <div *ngIf="user?.role === userRol.client" class="ion-margin change-rol-wrapper">
+      <ion-text color="medium" class="ion-text-center" class="change-rol-info">
+        Configura tu perfil para ofrecer servicios. 
+      Podrás seguir solicitando encargos una vez seas
+      profesional
+      </ion-text>
+      <ion-button (click)="makeMeProfesional()" expand="block" mode="ios" class="ion-margin-top">
+        <ion-text>Convertirme en profesional</ion-text>
+      </ion-button>
+    </div>
+      
   </div>
 </ion-content>

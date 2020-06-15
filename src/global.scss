@@ -106,7 +106,7 @@ ion-searchbar.search-locations {
   }
 }
 
-.logout-confirm {
+.custom-alert {
   .alert-wrapper {
     border-radius: 10px !important;
   }
@@ -115,13 +115,22 @@ ion-searchbar.search-locations {
     text-transform: none !important;
     margin-bottom: 10px !important;
 
-    &.confirm-button {
-      background-color: var(--ion-color-danger);
-      padding: 10px 15px;
-      border-radius: 10px;
-      color: white;
-      margin: 0px 14px 10px;
-    }
+  }
+
+  &.logout .confirm-button {
+    background-color: var(--ion-color-danger);
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: white;
+    margin: 0px 14px 10px;
+  }
+
+  &.not-upgrade .confirm-button {
+    background-color: var(--ion-color-secondary);
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: white;
+    margin: 0px 14px 10px;
   }
 }
 
