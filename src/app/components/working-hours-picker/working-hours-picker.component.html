@@ -1,4 +1,10 @@
-  <ion-list lines="none">
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title color="tertiary">{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-list lines="none">
     <ion-item *ngFor="let workingHour of workingHours">
       <ion-checkbox slot="start" [(ngModel)]="workingHour.checked"></ion-checkbox>
       <ion-label class="ion-text-capitalize" color="tertiary">{{workingHour.name}}</ion-label>

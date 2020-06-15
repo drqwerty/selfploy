@@ -9,6 +9,7 @@ import { WorkingHours } from 'src/app/models/user-model';
 })
 export class WorkingHoursPickerComponent {
 
+  @Input() title: string;
   @Input() userWorkingHours: WorkingHours[] = [];
 
 

@@ -4,7 +4,7 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
-        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+        <ion-icon color="tertiary" slot="icon-only" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
@@ -83,7 +83,7 @@
     <ion-item button (click)="editServices()">
       <ion-label position="stacked">
         <ion-text color="tertiary">
-          Servicios
+          {{headerServices}}
         </ion-text>
       </ion-label>
       <div class="user-options-list">
@@ -98,7 +98,7 @@
     <ion-item (click)="editWorkingHours()">
       <ion-label position="stacked">
         <ion-text color="tertiary">
-          Horario
+          {{headerWorkingHours}}
         </ion-text>
       </ion-label>
       <div class="user-options-list">

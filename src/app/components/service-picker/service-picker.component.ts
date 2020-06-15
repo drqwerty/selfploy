@@ -13,6 +13,7 @@ import * as _ from 'lodash';
 })
 export class ServicePickerComponent {
 
+  @Input() title: string;
   @Input() userServices: any = {};
 
   categories = Categories;

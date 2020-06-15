@@ -35,6 +35,8 @@ export class ProfileEditPage {
 
   headerName = 'Nombre completo';
   headerCompany = 'Empresa';
+  headerServices = 'Servicios';
+  headerWorkingHours = 'Horario';
   headerAbout = 'Sobre mí'
 
 
@@ -164,7 +166,10 @@ export class ProfileEditPage {
       component: ServicePickerComponent,
       enterAnimation: ModalAnimationSlideWithOpacityEnter,
       leaveAnimation: ModalAnimationSlideWithOpacityLeave,
-      componentProps: { userServices: this.tempUser.services }
+      componentProps: {
+        title: this.headerServices,
+        userServices: this.tempUser.services
+      }
     });
 
     modal.onWillDismiss().then(({ data }) => {
@@ -178,7 +183,10 @@ export class ProfileEditPage {
     const modal = await this.modalController.create({
       component: WorkingHoursPickerComponent,
       cssClass: 'modal-working-hours',
-      componentProps: { userWorkingHours: this.tempUser.workingHours }
+      componentProps: {
+        title: this.headerWorkingHours,
+        userWorkingHours: this.tempUser.workingHours
+      }
     });
 
     modal.onWillDismiss().then(({ data }) => {
