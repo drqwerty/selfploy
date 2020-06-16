@@ -33,6 +33,13 @@ export class ProfilePopoverComponent {
     this.nav.navigateForward('tabs/profile/edit', { state: { forceCompleteProfile: false } });
   }
 
+  async editSettings() {
+    this.currentPopover.animated = false;
+    await this.popoverController.dismiss();
+    tabBarAnimateOut();
+    this.nav.navigateForward('tabs/profile/settings', { state: { forceCompleteProfile: false } });
+  }
+
   async logout() {
     const alert = await this.alertController.create({
       cssClass: 'custom-alert danger',

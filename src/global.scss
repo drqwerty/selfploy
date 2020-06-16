@@ -27,6 +27,9 @@
 
 @import "theme/fonts.scss";
 
+.header-big-size ion-title {
+  font-size: 29px;
+}
 
 .no-transform {
   transform: none !important;
@@ -63,7 +66,7 @@
 }
 
 .break-spaces {
-  white-space: break-spaces;
+  white-space: break-spaces !important;
 }
 
 .nav-bar-space {

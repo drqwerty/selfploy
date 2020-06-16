@@ -33,6 +33,11 @@ const routes: Routes = [
       {
         path: 'profile/edit',
         loadChildren: () => import('../profile-edit/profile-edit.module').then(m => m.ProfileEditPageModule),
+      },  
+      {
+        path: 'profile/settings',
+        loadChildren: () => import('../settings/settings.module').then( m => m.SettingsPageModule),
+        canActivate: [ProfileCompletedGuardService],
       },
     ]
   },

@@ -54,4 +54,11 @@ export class FirestoreService {
 
     return this.geofirestore.collection('users').doc(currentUser.uid).update(dataToUpdate);
   }
+
+  async updateUserLocationAccuracySetting(disable: boolean) {
+    const currentUser = await this.aFAuth.currentUser;
+    return this.db.collection('users').doc(currentUser.uid).update({
+      'd.hideLocationAccuracy': disable,
+    });
+  }
 }

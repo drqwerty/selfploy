@@ -1,0 +1,49 @@
+<status-bar color="#fff"></status-bar>
+
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon color="tertiary" slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-header class="ion-no-border header-big-size">
+    <ion-toolbar>
+      <ion-title color="tertiary">Ajustes</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-list class="settings-list" lines="none">
+    <ion-list-header>
+      <ion-label>Cuenta</ion-label>
+    </ion-list-header>
+    
+    <ion-item button (click)="hideLocationAccuracy = !hideLocationAccuracy">
+      <ion-label color="tertiary" class="break-spaces">Ocultar localización precisa</ion-label>
+      <ion-toggle [(ngModel)]="hideLocationAccuracy"></ion-toggle>
+    </ion-item>
+  </ion-list>
+  
+  
+  <ion-list class="settings-list" lines="none">
+    <ion-list-header>
+      <ion-label>Notificaciones</ion-label>
+    </ion-list-header>
+
+    <ion-item button>
+      <ion-label color="tertiary" class="break-spaces">Notificaciones de chat</ion-label>
+      <ion-toggle></ion-toggle>
+    </ion-item>
+
+    <ion-item button>
+      <ion-label color="tertiary" class="break-spaces">Notificaciones de nuevos encargos</ion-label>
+      <ion-toggle></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
