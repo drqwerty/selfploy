@@ -7,11 +7,15 @@ const routes: Routes = [
   {
     path: '',
     component: ServicesPage
-  }
+  },
+  {
+    path: 'professional-list',
+    loadChildren: () => import('../professional-list/professional-list.module').then(m => m.ProfessionalListPageModule)
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ServicesPageRoutingModule {}
+export class ServicesPageRoutingModule { }

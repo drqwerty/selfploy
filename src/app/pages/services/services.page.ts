@@ -27,7 +27,6 @@ export class ServicesPage {
   }
 
   ionViewWillEnter() {
-    console.log(this.category);
     if (this.firstEnter) this.updateTitle(0);
     this.firstEnter = false;
   }
@@ -38,6 +37,10 @@ export class ServicesPage {
 
   updateTitle(scrollTop: number) {
     this.customHeader.updateHeaderTitle(scrollTop);
+  }
+
+  showProfessionals(service: string) {
+    this.navController.navigateForward('/tabs/categories/services/professional-list', { state: { service } })
   }
 
 }
