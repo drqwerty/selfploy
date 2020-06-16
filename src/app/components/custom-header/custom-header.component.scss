@@ -1,0 +1,34 @@
+.custom-header {
+  width: 100%;
+  position: relative;
+  color: black;
+
+  &::after {
+    z-index: 1;
+    left: 0;
+    bottom: -5px;
+    background-position: left 0 top -2px;
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAHBAMAAADzDtBxAAAAD1BMVEUAAAAAAAAAAAAAAAAAAABPDueNAAAABXRSTlMUCS0gBIh/TXEAAAAaSURBVAjXYxCEAgY4UIICBmMogMsgFLtAAQCNSwXZKOdPxgAAAABJRU5ErkJggg==);
+    background-repeat: repeat-x;
+    content: "";
+  }
+
+  .title {
+    color: var(--ion-color-tertiary);
+    font-weight: 500;
+    font-size: 16.5px;
+    text-align: center;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    z-index: 100;
+  }
+}

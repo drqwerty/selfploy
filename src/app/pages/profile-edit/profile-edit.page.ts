@@ -21,7 +21,6 @@ import { DataService } from 'src/app/providers/data.service';
 
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile-edit',
@@ -37,6 +36,7 @@ export class ProfileEditPage {
   userRol = UserRole;
 
   pageAlreadyLeave = false;
+  hideHeaderBorder = true;
 
   updateImageProfile = false;
   profilePicWithoutCrop: any;
@@ -80,6 +80,10 @@ export class ProfileEditPage {
     StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
+  updateHeaderShadow(scrollTop: number) {
+    this.hideHeaderBorder = scrollTop === 0;
+  }
+
   async getUser() {
     this.tempUser = new User();
     if (!this.data.user) this.data.user = await this.storage.getUserProfile();
@@ -95,7 +99,7 @@ export class ProfileEditPage {
       this.notificateNotUpgradeProfile()
     } else {
       tabBarAnimateIn();
-      this.navController.navigateBack('tabs');
+      this.navController.navigateBack('tabs/profile');
     }
   }
 

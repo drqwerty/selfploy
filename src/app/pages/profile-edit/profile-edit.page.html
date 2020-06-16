@@ -1,6 +1,6 @@
 <status-bar color="#fff"></status-bar>
 
-<ion-header class="ion-no-border">
+<ion-header [class.ion-no-border]="hideHeaderBorder">
   <ion-toolbar>
     <ion-buttons slot="start" *ngIf="tempUser?.profileCompleted || clientToProfessional">
       <ion-button (click)="goBack()">
@@ -15,7 +15,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content scrollEvents="true" (ionScroll)="updateHeaderShadow($event.detail.scrollTop);">
 
   <ion-text color="tertiary" class="title" *ngIf="forceCompleteProfile">
     <h1>Cuéntanos un <span>poco más de ti</span></h1>

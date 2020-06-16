@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 import { Categories, Category } from 'src/assets/categories';
 
 import * as _ from 'lodash';
+import { CustomHeaderComponent } from '../custom-header/custom-header.component';
 
 
 @Component({
@@ -16,6 +17,9 @@ export class ServicePickerComponent {
   @Input() title: string;
   @Input() userServices: any = {};
 
+
+  @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
+  
   categories = Categories;
 
   constructor(
@@ -24,6 +28,11 @@ export class ServicePickerComponent {
   
   ionViewWillEnter() {
     this.setServicesSelected();
+    this.updateTitle(0);
+  }
+
+  updateTitle(scrollTop: number) {
+    this.customHeader.updateHeaderTitle(scrollTop);
   }
 
   goBack() {

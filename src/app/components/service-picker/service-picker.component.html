@@ -1,23 +1,27 @@
 <status-bar color="#fff"></status-bar>
 
-<ion-header class="ion-no-border">
+<custom-header [title]="title">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
         <ion-icon color="tertiary" slot="icon-only" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title color="tertiary">{{title}}</ion-title>
   </ion-toolbar>
-</ion-header>
+</custom-header>
 
-<ion-content>
+
+<ion-content scrollEvents="true" (ionScroll)="updateTitle($event.detail.scrollTop)">
+
+  <ion-toolbar></ion-toolbar>
 
   <div *ngFor="let category of categories">
     <ion-list lines="none" class="item-category">
       <ion-item (click)="updateCollapseState(category)">
-        <ion-checkbox slot="start" [(ngModel)]="category.checked" [indeterminate]="category.indeterminateState" (click)="updateServicesCheckbox(category, $event)"></ion-checkbox>
-        <ion-icon class="category-icon" [style.backgroundColor]="category.color" color="light" slot="start" [src]="category.icon"></ion-icon>
+        <ion-checkbox slot="start" [(ngModel)]="category.checked" [indeterminate]="category.indeterminateState"
+          (click)="updateServicesCheckbox(category, $event)"></ion-checkbox>
+        <ion-icon class="category-icon" [style.backgroundColor]="category.color" color="light" slot="start"
+          [src]="category.icon"></ion-icon>
         <ion-label upperCaseFirstLetter color="medium">{{category.name}}</ion-label>
         <ion-icon slot="end" [name]="category.collapsed ? 'chevron-down-outline' : 'chevron-up-outline'"></ion-icon>
       </ion-item>
@@ -25,7 +29,8 @@
 
     <ion-list lines="none" [class.collapsed]="category.collapsed" class="item-service">
       <ion-item *ngFor="let service of category.services">
-        <ion-checkbox slot="start" [(ngModel)]="service.checked" (ionChange)="updateCategoryCheckbox(category)"></ion-checkbox>
+        <ion-checkbox slot="start" [(ngModel)]="service.checked" (ionChange)="updateCategoryCheckbox(category)">
+        </ion-checkbox>
         <ion-label upperCaseFirstLetter color="tertiary">{{service.name}}</ion-label>
       </ion-item>
     </ion-list>

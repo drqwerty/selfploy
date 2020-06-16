@@ -16,6 +16,7 @@ import {AutosizeModule} from 'ngx-autosize';
 import { MapLocationModule } from 'src/app/components/map-location/map-location.module';
 import { MapRangeModule } from 'src/app/components/map-range/map-range.module';
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
+import { CustomHeaderModule } from 'src/app/components/custom-header/custom-header.module';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-lette
     MapLocationModule,
     MapRangeModule,
     UpperCaseFirstLetterModule,
+    CustomHeaderModule,
   ],
   declarations: [
     ProfileEditPage,
