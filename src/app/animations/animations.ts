@@ -147,8 +147,7 @@ export class Animations {
             animation.elementAnimated.style.borderRadius = '0px';
             setTimeout(() => {
               resolve();
-              this.hideElement(animation.elementAnimated);
-          
+              setTimeout(() => this.hideElement(animation.elementAnimated), 50);
             }, this.duration);
           
           });

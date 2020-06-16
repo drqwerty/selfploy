@@ -85,7 +85,7 @@ export class CameraSourceActionSheetComponent {
       animated: false,
       componentProps,
     });
-    this.modalCropper.onWillDismiss().then(({ data }) => this.modalRoot.dismiss({ profilePicWithoutCrop: this.profilePic, ...data }));
+    this.modalCropper.onWillDismiss().then(({ data }) => this.modalRoot.dismiss({ profilePicWithoutCrop: this.profilePic, image: data }));
   }
 
 }

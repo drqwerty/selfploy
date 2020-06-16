@@ -240,12 +240,16 @@ export class LoginRegisterComponent {
     });
 
     modal.onWillDismiss().then(({ data }) => {
-      this.profilePicWithoutCrop = data.profilePicWithoutCrop;
-      if (data?.image) this.user.profilePic = data.image;
+      if (data?.image) this.updateImageVariables(data);
       else if (data?.remove) this.removeProfileImage();
     });
 
     modal.present();
+  }
+
+  updateImageVariables(data: { image: string, profilePicWithoutCrop: string }) {
+    this.profilePicWithoutCrop = data.profilePicWithoutCrop;
+    this.user.profilePic = data.image;
   }
 
   async removeProfileImage() {

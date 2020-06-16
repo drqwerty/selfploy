@@ -139,13 +139,11 @@ export class MapLocationComponent {
         mapCenter: this.map.getCenter(),
       }
     });
+    
     modal.onWillDismiss().then(({ data }) => {
-
-      if (data) {
-        this.map.flyToBounds(data);
-        this.forceRefreshHeight();
-      }
-    })
+      this.forceRefreshHeight();
+      if (data) this.map.flyToBounds(data);
+    });
     
     await this.animations.addElement(this.fab.el, 'light').startAnimation();
     modal.present();
@@ -155,7 +153,7 @@ export class MapLocationComponent {
   forceRefreshHeight() {
     const el = this.renderer.selectRootElement('app-map-location', true);
     this.renderer.setStyle(el, 'height', '100%');
-    setTimeout(() => this.renderer.removeStyle(el, 'height'), 200);
+    setTimeout(() => this.renderer.removeStyle(el, 'height'), 150);
   }
 
   async locate(requestPersmission = true) {

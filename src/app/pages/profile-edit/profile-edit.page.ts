@@ -21,6 +21,7 @@ import { DataService } from 'src/app/providers/data.service';
 
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile-edit',
@@ -50,7 +51,6 @@ export class ProfileEditPage {
 
   constructor(
     private navController: NavController,
-    private platform: Platform,
     private storage: StorageService,
     private modalController: ModalController,
     private toastController: ToastController,
@@ -63,12 +63,6 @@ export class ProfileEditPage {
     private router: Router,
     private alertController: AlertController,
   ) {
-    const goBackSubscription = platform.backButton.subscribe(() => {
-      if (this.tempUser.profileCompleted) {
-        goBackSubscription.unsubscribe();
-        tabBarAnimateIn();
-      }
-    });
     route.queryParams.subscribe(() => {
       this.forceCompleteProfile = router.getCurrentNavigation().extras.state?.forceCompleteProfile ?? true;
       this.clientToProfessional = router.getCurrentNavigation().extras.state?.clientToProfessional ?? false;
@@ -77,6 +71,7 @@ export class ProfileEditPage {
 
   ionViewWillLeave() {
     this.pageAlreadyLeave = true;
+    tabBarAnimateIn();
   }
 
   ionViewWillEnter() {
@@ -128,7 +123,7 @@ export class ProfileEditPage {
 
     let message: string;
 
-    // (await this.loadingController.create()).present();
+    (await this.loadingController.create()).present();
 
     try {
       this.tempUser.profileCompleted = this.profileIsComplete();
@@ -161,7 +156,7 @@ export class ProfileEditPage {
     let toast: HTMLIonToastElement;
 
     await Promise.all([
-      // this.loadingController.dismiss(),
+      this.loadingController.dismiss(),
       this.toastController.create({
         message,
         duration: 2000,
@@ -192,15 +187,18 @@ export class ProfileEditPage {
     });
 
     modal.onWillDismiss().then(({ data }) => {
-      this.profilePicWithoutCrop = data?.profilePicWithoutCrop;
-      this.updateImageProfile = data?.image;
-      if (data?.image) {
-        this.tempUser.hasProfilePic = true;
-        this.tempUser.profilePic = data.image;
-      } else if (data?.remove) { this.removeProfileImage(); }
+      if (data?.image) this.updateImageVariables(data);
+      else if (data?.remove) this.removeProfileImage();
     });
 
     modal.present();
+  }
+
+  updateImageVariables(data: { image: string, profilePicWithoutCrop: string }) {
+    this.profilePicWithoutCrop = data.profilePicWithoutCrop;
+    this.tempUser.profilePic = data.image;
+    this.tempUser.hasProfilePic = true;
+    this.updateImageProfile = true;
   }
 
   async removeProfileImage() {
