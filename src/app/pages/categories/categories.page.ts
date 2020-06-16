@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { NavController, Platform } from '@ionic/angular';
-import { createAnimation } from '@ionic/core';
-
+import { NavController, Platform, IonContent } from '@ionic/angular';
+import { Categories, Category } from 'src/assets/categories';
 
 import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
+import { isContext } from 'vm';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -14,39 +15,30 @@ const { StatusBar } = Plugins;
 })
 export class CategoriesPage {
 
+  @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
+  @ViewChild(IonContent) ionContent: IonContent;
+
+  firstEnter = true;
+
+  categories = Categories;
+
   constructor(
-    private AF: AuthService,
-    private nav: NavController,
-    private platform: Platform,
   ) { }
 
-  firstTime = true;
-
   ionViewWillEnter() {
-    if (!this.firstTime) StatusBar.setStyle({ style: StatusBarStyle.Light });
-    this.firstTime = false;
+    StatusBar.setStyle({ style: StatusBarStyle.Light });
+    if (this.firstEnter) this.updateTitle(0);
+    this.firstEnter = false;
   }
 
-  onClick() {
-    this.AF.logout();
-    StatusBar.setStyle({ style: StatusBarStyle.Dark });
-    this.playAnimation().then(() => this.nav.navigateRoot('main', { animated: false }));
+  updateTitle(scrollTop: number) {
+    this.customHeader.updateHeaderTitle(scrollTop);
   }
 
-  playAnimation() {
-    const a = document.querySelector('.background-animation-wrapper > .background');
-    const b = document.querySelector('.background-animation-wrapper > .backgroundImage');
-    const totalHeight = b.getBoundingClientRect().height + this.platform.height();
-    const elements = [a, b];
-    const animations = elements.map(element =>
-      createAnimation()
-        .addElement(element)
-        .fromTo('transform', `translateY(-${totalHeight}px)`, `translateY(0)`)
-    );
-    return createAnimation()
-      .duration(600)
-      .addAnimation(animations)
-      .easing('ease-out')
-      .play();
+  showServices(services) {
+    console.log(services);
+    
   }
+
+
 }

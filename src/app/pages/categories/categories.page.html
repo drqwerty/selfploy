@@ -1,14 +1,27 @@
 <status-bar color="#fff"></status-bar>
 
-
-<ion-header class="ion-no-border">
+<custom-header title="Categorías">
   <ion-toolbar>
-    <ion-title color="tertiary">Categorías</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="search()">
+        <ion-icon color="tertiary" slot="icon-only" name="search-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</custom-header>
 
-<ion-content>
-  <ion-button (click)="onClick()" expand="block" fill="clear" shape="round">
-    Cerrar sesión
-  </ion-button>
+
+<ion-content scrollEvents="true" (ionScroll)="updateTitle($event.detail.scrollTop)">
+
+  <ion-toolbar></ion-toolbar>
+
+  <div class="nav-bar-space">
+    <ion-card *ngFor="let category of categories" mode="ios" [style.--background]="category.color" class="category-card" button (click)="showServices(category)">
+      <div class="title-wrapper">
+        <ion-icon class="category-icon small-icon" color="light" [src]="category.icon"></ion-icon>
+        <ion-label upperCaseFirstLetter>{{category.name}}</ion-label>
+      </div>
+      <ion-icon class="category-icon big-icon" [src]="category.icon"></ion-icon>
+    </ion-card>
+  </div>
 </ion-content>

@@ -115,7 +115,7 @@ export class ProfileEditPage {
         }, {
           cssClass: 'confirm-button',
           text: 'Prefiero seguir como cliente',
-          handler: () => this.navController.navigateBack('tabs'),
+          handler: () => this.navController.navigateBack('tabs/profile'),
         }
       ]
     });
