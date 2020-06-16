@@ -26,7 +26,7 @@ export class ProfilePage {
   constructor(
     private storage: StorageService,
     private popoverController: PopoverController,
-    private nav: NavController,
+    private navController: NavController,
     private data: DataService,
   ) {
     storage.getUserProfile().then(user => {
@@ -55,7 +55,7 @@ export class ProfilePage {
 
   makeMeProfesional() {
     tabBarAnimateOut();
-    this.nav.navigateForward('tabs/profile/edit', {
+    this.navController.navigateForward('tabs/profile/edit', {
       state: {
         forceCompleteProfile: true,
         clientToProfessional: true,

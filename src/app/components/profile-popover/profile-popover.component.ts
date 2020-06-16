@@ -21,7 +21,7 @@ export class ProfilePopoverComponent {
     private auth: AuthService,
     private alertController: AlertController,
     private platform: Platform,
-    private nav: NavController,
+    private navController: NavController,
   ) {
     popoverController.getTop().then(el => this.currentPopover = el)
   }
@@ -30,14 +30,14 @@ export class ProfilePopoverComponent {
     this.currentPopover.animated = false;
     await this.popoverController.dismiss();
     tabBarAnimateOut();
-    this.nav.navigateForward('tabs/profile/edit', { state: { forceCompleteProfile: false } });
+    this.navController.navigateForward('tabs/profile/edit', { state: { forceCompleteProfile: false } });
   }
 
   async editSettings() {
     this.currentPopover.animated = false;
     await this.popoverController.dismiss();
     tabBarAnimateOut();
-    this.nav.navigateForward('tabs/profile/settings', { state: { forceCompleteProfile: false } });
+    this.navController.navigateForward('tabs/profile/settings', { state: { forceCompleteProfile: false } });
   }
 
   async logout() {
@@ -57,7 +57,7 @@ export class ProfilePopoverComponent {
             StatusBar.setStyle({ style: StatusBarStyle.Dark });
             this.auth.logout();
             await playLogoutAnimation(this.platform.height());
-            this.nav.navigateRoot('main', { animated: false });
+            this.navController.navigateRoot('main', { animated: false });
           }
         }
       ]

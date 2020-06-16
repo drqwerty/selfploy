@@ -23,6 +23,7 @@ export class CategoriesPage {
   categories = Categories;
 
   constructor(
+    private navController: NavController,
   ) { }
 
   ionViewWillEnter() {
@@ -35,9 +36,8 @@ export class CategoriesPage {
     this.customHeader.updateHeaderTitle(scrollTop);
   }
 
-  showServices(services) {
-    console.log(services);
-    
+  showServices(category) {
+    this.navController.navigateForward('tabs/categories/services', { state: { category } });
   }
 
 

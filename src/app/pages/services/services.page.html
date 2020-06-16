@@ -1,0 +1,36 @@
+<status-bar color="#fff"></status-bar>
+
+<custom-header title="Servicios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon color="tertiary" slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="search()">
+        <ion-icon color="tertiary" slot="icon-only" name="search-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</custom-header>
+
+
+<ion-content scrollEvents="true" (ionScroll)="updateTitle($event.detail.scrollTop)">
+
+  <ion-toolbar></ion-toolbar>
+
+  <ion-list lines="none" class="sercice-list">
+    <ion-item *ngFor="let service of category.services">
+      <ion-label>
+        <ion-text color="primary">
+          <h2 upperCaseFirstLetter>{{category.name}}</h2>
+        </ion-text>
+        <ion-text color="tertiary">
+          <h3 upperCaseFirstLetter class="ion-padding-start">{{service.name}}</h3>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
