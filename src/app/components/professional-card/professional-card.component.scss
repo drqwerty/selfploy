@@ -1,0 +1,54 @@
+ion-card {
+
+  --background: var(--ion-color-primary);
+
+  .card-content {
+    display: flex;
+    flex-direction: row;
+
+    .left-content {
+      max-width: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .main-content {
+      background-color: white;
+      // border-radius: 8px 0 0 8px;
+      overflow: hidden;
+      width: 100%;
+
+      .professional-image {
+        background: url('/assets/background-drawings/profile-picture.svg') bottom no-repeat;
+        background-color: var(--ion-color-light);
+        background-size: 70%;
+      }
+
+      ion-card-content {
+        padding-top: 0;
+        padding-bottom: 0;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .stats {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        font-size: 18px;
+        justify-content: center;
+        font-family: Poppins;
+
+        ion-text {
+          padding-left: 8px;
+        }
+      }
+    }
+  }
+
+}

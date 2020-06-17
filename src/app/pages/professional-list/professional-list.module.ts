@@ -9,6 +9,7 @@ import { ProfessionalListPageRoutingModule } from './professional-list-routing.m
 import { ProfessionalListPage } from './professional-list.page';
 import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module';
 import { CustomHeaderModule } from 'src/app/components/custom-header/custom-header.module';
+import { ProfessionalCardModule } from 'src/app/components/professional-card/professional-card.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { CustomHeaderModule } from 'src/app/components/custom-header/custom-head
     ProfessionalListPageRoutingModule,
     StatusBarModule,
     CustomHeaderModule,
+    ProfessionalCardModule,
   ],
   declarations: [ProfessionalListPage]
 })

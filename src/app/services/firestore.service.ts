@@ -4,9 +4,11 @@ import { User } from '../models/user-model';
 import { FirebaseStorage } from './firebase-storage.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 
-import { GeoCollectionReference, GeoFirestore, GeoQuery, GeoQuerySnapshot } from 'geofirestore';
+import { GeoFirestore, GeoQuerySnapshot } from 'geofirestore';
 import { firestore } from 'firebase/app';
 import { LatLng } from 'leaflet';
+import { DataService } from '../providers/data.service';
+import { StorageService } from './storage.service';
 const { GeoPoint } = firestore;
 
 
@@ -21,6 +23,8 @@ export class FirestoreService {
     private db: AngularFirestore,
     private fStorage: FirebaseStorage,
     private aFAuth: AngularFireAuth,
+    private data: DataService,
+    private storage: StorageService,
   ) {
     this.geofirestore = new GeoFirestore(db.firestore);
   }
@@ -28,7 +32,6 @@ export class FirestoreService {
   async createUserProfile(uid: string, user: User) {
     const { token, profilePic, ...essentialUserData } = user;
     if (user.hasProfilePic) await this.fStorage.uploadUserProfilePic(user.profilePic, uid);
-
     return this.db.collection('users').doc(uid).set({
       d: essentialUserData,
     });
@@ -44,14 +47,12 @@ export class FirestoreService {
   async updateUserProfile(user: User) {
     const currentUser = await this.aFAuth.currentUser;
     const { token, profilePic, coordinates, ...essentialUserData } = user;
-
     const dataToUpdate = coordinates == null
       ? essentialUserData
       : {
         coordinates: new GeoPoint(coordinates.lat, coordinates.lng),
         ...essentialUserData
       }
-
     return this.geofirestore.collection('users').doc(currentUser.uid).update(dataToUpdate);
   }
 
@@ -60,5 +61,22 @@ export class FirestoreService {
     return this.db.collection('users').doc(currentUser.uid).update({
       'd.hideLocationAccuracy': disable,
     });
+  }
+
+  async getProfessionalOf(categoryName, serviceName) {
+    const currentUserUid = (await this.aFAuth.currentUser).uid;
+    const user = this.data.user ?? await this.storage.getUserProfile();
+
+    return this.geofirestore
+      .collection('users')
+      .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
+      .where(`services.${categoryName}`, 'array-contains', serviceName)
+      .get()
+      .then((value: GeoQuerySnapshot) =>
+        value.docs
+          .filter(snap => snap.id != currentUserUid)
+          .map(snap => { return { id: snap.id, distance: snap.distance, ...snap.data() } as User; })
+      );
+
   }
 }

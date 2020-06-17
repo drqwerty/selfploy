@@ -29,4 +29,7 @@ export class User {
   addressCity: string;
   coordinates: LatLng;
   radiusKm: number;
+
+  id: string;
+  distance: number;
 }

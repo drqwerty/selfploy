@@ -1,6 +1,6 @@
 <status-bar color="#fff"></status-bar>
 
-<custom-header [title]="service">
+<custom-header [title]="serviceName">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
@@ -8,8 +8,8 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="search()">
-        <ion-icon color="tertiary" slot="icon-only" name="search-outline"></ion-icon>
+      <ion-button (click)="filter()">
+        <ion-icon color="tertiary" slot="icon-only" name="options"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -20,5 +20,8 @@
 
   <ion-toolbar></ion-toolbar>
 
-  
+  <div class="nav-bar-space">
+    <professional-card *ngFor="let professional of professionals" [professional]="professional"></professional-card>
+  </div>
+
 </ion-content>

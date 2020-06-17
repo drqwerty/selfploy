@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
+import { FirestoreService } from 'src/app/services/firestore.service';
+import { User } from 'src/app/models/user-model';
 
 @Component({
   selector: 'app-professional-list',
@@ -12,16 +14,31 @@ export class ProfessionalListPage {
 
   @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
 
+  professionals: User[] = [];
+
   firstEnter = true;
 
-  service: string
+  serviceName: string
+  categoryName: string;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private navController: NavController,
+    private firestoreService: FirestoreService,
   ) {
-    this.route.queryParams.subscribe(() => this.service = this.router.getCurrentNavigation().extras.state?.service);
+    this.route.queryParams.subscribe(() => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.serviceName = this.router.getCurrentNavigation().extras.state?.serviceName;
+        this.categoryName = this.router.getCurrentNavigation().extras.state?.categoryName;
+        this.getProfessionals();
+      }
+    });
+  }
+
+  async getProfessionals() {    
+    this.professionals = await this.firestoreService.getProfessionalOf(this.categoryName, this.serviceName);
+    console.log(this.professionals);
   }
 
   ionViewWillEnter() {

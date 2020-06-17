@@ -21,7 +21,7 @@
   <ion-toolbar></ion-toolbar>
 
   <ion-list lines="none" class="sercice-list">
-    <ion-item *ngFor="let service of category.services" button (click)="showProfessionals(service.name)">
+    <ion-item *ngFor="let service of category.services" button (click)="showProfessionals(category.name, service.name)">
       <ion-label>
         <ion-text color="primary">
           <h2 upperCaseFirstLetter>{{category.name}}</h2>

@@ -23,7 +23,10 @@ export class ServicesPage {
     private router: Router,
     private navController: NavController,
   ) {
-    this.route.queryParams.subscribe(() => this.category = this.router.getCurrentNavigation().extras.state?.category);
+    this.route.queryParams.subscribe(() => {
+      if (this.router.getCurrentNavigation().extras.state)
+        this.category = this.router.getCurrentNavigation().extras.state.category
+    });
   }
 
   ionViewWillEnter() {
@@ -39,8 +42,8 @@ export class ServicesPage {
     this.customHeader.updateHeaderTitle(scrollTop);
   }
 
-  showProfessionals(service: string) {
-    this.navController.navigateForward('/tabs/categories/services/professional-list', { state: { service } })
+  showProfessionals(categoryName, serviceName) {
+    this.navController.navigateForward('/tabs/categories/services/professional-list', { state: { categoryName, serviceName } })
   }
 
 }
