@@ -14,7 +14,7 @@ export class ProfessionalListPage {
 
   @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
 
-  professionals: User[] = [];
+  professionals: User[]
 
   firstEnter = true;
 

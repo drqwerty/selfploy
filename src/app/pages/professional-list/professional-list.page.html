@@ -21,7 +21,28 @@
   <ion-toolbar></ion-toolbar>
 
   <div class="nav-bar-space">
-    <professional-card *ngFor="let professional of professionals" [professional]="professional"></professional-card>
+
+    <ng-template *ngIf="professionals then showContent; else demo"></ng-template>
+    <ng-template #demo>
+      <professional-card *ngFor="let i of [].constructor(2)"></professional-card>
+    </ng-template>
+
+    <ng-template #showContent>
+      <ng-template *ngIf="professionals.length then professionalList; else emptyContent"></ng-template>
+
+      <ng-template #emptyContent>
+        <div class="content-empty">
+          <img src="/assets/background-drawings/no-professionals.svg">
+        <ion-text color="medium"><h1>Parece que no hay nadie por aquí...</h1></ion-text>
+        </div>
+      </ng-template>
+
+      <ng-template #professionalList>
+        <professional-card *ngFor="let professional of professionals" [professional]="professional"></professional-card>
+      </ng-template>
+    </ng-template>
+
+
   </div>
 
 </ion-content>

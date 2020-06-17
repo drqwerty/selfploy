@@ -1,4 +1,4 @@
-<ion-card mode="ios" button>
+<ion-card *ngIf="professional; else demo" mode="ios" button>
   <div class="card-content">
 
     <div class="left-content">
@@ -59,3 +59,53 @@
 
   </div>
 </ion-card>
+
+
+<ng-template #demo>
+  <ion-card class="demo" mode="ios">
+    <div class="card-content">
+      <div class="left-content">
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-thumbnail slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-thumbnail>
+      </div>
+      <div class="main-content">
+        <ion-item lines="none">
+          <ion-avatar slot="start">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-avatar>
+          <ion-label class="border-radius">
+            <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-card-content class="ion-padding border-radius">
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        </ion-card-content>
+
+        <ion-footer class="ion-no-border border-radius">
+
+          <ion-row>
+            <ion-col size="6">
+              <ion-skeleton-text animated style="width: 20%; margin: 4px auto;"></ion-skeleton-text>
+            </ion-col>
+            <ion-col size="6">
+              <ion-skeleton-text animated style="width: 20%; margin: 4px auto;"></ion-skeleton-text>
+            </ion-col>
+          </ion-row>
+
+        </ion-footer>
+
+        <ion-footer style="display: inline-block;" class="border-radius" mode="md">
+          <ion-skeleton-text class="ion-margin" animated style="width: 88%"></ion-skeleton-text>
+        </ion-footer>
+      </div>
+    </div>
+
+
+  </ion-card>
+</ng-template>

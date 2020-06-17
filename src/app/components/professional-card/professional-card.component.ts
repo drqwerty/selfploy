@@ -26,7 +26,7 @@ export class ProfessionalCardComponent implements OnInit {
   }
   
   async getImage() {
-    if (this.professional.hasProfilePic)
+    if (this.professional?.hasProfilePic)
       this.professionalImage = await this.fStorage.getUserProfilePic(this.professional.id);
   }
 
