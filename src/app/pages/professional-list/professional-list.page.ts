@@ -21,6 +21,8 @@ export class ProfessionalListPage {
   serviceName: string
   categoryName: string;
 
+  pageLoaded = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -38,12 +40,16 @@ export class ProfessionalListPage {
 
   async getProfessionals() {    
     this.professionals = await this.firestoreService.getProfessionalOf(this.categoryName, this.serviceName);
-    console.log(this.professionals);
+    console.table(this.professionals);
   }
 
   ionViewWillEnter() {
     if (this.firstEnter) this.updateTitle(0);
     this.firstEnter = false;
+  }
+
+  ionViewDidEnter() {
+    this.pageLoaded = true;
   }
 
   goBack() {

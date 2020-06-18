@@ -9,6 +9,7 @@ const { GoogleAuth } = Plugins;
 import * as firebase from 'firebase/app';
 import { FirestoreService } from './firestore.service';
 import { FirebaseStorage } from './firebase-storage.service';
+import { DataService } from '../providers/data.service';
 
 declare var FB;
 
@@ -33,6 +34,7 @@ export class AuthService {
     private storageService: StorageService,
     private firestoreService: FirestoreService,
     private fStorage: FirebaseStorage,
+    private data: DataService,
   ) { }
 
   loginWithEmailAndPassword(email: string, password: string) {
@@ -109,6 +111,7 @@ export class AuthService {
     this.storageService.removeUserProfile();
     this.aFAuth.currentUser.then(({ providerData }) => {
       this.aFAuth.signOut();
+      this.data.user == null;
       const providerId = providerData[0].providerId;
       if (providerId === 'facebook.com') Plugins.FacebookLogin.logout();
       if (providerId === 'google.com') GoogleAuth.signOut();

@@ -7,6 +7,7 @@ import { ModalAnimationFadeWithMoveContentEnter, ModalAnimationFadeWithMoveConte
 import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast-transitions';
 import { BehaviorSubject } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
+import { DataService } from 'src/app/providers/data.service';
 
 @Component({
   selector: 'app-main',
@@ -28,6 +29,7 @@ export class MainPage {
     private modalController: ModalController,
     private loadingController: LoadingController,
     private toastController: ToastController,
+    private data: DataService,
   ) { }
 
   ionViewDidEnter() {
@@ -66,7 +68,10 @@ export class MainPage {
   }
 
   async tryToLogin(token: string, socialAccount: 'google.com' | 'facebook.com') {
-    const loading = await this.loadingController.create();
+    const loading = await this.loadingController.create({
+      cssClass: 'only-spinner',
+      showBackdrop: false
+    });
     Promise
       .all([
         this.playBackgroundAnimation().then(() => loading.present().then(() => this.isLoadingObservable.next(true))),

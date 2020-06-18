@@ -8,7 +8,7 @@ import { Platform } from '@ionic/angular';
 })
 export class CustomHeaderComponent {
 
-  @Input() protected title: string;
+  @Input() title: string;
 
 
   @ViewChild('titleWrapper') private titleWrapper: ElementRef;

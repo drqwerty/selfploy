@@ -20,7 +20,7 @@
 
   <ion-toolbar></ion-toolbar>
 
-  <div class="nav-bar-space">
+  <div class="nav-bar-space" *ngIf="pageLoaded">
 
     <ng-template *ngIf="professionals then showContent; else demo"></ng-template>
     <ng-template #demo>

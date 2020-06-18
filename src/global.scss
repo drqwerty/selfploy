@@ -412,3 +412,18 @@ image-cropper {
   top: 50%;
   transform: translate(-50%, -50%);
 }
+
+.only-spinner .loading-wrapper {
+  display: contents;
+  --color: #fff;
+
+  ion-spinner {
+    --spinner-color: #fff;
+  }
+
+  ion-spinner,
+  ion-spinner svg {
+    height: 100px;
+    width: 100px;
+  }
+}

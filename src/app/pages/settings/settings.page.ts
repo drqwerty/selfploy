@@ -35,7 +35,7 @@ export class SettingsPage {
   }
 
   goBack() {
-    this.navController.navigateBack('tabs');
+    this.navController.pop();
   }
 
   async getUser() {
