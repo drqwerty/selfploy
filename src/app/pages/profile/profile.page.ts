@@ -53,12 +53,21 @@ export class ProfilePage {
     return await popover.present();
   }
 
-  makeMeProfesional() {
+  createProfessionalProfile() {
     tabBarAnimateOut();
     this.navController.navigateForward('tabs/profile/edit', {
       state: {
         forceCompleteProfile: true,
         clientToProfessional: true,
+      }
+    });
+  }
+  
+  activateProfessionalProfile() {
+    this.navController.navigateForward('tabs/profile/edit', {
+      state: {
+        forceCompleteProfile: false,
+        activeProfessionalProfile: true,
       }
     });
   }

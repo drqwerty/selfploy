@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user-model';
+import * as _ from 'lodash';
 
 import { Plugins } from '@capacitor/core';
 
@@ -14,6 +15,7 @@ export class StorageService {
 
   async saveUserProfile(user: User) {
     const { token, ...essentialUserData } = user;
+    _.forEach(essentialUserData, (value, key) => { if (value === null) delete essentialUserData[key]; });
     return Storage.set({
       key: 'user',
       value: JSON.stringify(Object.assign({}, essentialUserData))

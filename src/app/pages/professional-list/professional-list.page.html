@@ -20,11 +20,11 @@
 
   <ion-toolbar></ion-toolbar>
 
-  <div class="nav-bar-space" *ngIf="pageLoaded">
+  <div class="nav-bar-space" *ngIf="pageLoaded" [class.limit-height]="!professionals">
 
     <ng-template *ngIf="professionals then showContent; else demo"></ng-template>
     <ng-template #demo>
-      <professional-card *ngFor="let i of [].constructor(2)"></professional-card>
+      <professional-card *ngFor="let i of [].constructor(4)"></professional-card>
     </ng-template>
 
     <ng-template #showContent>

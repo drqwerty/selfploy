@@ -9,6 +9,7 @@ import { firestore } from 'firebase/app';
 import { LatLng } from 'leaflet';
 import { DataService } from '../providers/data.service';
 import { StorageService } from './storage.service';
+import * as _ from 'lodash';
 const { GeoPoint } = firestore;
 
 
@@ -47,6 +48,11 @@ export class FirestoreService {
   async updateUserProfile(user: User) {
     const currentUser = await this.aFAuth.currentUser;
     const { token, profilePic, coordinates, ...essentialUserData } = user;
+
+    _.forEach(essentialUserData, (value, key) => {
+      if (value === null) essentialUserData[key] = firestore.FieldValue.delete();
+    });
+
     const dataToUpdate = coordinates == null
       ? essentialUserData
       : {
@@ -71,11 +77,13 @@ export class FirestoreService {
       .collection('users')
       .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
       .where(`services.${categoryName}`, 'array-contains', serviceName)
+      .where('professionalProfileActivated', '==', true)
       .get()
       .then((value: GeoQuerySnapshot) =>
         value.docs
           .filter(snap => snap.id != currentUserUid)
           .map(snap => { return { id: snap.id, distance: snap.distance, ...snap.data() } as User; })
+          .sort(({distance: a}, {distance: b}) => a - b)
       );
 
   }

@@ -37,7 +37,7 @@ export class ProfilePopoverComponent {
     this.currentPopover.animated = false;
     await this.popoverController.dismiss();
     tabBarAnimateOut();
-    this.navController.navigateForward('tabs/profile/settings', { state: { forceCompleteProfile: false } });
+    this.navController.navigateForward('tabs/profile/settings');
   }
 
   async logout() {

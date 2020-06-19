@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController, Platform, ModalController, ToastController, LoadingController, AlertController } from '@ionic/angular';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { NavController, Platform, ModalController, ToastController, LoadingController, AlertController, IonContent, IonButton } from '@ionic/angular';
 import { tabBarAnimateIn, tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 
 import { Plugins, StatusBarStyle } from '@capacitor/core';
@@ -29,9 +29,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ProfileEditPage {
 
-  forceCompleteProfile = false;
-  clientToProfessional = false;
+  @ViewChild(IonContent) content: IonContent;
 
+  forceCompleteProfile: boolean;
+  clientToProfessional: boolean;
+  activeProfessionalProfile: boolean;
+
+  user: User;
   tempUser: User;
   userRol = UserRole;
 
@@ -66,6 +70,7 @@ export class ProfileEditPage {
     route.queryParams.subscribe(() => {
       this.forceCompleteProfile = router.getCurrentNavigation().extras.state?.forceCompleteProfile ?? true;
       this.clientToProfessional = router.getCurrentNavigation().extras.state?.clientToProfessional ?? false;
+      this.activeProfessionalProfile = router.getCurrentNavigation().extras.state?.activeProfessionalProfile ?? false;
     });
   }
 
@@ -80,16 +85,25 @@ export class ProfileEditPage {
     StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
+  ionViewDidEnter() {
+    if (this.activeProfessionalProfile)
+      this.content.scrollToBottom(1000)
+        .then(() => this.showEnableProfessionalAccountAlert());
+  }
+
   updateHeaderShadow(scrollTop: number) {
     this.hideHeaderBorder = scrollTop === 0;
   }
 
   async getUser() {
-    this.tempUser = new User();
     if (!this.data.user) this.data.user = await this.storage.getUserProfile();
+    this.user = this.data.user;
+    this.tempUser = new User();
     Object.assign(this.tempUser, this.data.user);
+    this.tempUser.profileCompleted = !this.forceCompleteProfile;
     if (this.clientToProfessional) {
       this.tempUser.role = this.userRol.professional;
+      this.tempUser.professionalProfileActivated = true;
       this.tempUser.profileCompleted = false;
     }
   }
@@ -98,14 +112,13 @@ export class ProfileEditPage {
     if (this.clientToProfessional) {
       this.notificateNotUpgradeProfile()
     } else {
-      tabBarAnimateIn();
       this.navController.navigateBack('tabs/profile');
     }
   }
 
   async notificateNotUpgradeProfile() {
     const alert = await this.alertController.create({
-      cssClass: 'custom-alert not-upgrade',
+      cssClass: 'custom-alert secondary',
       header: 'No se guardarán los cambios',
       message: 'Seguirás teniendo un perfil de cliente, ¿quieres continuar?',
       buttons: [
@@ -123,23 +136,26 @@ export class ProfileEditPage {
     alert.present();
   }
 
-  async updateUser() {
+  async updateUser(successMessage?: string, updatedUser?: User) {
 
-    let message: string;
-
+    let message
     (await this.loadingController.create()).present();
+    if (!updatedUser) updatedUser = this.tempUser;
 
     try {
-      this.tempUser.profileCompleted = this.profileIsComplete();
-      if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(this.tempUser.profilePic);
-      await this.firestoreService.updateUserProfile(this.tempUser);
-      this.storage.saveUserProfile(this.tempUser);
-      message = 'Perfil actualizado';
-      if (!this.tempUser.profileCompleted) message += '\naunque faltan algunos datos...';
-      Object.assign(this.data.user, this.tempUser);
+      this.tempUser = await this.saveUser(updatedUser);
       this.updateImageProfile = false;
       this.clientToProfessional = false;
-    } catch (error) {
+      Object.assign(this.data.user, this.tempUser);
+
+      if (!successMessage) {
+        message = 'Perfil actualizado';
+        if (!this.tempUser.profileCompleted) message += '\naunque faltan algunos datos...';
+      } else {
+        message = successMessage;
+      }
+
+    } catch {
       message = 'Ha ocurrido un error, inténtalo de nuevo';
     }
 
@@ -147,11 +163,19 @@ export class ProfileEditPage {
     this.leavePageIfPossible(toast);
   }
 
-  profileIsComplete() {
-    if (this.tempUser.role === UserRole.professional && !this.tempUser.profileCompleted) {
+  async saveUser(updatedUser: User) {
+    updatedUser.profileCompleted = this.profileIsComplete(updatedUser);
+    if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(updatedUser.profilePic);
+    await this.firestoreService.updateUserProfile(updatedUser);
+    this.storage.saveUserProfile(updatedUser);
+    return updatedUser;
+  }
+
+  profileIsComplete(updateUser: User) {
+    if (updateUser.role === UserRole.professional && !updateUser.profileCompleted) {
       const properties = ["services", "workingHours", "coordinates"];
-      for (const property of properties) if (_.isEmpty(this.tempUser[property])) return false;
-      if (!this.tempUser.radiusKm) return false;
+      for (const property of properties) if (_.isEmpty(updateUser[property])) return false;
+      if (!updateUser.radiusKm) return false;
     }
     return true;
   }
@@ -343,24 +367,63 @@ export class ProfileEditPage {
     modal.present();
   }
 
-  async showMakeMeClientAlert() {
+  async showDeleteProfessionalProfileAlert() {
+    const cssClass = 'custom-alert danger';
+    const header = '¿Eliminar perfil profesional?';
+    const message = `
+    Perderás permanentemente:<br><br>
+    - tu perfil profesional<br>
+    - tus encargos aceptados como profesional
+    `;
+    const confirmText = 'Sí, hazme solo cliente';
+
+    this.showAlert(cssClass, header, message, confirmText, this.deleteProfessionalProfile);
+  }
+
+  async showDisableProfessionalAccountAlert() {
+    const cssClass = 'custom-alert secondary';
+    const header = '¿Desactivar perfil profesional?';
+    const message = `
+    Podrás volver a activarlo cuando quieras.<br>
+    Mientras esté desactivado tu perfil no podrá:<br><br>
+    - aparecer en las búsquedas<br>
+    - recibir peticiones de trabajos<br>
+    - aceptar trabajos
+    `;
+    const confirmText = 'Sí, dame un tiempo';
+
+    this.showAlert(cssClass, header, message, confirmText, this.disableProfessionalProfile);
+  }
+
+  async showEnableProfessionalAccountAlert() {
+    const cssClass = 'custom-alert primary';
+    const header = '¿Activar perfil profesional?';
+    const message = `
+    ¡Nos alegra verte por aquí!<br>
+    Recuerda que una vez actives tu perfil profesional podrás:<br><br>
+    - aparecer en las búsquedas<br>
+    - recibir peticiones de trabajos<br>
+    - aceptar trabajos
+    `;
+    const confirmText = 'Sí, activa mi perfil';
+
+    this.showAlert(cssClass, header, message, confirmText, this.enableProfessionalProfile);
+  }
+
+  async showAlert(cssClass, header, message, confirmText, confirmHandler) {
     const alert = await this.alertController.create({
-      cssClass: 'custom-alert danger',
-      header: 'Se eliminarán los siguientes datos:',
-      message: `
-      -Tu perfil como profesional.<br><br>
-      -Los datos de tu perfil relacionados con el profesional.<br><br>
-      -Encargos aceptados como profesional.<br><br>
-      ¿Quieres continuar?
-      `,
+      cssClass,
+      header,
+      message,
       buttons: [
         {
           text: 'No, ¡espera!',
           role: 'cancel',
-        }, {
+        },
+        {
           cssClass: 'confirm-button',
-          text: 'Sí, hazme solo cliente',
-          handler: () => this.makeMeClient(),
+          text: confirmText,
+          handler: () => confirmHandler.call(this),
         }
       ]
     });
@@ -368,15 +431,27 @@ export class ProfileEditPage {
     alert.present();
   }
 
-  makeMeClient() {
-    this.forceCompleteProfile = false;
-    this.tempUser.role = this.userRol.client;
-    this.tempUser.about = '';
-    this.tempUser.companyName = '';
-    this.tempUser.radiusKm = 0;
-    this.tempUser.services = {};
-    this.tempUser.workingHours = [];
-    this.updateUser();
+  deleteProfessionalProfile() {
+    const userClient = new User();
+    Object.assign(userClient, this.tempUser);
+    userClient.role = this.userRol.client;
+    userClient.about = null;
+    userClient.companyName = null;
+    userClient.professionalProfileActivated = null;
+    userClient.radiusKm = null;
+    userClient.services = null;
+    userClient.workingHours = null;
+    this.updateUser('Perfil profesional eliminado', userClient);
+  }
+
+  enableProfessionalProfile() {
+    this.tempUser.professionalProfileActivated = true;
+    this.updateUser('Perfil profesional activado');
+  }
+
+  disableProfessionalProfile() {
+    this.tempUser.professionalProfileActivated = false;
+    this.updateUser('Perfil profesional desactivado');
   }
 
 }

@@ -2,13 +2,13 @@
 
 <ion-header [class.ion-no-border]="hideHeaderBorder">
   <ion-toolbar>
-    <ion-buttons slot="start" *ngIf="tempUser?.profileCompleted || clientToProfessional">
+    <ion-buttons slot="start" *ngIf="!forceCompleteProfile || clientToProfessional">
       <ion-button (click)="goBack()">
         <ion-icon color="tertiary" slot="icon-only" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="updateUser()" [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" class="no-transform">
+      <ion-button (click)="updateUser()" [color]="user?.role === userRol.client ? 'secondary' : 'primary'" class="no-transform">
         Guardar
       </ion-button>
     </ion-buttons>
@@ -152,9 +152,18 @@
     </ion-item>
     <div class="border"></div>
 
-    <div *ngIf="tempUser?.role === userRol.professional && !clientToProfessional" class="ion-margin change-rol-wrapper">
-      <ion-button (click)="showMakeMeClientAlert()" expand="block" mode="ios" class="ion-margin-top" color="danger">
-        <ion-text color="light">Eliminar perfil profesional</ion-text>
+
+    <div *ngIf="user?.role === userRol.professional && !forceCompleteProfile" class="ion-margin bottom-buttons-wrapper">
+      <ion-button *ngIf="user?.professionalProfileActivated; else enableProfile" (click)="showDisableProfessionalAccountAlert()" expand="block" mode="ios" class="ion-margin-top" color="danger" fill="clear">
+        <ion-text class="font-weight-600" color="secondary">Desactivar temporalmente <span class="new-line">mi perfil profesional</span></ion-text>
+      </ion-button>
+      <ng-template #enableProfile>
+        <ion-button (click)="showEnableProfessionalAccountAlert()"  expand="block" mode="ios" class="ion-margin-top" color="danger" fill="clear">
+          <ion-text class="font-weight-600" color="secondary">Activar perfil profesional</ion-text>
+        </ion-button>
+      </ng-template>
+      <ion-button (click)="showDeleteProfessionalProfileAlert()" expand="block" mode="ios" class="ion-margin-top" color="danger" fill="clear">
+        <ion-text class="font-weight-600 break-spaces" color="danger">Eliminar mi perfil profesional</ion-text>
       </ion-button>
     </div>
 

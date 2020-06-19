@@ -56,6 +56,15 @@
           </h6>
         </ion-text>
       </div>
+
+      <ion-card *ngIf="user?.role === userRol.professional && !user?.professionalProfileActivated" mode="ios" color="danger" button (click)="activateProfessionalProfile()">
+        <ion-card-header mode="md">
+          <ion-card-title color="light">Perfil profesional desactivado</ion-card-title>
+        </ion-card-header>
+        <ion-card-content color="light">
+          Puedes activarlo desde aquí
+        </ion-card-content>
+      </ion-card>
     </div>
 
 
@@ -109,7 +118,8 @@
           </ion-item>
 
           <ion-card mode="ios" *ngIf="user?.role === userRol.professional">
-            <map-preview [coordinates]="user?.coordinates" [radiusKm]="user?.radiusKm" [hideMarker]="user?.hideLocationAccuracy"></map-preview>
+            <map-preview [coordinates]="user?.coordinates" [radiusKm]="user?.radiusKm"
+              [hideMarker]="user?.hideLocationAccuracy"></map-preview>
           </ion-card>
 
         </ng-container>
@@ -118,14 +128,14 @@
 
     <div *ngIf="user?.role === userRol.client" class="ion-margin change-rol-wrapper">
       <ion-text color="medium" class="change-rol-info">
-      Configura tu perfil para ofrecer servicios. 
-      Podrás seguir solicitando encargos una vez seas
-      profesional
+        Configura tu perfil para ofrecer servicios.
+        Podrás seguir solicitando encargos una vez seas
+        profesional
       </ion-text>
-      <ion-button (click)="makeMeProfesional()" expand="block" mode="ios" class="ion-margin-top">
+      <ion-button (click)="createProfessionalProfile()" expand="block" mode="ios" class="ion-margin-top">
         <ion-text>Convertirme en profesional</ion-text>
       </ion-button>
     </div>
-      
+
   </div>
 </ion-content>
