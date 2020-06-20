@@ -5,7 +5,7 @@ import 'leaflet.locatecontrol';
 import * as Geocoding from 'esri-leaflet-geocoder';
 import { Animation, createAnimation } from '@ionic/core';
 import { environment } from "src/environments/environment";
-import { Plugins, StatusBarStyle, PermissionType } from '@capacitor/core';
+import { Plugins, StatusBarStyle, PermissionType, Capacitor } from '@capacitor/core';
 import { MapSearchComponent } from '../map-search/map-search.component';
 import { Animations } from 'src/app/animations/animations';
 import { Subject } from 'rxjs';
@@ -53,7 +53,9 @@ export class MapLocationComponent {
 
   ionViewWillEnter() {
     this.createMyLocationAnimation();
-    StatusBar.setStyle({ style: StatusBarStyle.Light });
+    if (Capacitor.isPluginAvailable('StatusBar')) {
+      StatusBar.setStyle({ style: StatusBarStyle.Light });
+    }
   }
 
   ionViewDidEnter() {

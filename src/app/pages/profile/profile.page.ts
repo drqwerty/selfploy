@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
 import { User, UserRole } from 'src/app/models/user-model';
 
-import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { PopoverController, NavController } from '@ionic/angular';
 import { ProfilePopoverComponent } from 'src/app/components/profile-popover/profile-popover.component';
 import { MapPreviewComponent } from 'src/app/components/map-preview/map-preview.component';
@@ -38,7 +38,9 @@ export class ProfilePage {
   ionViewWillEnter() {
     if (this.user && this.user !== this.data.user) this.user = this.data.user;
     this.backgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
-    StatusBar.setStyle({ style: StatusBarStyle.Dark })
+    if (Capacitor.isPluginAvailable('StatusBar')) { 
+    StatusBar.setStyle({ style: StatusBarStyle.Dark });
+    };
   }
 
   ionViewDidEnter() {

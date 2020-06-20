@@ -2,7 +2,7 @@ import { Component, } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { playLoginAnimation } from "../../animations/log-in-out-transition";
 
-import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -34,7 +34,9 @@ export class TabsPage {
   constructor(private platform: Platform) {
     setTimeout(() => {
       playLoginAnimation(platform.height())
-        .then(() => StatusBar.setStyle({ style: StatusBarStyle.Light }));
+        .then(() => {
+          if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light })
+        });
     }, 500);
   }
 

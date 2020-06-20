@@ -3,7 +3,7 @@ import { AlertController, Platform, PopoverController, NavController } from '@io
 import { playLogoutAnimation } from "../../animations/log-in-out-transition";
 import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
 
-import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { AuthService } from 'src/app/services/auth.service';
 const { StatusBar } = Plugins;
 
@@ -54,7 +54,9 @@ export class ProfilePopoverComponent {
           text: 'Cerrar sesión',
           handler: async () => {
             await this.popoverController.dismiss();
-            StatusBar.setStyle({ style: StatusBarStyle.Dark });
+            if (Capacitor.isPluginAvailable('StatusBar')) { 
+              StatusBar.setStyle({ style: StatusBarStyle.Dark });
+            };
             this.auth.logout();
             await playLogoutAnimation(this.platform.height());
             this.navController.navigateRoot('main', { animated: false });

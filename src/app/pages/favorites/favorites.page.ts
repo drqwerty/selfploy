@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -16,7 +16,9 @@ export class FavoritesPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    StatusBar.setStyle({ style: StatusBarStyle.Dark })
+    if (Capacitor.isPluginAvailable('StatusBar')) { 
+      StatusBar.setStyle({ style: StatusBarStyle.Dark })
+    };
   }
 
 }

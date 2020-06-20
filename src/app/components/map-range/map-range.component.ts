@@ -4,7 +4,7 @@ import { Map as leafletMap, tileLayer, icon, circle, marker, LatLng, Circle } fr
 import { environment } from "src/environments/environment";
 import { ModalController, IonRange } from '@ionic/angular';
 
-import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -34,7 +34,9 @@ export class MapRangeComponent {
   ) { }
 
   ionViewWillEnter() {
-    StatusBar.setStyle({ style: StatusBarStyle.Light });
+    if (Capacitor.isPluginAvailable('StatusBar')) { 
+      StatusBar.setStyle({ style: StatusBarStyle.Light });
+    };
   }
 
   ionViewDidEnter() {

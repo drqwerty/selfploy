@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { NavController, Platform, IonContent } from '@ionic/angular';
 import { Categories, Category } from 'src/assets/categories';
 
-import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
 import { isContext } from 'vm';
 const { StatusBar } = Plugins;
@@ -27,8 +27,11 @@ export class CategoriesPage {
   ) { }
 
   ionViewWillEnter() {
-    StatusBar.setStyle({ style: StatusBarStyle.Light });
-    if (this.firstEnter) this.updateTitle(0);
+    if (this.firstEnter) {
+      this.updateTitle(0);
+    } else if (Capacitor.isPluginAvailable('StatusBar')) {
+      StatusBar.setStyle({ style: StatusBarStyle.Light })
+    }
     this.firstEnter = false;
   }
 

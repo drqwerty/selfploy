@@ -3,7 +3,7 @@ import { Component, NgZone, ViewChild } from '@angular/core';
 import { Platform, IonApp } from '@ionic/angular';
 import { Router } from '@angular/router';
 
-import { registerWebPlugin, StatusBarStyle, KeyboardInfo } from '@capacitor/core';
+import { registerWebPlugin, StatusBarStyle, KeyboardInfo, Capacitor } from '@capacitor/core';
 import { FacebookLogin } from '@rdlabo/capacitor-facebook-login';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -46,9 +46,11 @@ export class AppComponent {
   }
 
   setStatusBarTransparent() {
-    StatusBar.setStyle({ style: StatusBarStyle.Dark });
-    StatusBar.setBackgroundColor({ color: '#ffffff' });
-    StatusBar.setOverlaysWebView({ overlay: true });
+    if (Capacitor.isPluginAvailable('StatusBar')) {
+      StatusBar.setStyle({ style: StatusBarStyle.Dark });
+      StatusBar.setBackgroundColor({ color: '#ffffff' });
+      StatusBar.setOverlaysWebView({ overlay: true });
+    }
   }
 
   async authObserver() {

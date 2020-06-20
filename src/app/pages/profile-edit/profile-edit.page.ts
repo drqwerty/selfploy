@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, Platform, ModalController, ToastController, LoadingController, AlertController, IonContent, IonButton } from '@ionic/angular';
 import { tabBarAnimateIn, tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 
-import { Plugins, StatusBarStyle } from '@capacitor/core';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { User, UserRole } from 'src/app/models/user-model';
 import { StorageService } from 'src/app/services/storage.service';
 import { InputBottomSheetComponent } from 'src/app/components/input-bottom-sheet/input-bottom-sheet.component';
@@ -82,7 +82,9 @@ export class ProfileEditPage {
   ionViewWillEnter() {
     this.getUser();
     tabBarAnimateOut();
-    StatusBar.setStyle({ style: StatusBarStyle.Light });
+    if (Capacitor.isPluginAvailable('StatusBar')) { 
+      StatusBar.setStyle({ style: StatusBarStyle.Light });
+    };
   }
 
   ionViewDidEnter() {
