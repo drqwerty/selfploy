@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
 import { NavController } from '@ionic/angular';
 
+import * as _ from 'lodash';
+import { Categories } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/categories';
+
 @Component({
   selector: 'app-services',
   templateUrl: './services.page.html',
@@ -14,6 +17,7 @@ export class ServicesPage {
   @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
 
   category: Category;
+  categoryName: Category;
 
   firstEnter = true;
 
@@ -24,8 +28,13 @@ export class ServicesPage {
     private navController: NavController,
   ) {
     this.route.queryParams.subscribe(() => {
-      if (this.router.getCurrentNavigation().extras.state)
-        this.category = this.router.getCurrentNavigation().extras.state.category
+      if (this.router.getCurrentNavigation().extras.state?.category)
+        this.category = this.router.getCurrentNavigation().extras.state?.category;
+      if (!this.category && this.router.getCurrentNavigation().extras.state?.categoryName) {
+        this.category = Categories.find(category => category.name === this.router.getCurrentNavigation().extras.state?.categoryName)
+      }
+
+      // this.categoryName = this.router.getCurrentNavigation().extras.state.categoryName;
     });
   }
 

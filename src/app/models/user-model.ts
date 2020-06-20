@@ -17,6 +17,7 @@ export class User {
   role: UserRole;
   profilePic: string;
   name: string;
+  name_splited: string[];
   token: string;
   hasProfilePic: boolean;
   profileCompleted: boolean;

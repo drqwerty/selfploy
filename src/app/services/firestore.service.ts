@@ -10,6 +10,8 @@ import { LatLng } from 'leaflet';
 import { DataService } from '../providers/data.service';
 import { StorageService } from './storage.service';
 import * as _ from 'lodash';
+import Utils from "src/app/utils";
+
 const { GeoPoint } = firestore;
 
 
@@ -69,7 +71,7 @@ export class FirestoreService {
     });
   }
 
-  async getProfessionalOf(categoryName, serviceName) {
+  async findProfessionalOf(categoryName, serviceName) {
     const currentUserUid = (await this.aFAuth.currentUser).uid;
     const user = this.data.user ?? await this.storage.getUserProfile();
 
@@ -83,8 +85,24 @@ export class FirestoreService {
         value.docs
           .filter(snap => snap.id != currentUserUid)
           .map(snap => { return { id: snap.id, distance: snap.distance, ...snap.data() } as User; })
-          .sort(({distance: a}, {distance: b}) => a - b)
+          .sort(({ distance: a }, { distance: b }) => a - b)
       );
+  }
 
+  async findUserByName(userName) {
+    const currentUserUid = (await this.aFAuth.currentUser).uid;
+    const user = this.data.user ?? await this.storage.getUserProfile();
+
+    return this.geofirestore
+      .collection('users')
+      .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
+      .where('name_splited', 'array-contains', Utils.normalize(userName))
+      .get()
+      .then((value: GeoQuerySnapshot) =>
+        value.docs
+          .filter(snap => snap.id != currentUserUid)
+          .map(snap => { return { id: snap.id, distance: snap.distance, ...snap.data() } as User; })
+          .sort(({ distance: a }, { distance: b }) => a - b)
+      );
   }
 }

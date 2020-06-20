@@ -10,6 +10,7 @@ import { CategoriesPage } from './categories.page';
 import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module';
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
 import { CustomHeaderModule } from 'src/app/components/custom-header/custom-header.module';
+import { ServiceSearchModule } from 'src/app/components/service-search/service-search.module';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { CustomHeaderModule } from 'src/app/components/custom-header/custom-head
     StatusBarModule,
     UpperCaseFirstLetterModule,
     CustomHeaderModule,
+    ServiceSearchModule,
   ],
   declarations: [
     CategoriesPage,

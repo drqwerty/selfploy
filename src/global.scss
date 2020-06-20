@@ -86,11 +86,22 @@
   }
 }
 
-ion-searchbar.search-locations {
+ion-searchbar.custom-searchbar {
+  --box-shadow: none;
+  --color: var(--ion-color-tertiary);
+  --icon-color: var(--ion-color-tertiary);
+
+
   input {
     font-weight: 500 !important;
     font-size: 20px !important;
   }
+}
+
+.custom-searchbar.border-bottom {
+  margin: 0 20px 0 60px;
+  border-top: 2px solid var(--ion-color-primary);
+  transform: translateY(-10px);
 }
 
 .buttons-cancel-confirm {
@@ -125,11 +136,11 @@ ion-searchbar.search-locations {
       margin: 0px 14px 10px;
     }
   }
-  
+
   &.primary .confirm-button {
     background-color: var(--ion-color-primary);
   }
-  
+
   &.secondary .confirm-button {
     background-color: var(--ion-color-secondary);
   }

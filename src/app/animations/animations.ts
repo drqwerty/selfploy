@@ -9,7 +9,7 @@ export class Animations {
   private readonly DEFAULT_DURATION_OPACITY = 200;
   private readonly DEFAULT_COLOR = 'primary';
   private duration = this.DEFAULT_DURATION;
-  private color;
+  private color: string;
 
   private firstAnimation = true;  // la primera vez que anima, pone los elementos 40px más abajo
   private button: AnimationModel;
@@ -76,7 +76,8 @@ export class Animations {
    */
   private copyCssStyles(source: HTMLElement, target: HTMLElement) {
     target.style.cssText = document.defaultView.getComputedStyle(source).cssText;
-    target.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(`--ion-color-${this.color}`);
+    if (this.color.startsWith('#')) target.style.backgroundColor = this.color;
+    else target.style.backgroundColor = `var(--ion-color-${this.color})`;
     target.style.borderRadius = '64px';
 
     const position   = source.getBoundingClientRect();
@@ -145,11 +146,8 @@ export class Animations {
           .then(() => {   
             animation.elementAnimated.style.transform = `scale3d(${scaleY * 2}, ${scaleY * 2}, 1)`;
             animation.elementAnimated.style.borderRadius = '0px';
-            setTimeout(() => {
-              resolve();
-              setTimeout(() => this.hideElement(animation.elementAnimated), 50);
-            }, this.duration);
-          
+            setTimeout(() => resolve(), this.duration - 100);
+            setTimeout(() => this.hideElement(animation.elementAnimated), this.duration);
           });
       }, 50);
     });

@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { NavController, Platform, IonContent } from '@ionic/angular';
+import { NavController, IonContent, ModalController } from '@ionic/angular';
 import { Categories, Category } from 'src/assets/categories';
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
-import { isContext } from 'vm';
 const { StatusBar } = Plugins;
+import { Animations } from 'src/app/animations/animations';
+import { ServiceSearchComponent } from 'src/app/components/service-search/service-search.component';
 
 @Component({
   selector: 'app-categories',
@@ -17,6 +17,8 @@ export class CategoriesPage {
 
   @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
   @ViewChild(IonContent) ionContent: IonContent;
+  @ViewChild('searchButton') searchButton: any;
+
 
   firstEnter = true;
 
@@ -24,6 +26,8 @@ export class CategoriesPage {
 
   constructor(
     private navController: NavController,
+    private modalController: ModalController,
+    private animations: Animations,
   ) { }
 
   ionViewWillEnter() {
@@ -33,6 +37,21 @@ export class CategoriesPage {
       StatusBar.setStyle({ style: StatusBarStyle.Light })
     }
     this.firstEnter = false;
+  }
+
+  async search() {
+    const modal = await this.modalController.create({
+      component: ServiceSearchComponent,
+      animated: false,
+      componentProps: {
+      }
+    });
+
+    modal.onWillDismiss().then(({ data }) => {
+    });
+
+    await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
+    modal.present();
   }
 
   updateTitle(scrollTop: number) {

@@ -10,6 +10,8 @@ import * as firebase from 'firebase/app';
 import { FirestoreService } from './firestore.service';
 import { FirebaseStorage } from './firebase-storage.service';
 import { DataService } from '../providers/data.service';
+import Utils from "src/app/utils";
+
 
 declare var FB;
 
@@ -138,6 +140,7 @@ export class AuthService {
 
   createAndSaveUserProfile(user: User, signUpPromise: Promise<firebase.auth.UserCredential>) {
     if (user.role === UserRole.professional) user.professionalProfileActivated = true;
+    user.name_splited = Utils.normalizeAndSplit(user.name);
 
     return new Promise((resolve, reject) => {
       signUpPromise

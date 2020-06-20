@@ -38,8 +38,8 @@ export class ProfessionalListPage {
     });
   }
 
-  async getProfessionals() {    
-    this.professionals = await this.firestoreService.getProfessionalOf(this.categoryName, this.serviceName);
+  async getProfessionals() {
+    this.professionals = await this.firestoreService.findProfessionalOf(this.categoryName, this.serviceName);
     console.table(this.professionals);
   }
 
@@ -53,7 +53,7 @@ export class ProfessionalListPage {
   }
 
   goBack() {
-    this.navController.navigateBack('/tabs/categories/services');
+    this.navController.navigateBack('/tabs/categories/services', { state: { categoryName: this.categoryName } });
   }
 
   updateTitle(scrollTop: number) {

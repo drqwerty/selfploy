@@ -18,6 +18,7 @@ import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import { MapLocationComponent } from 'src/app/components/map-location/map-location.component';
 import { MapRangeComponent } from 'src/app/components/map-range/map-range.component';
 import { DataService } from 'src/app/providers/data.service';
+import Utils from "src/app/utils";
 
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -166,6 +167,7 @@ export class ProfileEditPage {
   }
 
   async saveUser(updatedUser: User) {
+    updatedUser.name_splited = Utils.normalizeAndSplit(updatedUser.name);
     updatedUser.profileCompleted = this.profileIsComplete(updatedUser);
     if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(updatedUser.profilePic);
     await this.firestoreService.updateUserProfile(updatedUser);

@@ -1,0 +1,45 @@
+<status-bar color="#fff"></status-bar>
+
+<ion-header [class.ion-no-border]="hideHeaderBorder">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-searchbar class="custom-searchbar" (ionChange)="searchQuery($event)" placeholder="¿Qué necesitas?">
+  </ion-searchbar>
+  <div class="custom-searchbar border-bottom"></div>
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="updateHeaderShadow($event.detail.scrollTop)">
+
+
+  <ion-list lines="none" class="sercice-list">
+      <ion-item *ngFor="let service of servicesQuery" button (click)="showProfessionals(service.category, service.name)">
+      <!-- <ion-item *ngFor="let service of servicesQuery" button> -->
+        <ion-label>
+          <ion-text color="primary">
+            <h2 upperCaseFirstLetter>{{service.category}}</h2>
+          </ion-text>
+          <ion-text color="tertiary">
+            <h3 upperCaseFirstLetter class="ion-padding-start">{{service.name}}</h3>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ng-template *ngIf="professionalsQuery then showContent; else demo"></ng-template>
+    <ng-template #demo>
+      <professional-card *ngFor="let i of [].constructor(4)"></professional-card>
+    </ng-template>
+
+    <ng-template #showContent>
+      <professional-card *ngFor=" let professional of professionalsQuery" [professional]="professional">
+      </professional-card>
+    </ng-template>
+
+
+</ion-content>
