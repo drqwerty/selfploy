@@ -172,7 +172,9 @@ export class ProfileEditPage {
   }
 
   profileIsComplete(updateUser: User) {
-    if (updateUser.role === UserRole.professional && !updateUser.profileCompleted) {
+    if (updateUser.role === UserRole.client) {
+      return updateUser.addressFull?.length > 0;
+    } else if (!updateUser.profileCompleted) {
       const properties = ["services", "workingHours", "coordinates"];
       for (const property of properties) if (_.isEmpty(updateUser[property])) return false;
       if (!updateUser.radiusKm) return false;

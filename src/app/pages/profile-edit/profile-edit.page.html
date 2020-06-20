@@ -132,6 +132,14 @@
         </ion-text>
       </ion-label>
       <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
+      <ion-text color="medium" class="map-info">
+        <span *ngIf="tempUser?.role === userRol.client; else mapLocationProInfo">
+          La localización es necesaria para mostrarte profesionales cerca. Basta con una ubicación aproximada
+        </span>
+        <ng-template #mapLocationProInfo>
+          <span>Ayuda al resto de personas a saber en dónde ofreces tus servicios</span>
+        </ng-template>
+      </ion-text>
       <ion-textarea [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" rows="1" autosize readonly type="text" [value]="tempUser?.hideLocationAccuracy ? tempUser?.addressCity: tempUser?.addressFull"></ion-textarea>
     </ion-item>
     <div class="border"></div>
@@ -144,9 +152,8 @@
         </ion-text>
       </ion-label>
       <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
-      <ion-text color="medium" class="range-info">
-        A mayor distancia cubierta, mayor número de
-        encargos podrán llegarte
+      <ion-text color="medium" class="map-info">
+        A mayor distancia cubierta, mayor número de encargos podrán llegarte
       </ion-text>
       <ion-input readonly type="text" [value]="tempUser?.radiusKm ? tempUser?.radiusKm + ' km' : ''"></ion-input>
     </ion-item>
