@@ -5,9 +5,9 @@ import { User, UserRole } from 'src/app/models/user-model';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { PopoverController, NavController } from '@ionic/angular';
 import { ProfilePopoverComponent } from 'src/app/components/popovers/profile-popover/profile-popover.component';
-import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { DataService } from 'src/app/providers/data.service';
 import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
+import { UserProfileComponent } from 'src/app/components/templates/user-profile/user-profile.component';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -17,7 +17,7 @@ const { StatusBar } = Plugins;
 })
 export class ProfilePage {
 
-  @ViewChild(MapPreviewComponent) mapPreview: MapPreviewComponent;
+  @ViewChild(UserProfileComponent) userProfile: UserProfileComponent;
 
   userRol = UserRole;
   user: User;
@@ -31,20 +31,22 @@ export class ProfilePage {
   ) {
     storage.getUserProfile().then(user => {
       this.user = data.user = user;
-      this.backgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
+      this.updateBackgroundColor();
     });
   }
 
   ionViewWillEnter() {
-    if (this.user && this.user !== this.data.user) this.user = this.data.user;
-    this.backgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
-    if (Capacitor.isPluginAvailable('StatusBar')) { 
-    StatusBar.setStyle({ style: StatusBarStyle.Dark });
-    };
+    this.updateBackgroundColor();
+    if (this.user !== this.data.user) this.user = this.data.user;
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
   }
 
   ionViewDidEnter() {
-    this.mapPreview?.initMap();
+    this.userProfile.initMap()
+  }
+
+  updateBackgroundColor() {
+    this.backgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
   }
 
   async presentPopover(ev: any) {
@@ -64,7 +66,7 @@ export class ProfilePage {
       }
     });
   }
-  
+
   activateProfessionalProfile() {
     this.navController.navigateForward('tabs/profile/edit', {
       state: {

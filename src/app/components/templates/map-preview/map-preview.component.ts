@@ -10,11 +10,13 @@ import { environment } from "src/environments/environment";
 })
 export class MapPreviewComponent {
 
+  @Input() id: string;
   @Input() private coordinates: LatLng;
   @Input() private radiusKm: number;
   @Input() private hideMarker: boolean;
 
 
+  idPrefix = 'map-preview-';
   private map: leafletMap;
   private circleRadius: Circle;
   private marker: Marker;
@@ -31,7 +33,7 @@ export class MapPreviewComponent {
     if (this.map) return;
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
 
-    this.map = new leafletMap('map-preview', { zoomControl: false, attributionControl: false }).setView(this.coordinates, 9);
+    this.map = new leafletMap(this.idPrefix + this.id, { zoomControl: false, attributionControl: false }).setView(this.coordinates, 9);
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
   }
 

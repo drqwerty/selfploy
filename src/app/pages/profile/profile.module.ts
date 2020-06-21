@@ -11,6 +11,7 @@ import { StatusBarModule } from 'src/app/components/utils/status-bar/status-bar.
 import { ProfilePopoverComponent } from 'src/app/components/popovers/profile-popover/profile-popover.component';
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
 import { MapPreviewModule } from 'src/app/components/templates/map-preview/map-preview.module';
+import { UserProfileModule } from 'src/app/components/templates/user-profile/user-profile.module';
 
 @NgModule({
   imports: [
@@ -18,9 +19,7 @@ import { MapPreviewModule } from 'src/app/components/templates/map-preview/map-p
     FormsModule,
     IonicModule,
     ProfilePageRoutingModule,
-    StatusBarModule,
-    MapPreviewModule,
-    UpperCaseFirstLetterModule,
+    UserProfileModule,
   ],
   declarations: [
     ProfilePage,

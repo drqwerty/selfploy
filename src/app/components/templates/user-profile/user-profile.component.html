@@ -1,0 +1,144 @@
+<status-bar [color]="backgroundColor"></status-bar>
+
+<ion-header class="ion-no-border">
+  <ion-toolbar [color]="backgroundColor">
+    <ion-buttons slot="end">
+      <ion-button (click)="presentPopover.emit($event)">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [color]="backgroundColor">
+
+  <div class="ion-padding content nav-bar-space">
+
+    <div class="image-profile">
+      <img [src]="user?.profilePic">
+      <div *ngIf="user?.role === userRol.professional" class="stars">
+        <span class="number">4.5</span>
+      </div>
+    </div>
+
+    <div *ngIf="user?.role === userRol.professional" class="stats">
+      <div class="works">
+        <ion-text color="primary">
+          <h1 class="number">24</h1>
+        </ion-text>
+        <ion-text color="tertiary">
+          Trabajos
+        </ion-text>
+      </div>
+      <div class="image-space"></div>
+      <div class="opinions">
+        <ion-text color="primary">
+          <h1 class="number">13</h1>
+        </ion-text>
+        <ion-text color="tertiary">
+          Opiniones
+        </ion-text>
+      </div>
+    </div>
+
+    <div class="header">
+      <div class="name">
+        <ion-text color="tertiary">
+          <h1> {{user?.name}}</h1>
+        </ion-text>
+      </div>
+      <div *ngIf="user?.role === userRol.professional" class="jobs">
+        <ion-text color="primary">
+          <h6>
+            <span class="separate-childs-with-commas" upperCaseFirstLetter
+              *ngFor="let category of user?.services | keyvalue ">{{category.key}}</span>
+          </h6>
+        </ion-text>
+      </div>
+
+      <ion-card *ngIf="user?.role === userRol.professional && !user?.professionalProfileActivated" mode="ios" color="danger" button (click)="activateProfessionalProfile.emit()">
+        <ion-card-header mode="md">
+          <ion-card-title color="light">Perfil profesional desactivado</ion-card-title>
+        </ion-card-header>
+        <ion-card-content color="light">
+          Puedes activarlo desde aquí
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+
+    <div class="info">
+      <ion-list lines="none">
+
+        <ng-container *ngIf="user?.role === userRol.professional" class="professional-info">
+          <ion-item *ngIf="user?.companyName">
+            <ion-label>
+              <h2>Empresa</h2>
+              <h3 class="ion-text-wrap">{{user.companyName}}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user?.services">
+            <ion-label>
+              <h2>Especialización</h2>
+              <h3 class="ion-text-wrap">
+                <ng-container *ngFor="let category of user.services | keyvalue ">
+                  <span upperCaseFirstLetter *ngFor="let service of category.value"
+                    class="separate-childs-with-commas">{{service}}</span>
+                </ng-container>
+              </h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user?.workingHours">
+            <ion-label>
+              <h2>Horario</h2>
+              <h3>
+                <span class="separate-childs-with-commas" upperCaseFirstLetter
+                  *ngFor="let workingHour of user.workingHours">{{workingHour}}</span>
+              </h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user?.about">
+            <ion-label>
+              <h2>Sobre mí</h2>
+              <h3 class="break-spaces">{{user.about}}</h3>
+            </ion-label>
+          </ion-item>
+        </ng-container>
+
+        <ng-container *ngIf="user?.addressFull">
+          <ion-item>
+            <ion-label>
+              <h2>Ubicación</h2>
+              <h3 class="break-spaces">{{user?.hideLocationAccuracy ? user?.addressCity: user?.addressFull}}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-card mode="ios" *ngIf="user?.role === userRol.professional">
+            <map-preview 
+              [coordinates]="user?.coordinates"
+              [radiusKm]="user?.radiusKm"
+              [hideMarker]="user?.hideLocationAccuracy"
+              [id]="mapId"
+            ></map-preview>
+          </ion-card>
+
+        </ng-container>
+      </ion-list>
+    </div>
+
+    <div *ngIf="user?.role === userRol.client" class="ion-margin change-rol-wrapper">
+      <ion-text color="medium" class="change-rol-info">
+        Configura tu perfil para ofrecer servicios.
+        Podrás seguir solicitando encargos una vez seas
+        profesional
+      </ion-text>
+      <ion-button (click)="createProfessionalProfile.emit()" expand="block" mode="ios" class="ion-margin-top">
+        <ion-text>Convertirme en profesional</ion-text>
+      </ion-button>
+    </div>
+
+  </div>
+</ion-content>
