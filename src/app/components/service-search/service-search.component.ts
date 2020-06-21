@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { Animations } from 'src/app/animations/animations';
 import { ModalController, IonSearchbar, NavController } from '@ionic/angular';
 import { Categories } from 'src/assets/categories';
@@ -13,6 +13,9 @@ import Utils from "src/app/utils";
   styleUrls: ['./service-search.component.scss'],
 })
 export class ServiceSearchComponent {
+
+  @Input() categoryFilter: string;
+
 
   @ViewChild(IonSearchbar) searchbar: IonSearchbar;
 
@@ -56,20 +59,30 @@ export class ServiceSearchComponent {
     this.servicesQuery = [];
     if (text == '') return;
     const val = Utils.normalize(text);
-    Categories.forEach(category => {
-      if (Utils.normalize(category.name).includes(val)) {
-        category.services.forEach(service => this.servicesQuery.push({ category: category.name, name: service.name }));
-      } else {
-        category.services.forEach(service => {
-          if (Utils.normalize(service.name).includes(val)) this.servicesQuery.push({ category: category.name, name: service.name });
+
+    if (this.categoryFilter) {
+      Categories
+        .find(category => category.name === this.categoryFilter).services
+        .forEach(service => {
+          if (Utils.normalize(service.name).includes(val)) this.servicesQuery.push({ category: this.categoryFilter, name: service.name });
         });
-      }
-    });
+
+    } else {
+      Categories
+        .forEach(category => {
+          if (Utils.normalize(category.name).includes(val)) {
+            category.services.forEach(service => this.servicesQuery.push({ category: category.name, name: service.name }));
+          } else {
+            category.services.forEach(service => {
+              if (Utils.normalize(service.name).includes(val)) this.servicesQuery.push({ category: category.name, name: service.name });
+            });
+          }
+        });
+    }
   }
 
   async findUsers(text) {
     this.professionalsQuery = null;
-    this.professionalsQuery = (text == '') ? [] : await this.firestoreService.findUserByName(text);
-    console.table(this.professionalsQuery);
+    this.professionalsQuery = (text == '') ? [] : await this.firestoreService.findUserByName(text, this.categoryFilter);
   }
 }

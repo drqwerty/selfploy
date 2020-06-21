@@ -19,9 +19,7 @@ export class CategoriesPage {
   @ViewChild(IonContent) ionContent: IonContent;
   @ViewChild('searchButton') searchButton: any;
 
-
   firstEnter = true;
-
   categories = Categories;
 
   constructor(
@@ -43,8 +41,6 @@ export class CategoriesPage {
     const modal = await this.modalController.create({
       component: ServiceSearchComponent,
       animated: false,
-      componentProps: {
-      }
     });
 
     await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();

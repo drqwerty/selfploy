@@ -51,7 +51,7 @@ export class WorkingHoursPickerComponent {
 
   setWorkingHoursSelected() {
     this.workingHours.forEach(workingHour =>
-      workingHour.checked = this.userWorkingHours.includes(workingHour.name)
+      workingHour.checked = this.userWorkingHours?.includes(workingHour.name)
     );
   }
 

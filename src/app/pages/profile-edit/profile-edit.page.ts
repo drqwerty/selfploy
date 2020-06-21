@@ -83,7 +83,7 @@ export class ProfileEditPage {
   ionViewWillEnter() {
     this.getUser();
     tabBarAnimateOut();
-    if (Capacitor.isPluginAvailable('StatusBar')) { 
+    if (Capacitor.isPluginAvailable('StatusBar')) {
       StatusBar.setStyle({ style: StatusBarStyle.Light });
     };
   }
@@ -341,10 +341,7 @@ export class ProfileEditPage {
     });
 
     modal.onWillDismiss().then(({ data }) => {
-      if (data) {
-        console.log(data);
-        this.tempUser.radiusKm = data
-      }
+      if (data) this.tempUser.radiusKm = data;
     });
 
     modal.present();

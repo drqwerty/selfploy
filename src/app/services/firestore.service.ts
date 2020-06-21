@@ -75,7 +75,7 @@ export class FirestoreService {
     const currentUserUid = (await this.aFAuth.currentUser).uid;
     const user = this.data.user ?? await this.storage.getUserProfile();
 
-    return this.geofirestore
+    const query = await this.geofirestore
       .collection('users')
       .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
       .where(`services.${categoryName}`, 'array-contains', serviceName)
@@ -83,26 +83,36 @@ export class FirestoreService {
       .get()
       .then((value: GeoQuerySnapshot) =>
         value.docs
-          .filter(snap => snap.id != currentUserUid)
           .map(snap => { return { id: snap.id, distance: snap.distance, ...snap.data() } as User; })
           .sort(({ distance: a }, { distance: b }) => a - b)
       );
+
+    return this.omitMyProfile(query, currentUserUid);
   }
 
-  async findUserByName(userName) {
+  async findUserByName(userName, categoryFilter) {
     const currentUserUid = (await this.aFAuth.currentUser).uid;
     const user = this.data.user ?? await this.storage.getUserProfile();
 
-    return this.geofirestore
+    let query = await this.geofirestore
       .collection('users')
       .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
       .where('name_splited', 'array-contains', Utils.normalize(userName))
       .get()
       .then((value: GeoQuerySnapshot) =>
         value.docs
-          .filter(snap => snap.id != currentUserUid)
           .map(snap => { return { id: snap.id, distance: snap.distance, ...snap.data() } as User; })
           .sort(({ distance: a }, { distance: b }) => a - b)
       );
+
+    if (categoryFilter) query = query.filter(user => user.services[categoryFilter])
+
+    return this.omitMyProfile(query, currentUserUid);
+  }
+
+  private omitMyProfile(profiles: User[], id: string) {
+    const myUserIndex = profiles.findIndex(user => user.id === id);
+    if (myUserIndex != -1) profiles.splice(myUserIndex, 1);
+    return profiles;
   }
 }

@@ -2,10 +2,12 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { Category } from 'src/assets/categories';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 
 import * as _ from 'lodash';
 import { Categories } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/categories';
+import { Animations } from 'src/app/animations/animations';
+import { ServiceSearchComponent } from 'src/app/components/service-search/service-search.component';
 
 @Component({
   selector: 'app-services',
@@ -15,17 +17,17 @@ import { Categories } from 'android/app/build/intermediates/merged_assets/debug/
 export class ServicesPage {
 
   @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
+  @ViewChild('searchButton') searchButton: any;
 
   category: Category;
-  categoryName: Category;
-
   firstEnter = true;
-
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private navController: NavController,
+    private modalController: ModalController,
+    private animations: Animations,
   ) {
     this.route.queryParams.subscribe(() => {
       if (this.router.getCurrentNavigation().extras.state?.category)
@@ -33,8 +35,6 @@ export class ServicesPage {
       if (!this.category && this.router.getCurrentNavigation().extras.state?.categoryName) {
         this.category = Categories.find(category => category.name === this.router.getCurrentNavigation().extras.state?.categoryName)
       }
-
-      // this.categoryName = this.router.getCurrentNavigation().extras.state.categoryName;
     });
   }
 
@@ -45,6 +45,19 @@ export class ServicesPage {
 
   goBack() {
     this.navController.navigateBack('/tabs/categories');
+  }
+
+  async search() {
+    const modal = await this.modalController.create({
+      component: ServiceSearchComponent,
+      animated: false,
+      componentProps: {
+        categoryFilter: this.category.name,
+      },
+    });
+
+    await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
+    modal.present();
   }
 
   updateTitle(scrollTop: number) {
