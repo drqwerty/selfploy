@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { Categories, Category } from 'src/assets/categories';
 
 import * as _ from 'lodash';
-import { CustomHeaderComponent } from '../custom-header/custom-header.component';
+import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 
 
 @Component({

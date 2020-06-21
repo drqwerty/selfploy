@@ -1,13 +1,13 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { Category } from 'src/assets/categories';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
+import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 import { NavController, ModalController } from '@ionic/angular';
 
 import * as _ from 'lodash';
 import { Categories } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/categories';
 import { Animations } from 'src/app/animations/animations';
-import { ServiceSearchComponent } from 'src/app/components/service-search/service-search.component';
+import { ServiceSearchComponent } from 'src/app/components/modals/as-pages/service-search/service-search.component';
 
 @Component({
   selector: 'app-services',

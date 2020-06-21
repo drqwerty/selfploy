@@ -1,11 +1,11 @@
 import { Component, ViewChild, ElementRef, NgZone, ChangeDetectorRef } from '@angular/core';
 import { NavController, ModalController, Platform, LoadingController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
-import { LoginPasswordComponent } from '../../components/login-password/login-password.component';
-import { ModalAnimationSlideEnter, ModalAnimationSlideLeave, ModalAnimationSlideDuration, ModalAnimationSlideEasing } from '../../animations/page-transitions';
-import { LoginRegisterComponent } from '../../components/login-register/login-register.component';
+import { LoginPasswordComponent } from 'src/app/components/modals/as-pages/login-password/login-password.component';
+import { ModalAnimationSlideEnter, ModalAnimationSlideLeave, ModalAnimationSlideDuration, ModalAnimationSlideEasing } from 'src/app/animations/page-transitions';
+import { LoginRegisterComponent } from 'src/app/components/modals/as-pages/login-register/login-register.component';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login-email',

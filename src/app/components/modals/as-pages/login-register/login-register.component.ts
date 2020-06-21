@@ -1,15 +1,15 @@
 import { Component, ViewChild, Input } from '@angular/core';
 import { IonToolbar, ModalController, IonSlides, IonInput, NavController, IonContent, LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
-import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../../animations/page-transitions';
-import { User, UserRole } from '../../models/user-model';
+import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from 'src/app/animations/page-transitions';
+import { User, UserRole } from 'src/app/models/user-model';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast-transitions';
+import { AuthService } from 'src/app/services/auth.service';
+import { ToastAnimationEnter, ToastAnimationLeave } from 'src/app/animations/toast-transitions';
 import { FirebaseError } from 'firebase';
-import { TermsAndConditionsComponent } from '../terms-and-conditions/terms-and-conditions.component';
-import { FirestoreService } from '../../services/firestore.service';
-import { CameraSourceActionSheetComponent } from '../camera-source-action-sheet/camera-source-action-sheet.component';
+import { TermsAndConditionsComponent } from 'src/app/components/modals/terms-and-conditions/terms-and-conditions.component';
+import { FirestoreService } from 'src/app/services/firestore.service';
+import { CameraSourceActionSheetComponent } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.component';
 
 @Component({
   selector: 'app-login-register',

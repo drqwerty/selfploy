@@ -3,10 +3,10 @@ import { NavController, IonContent, ModalController } from '@ionic/angular';
 import { Categories, Category } from 'src/assets/categories';
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
-import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
+import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 const { StatusBar } = Plugins;
 import { Animations } from 'src/app/animations/animations';
-import { ServiceSearchComponent } from 'src/app/components/service-search/service-search.component';
+import { ServiceSearchComponent } from 'src/app/components/modals/as-pages/service-search/service-search.component';
 
 @Component({
   selector: 'app-categories',

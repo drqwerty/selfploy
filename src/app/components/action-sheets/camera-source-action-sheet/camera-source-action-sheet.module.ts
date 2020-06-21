@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { CameraSourceActionSheetComponent } from './camera-source-action-sheet.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
-import { ImageCropperComponent } from '../image-cropper/image-cropper.component';
+import { ImageCropperComponent } from 'src/app/components/modals/as-pages/image-cropper/image-cropper.component';
 
 @NgModule({
   imports: [

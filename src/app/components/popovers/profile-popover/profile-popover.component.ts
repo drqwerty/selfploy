@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController, Platform, PopoverController, NavController } from '@ionic/angular';
-import { playLogoutAnimation } from "../../animations/log-in-out-transition";
-import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
+import { playLogoutAnimation } from "src/app/animations/log-in-out-transition";
+import { tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { AuthService } from 'src/app/services/auth.service';

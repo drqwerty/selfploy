@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController, ModalController, LoadingController, ToastController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { AuthService } from '../../services/auth.service';
-import { LoginRegisterComponent } from '../../components/login-register/login-register.component';
+import { LoginRegisterComponent } from '../../components/modals/as-pages/login-register/login-register.component';
 import { ModalAnimationFadeWithMoveContentEnter, ModalAnimationFadeWithMoveContentLeave } from '../../animations/page-transitions';
 import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast-transitions';
 import { BehaviorSubject } from 'rxjs';

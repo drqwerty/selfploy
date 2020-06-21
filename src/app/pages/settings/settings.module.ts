@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { SettingsPageRoutingModule } from './settings-routing.module';
 
 import { SettingsPage } from './settings.page';
-import { StatusBarModule } from 'src/app/components/status-bar/status-bar.module';
+import { StatusBarModule } from 'src/app/components/utils/status-bar/status-bar.module';
 
 @NgModule({
   imports: [

@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginRegisterComponent } from './login-register.component';
-import { StatusBarModule } from '../status-bar/status-bar.module';
+import { StatusBarModule } from 'src/app/components/utils/status-bar/status-bar.module';
 
 @NgModule({
   imports: [

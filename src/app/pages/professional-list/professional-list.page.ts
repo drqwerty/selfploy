@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { CustomHeaderComponent } from 'src/app/components/custom-header/custom-header.component';
+import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { User } from 'src/app/models/user-model';
 

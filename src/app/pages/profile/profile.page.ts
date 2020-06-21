@@ -4,8 +4,8 @@ import { User, UserRole } from 'src/app/models/user-model';
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { PopoverController, NavController } from '@ionic/angular';
-import { ProfilePopoverComponent } from 'src/app/components/profile-popover/profile-popover.component';
-import { MapPreviewComponent } from 'src/app/components/map-preview/map-preview.component';
+import { ProfilePopoverComponent } from 'src/app/components/popovers/profile-popover/profile-popover.component';
+import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { DataService } from 'src/app/providers/data.service';
 import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
 const { StatusBar } = Plugins;

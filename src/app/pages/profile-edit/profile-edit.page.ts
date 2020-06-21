@@ -1,22 +1,22 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, Platform, ModalController, ToastController, LoadingController, AlertController, IonContent, IonButton } from '@ionic/angular';
+import { Component, ViewChild,  } from '@angular/core';
+import { NavController, ModalController, ToastController, LoadingController, AlertController, IonContent, IonButton } from '@ionic/angular';
 import { tabBarAnimateIn, tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { User, UserRole } from 'src/app/models/user-model';
 import { StorageService } from 'src/app/services/storage.service';
-import { InputBottomSheetComponent } from 'src/app/components/input-bottom-sheet/input-bottom-sheet.component';
-import { CameraSourceActionSheetComponent } from 'src/app/components/camera-source-action-sheet/camera-source-action-sheet.component';
-import { FormBuilder, FormControl, Validators, ValidatorFn } from '@angular/forms';
+import { InputBottomSheetComponent } from 'src/app/components/bottom-sheets/input-bottom-sheet/input-bottom-sheet.component';
+import { CameraSourceActionSheetComponent } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.component';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 const { StatusBar } = Plugins;
 
 import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
-import { ServicePickerComponent } from 'src/app/components/service-picker/service-picker.component';
-import { WorkingHoursPickerComponent } from 'src/app/components/working-hours-picker/working-hours-picker.component';
+import { ServicePickerComponent } from 'src/app/components/modals/as-pages/service-picker/service-picker.component';
+import { WorkingHoursPickerComponent } from 'src/app/components/modals/working-hours-picker/working-hours-picker.component';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
-import { MapLocationComponent } from 'src/app/components/map-location/map-location.component';
-import { MapRangeComponent } from 'src/app/components/map-range/map-range.component';
+import { MapLocationComponent } from 'src/app/components/modals/as-pages/map-location/map-location.component';
+import { MapRangeComponent } from 'src/app/components/modals/as-pages/map-range/map-range.component';
 import { DataService } from 'src/app/providers/data.service';
 import Utils from "src/app/utils";
 

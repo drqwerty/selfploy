@@ -1,11 +1,11 @@
 import { Component, ViewChild, Input } from '@angular/core';
 import { ModalController, IonToolbar, IonInput, LoadingController, ToastController, NavController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
-import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from '../../animations/page-transitions';
+import { ModalAnimationSlideDuration, ModalAnimationFadeLeave } from 'src/app/animations/page-transitions';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { FirebaseError } from 'firebase';
-import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast-transitions';
+import { ToastAnimationEnter, ToastAnimationLeave } from 'src/app/animations/toast-transitions';
 
 @Component({
   selector: 'app-login-password',

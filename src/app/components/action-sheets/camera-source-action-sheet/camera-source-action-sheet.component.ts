@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
-import { CameraSource, CameraResultType, Plugins, CameraPhoto } from '@capacitor/core';
-import { ImageCropperComponent } from '../image-cropper/image-cropper.component';
+import { CameraSource, CameraResultType, Plugins } from '@capacitor/core';
+import { ImageCropperComponent } from 'src/app/components/modals/as-pages/image-cropper/image-cropper.component';
 
 const { Camera } = Plugins;
 
