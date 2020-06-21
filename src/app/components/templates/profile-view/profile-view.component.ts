@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Input, } from '@angular/core';
 import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { User, UserRole } from 'src/app/models/user-model';
 
@@ -19,11 +19,16 @@ export class ProfileViewComponent {
   @ViewChild(MapPreviewComponent) private mapPreview: MapPreviewComponent;
 
   userRol = UserRole;
+  showSpinner = true;
 
   constructor() { }
 
   initMap() {
     this.mapPreview.initMap();
+  }
+
+  imageLoaded() {
+    this.showSpinner = false;
   }
 
 }

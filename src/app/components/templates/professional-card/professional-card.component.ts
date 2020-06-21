@@ -10,11 +10,11 @@ import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 export class ProfessionalCardComponent implements OnInit {
 
   @Input() professional: User;
-  professionalImage: string;
 
   stars = 3;
   jobs = 12;
 
+  showSpinner = true;
 
   constructor(
     private fStorage: FirebaseStorage,
@@ -26,9 +26,11 @@ export class ProfessionalCardComponent implements OnInit {
   }
   
   async getImage() {
-    if (this.professional?.hasProfilePic)
-      this.professionalImage = await this.fStorage.getUserProfilePic(this.professional.id);
+    if (this.professional?.hasProfilePic) 
+      this.professional.profilePic = await this.fStorage.getUserProfilePic(this.professional.id);
   }
 
-
+  imageLoaded() {
+    this.showSpinner = false;
+  }
 }

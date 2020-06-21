@@ -7,7 +7,12 @@
   <div class="ion-padding content" [class.nav-bar-space]="navBarSpace">
 
     <div class="image-profile">
-      <img [src]="user?.profilePic">
+      <ng-container *ngIf="user?.hasProfilePic">
+        <ion-avatar>
+          <ion-spinner *ngIf="showSpinner" name="crescent" color="medium"></ion-spinner>
+          <ion-img [class.ion-invisible]="showSpinner" (ionImgDidLoad)="imageLoaded()" [src]="user?.profilePic"></ion-img>
+        </ion-avatar>
+      </ng-container>
       <div *ngIf="user?.role === userRol.professional" class="stars">
         <span class="number">4.5</span>
       </div>

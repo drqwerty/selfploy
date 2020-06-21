@@ -12,9 +12,14 @@
 
     <div class="main-content">
       <ion-item lines="none">
+
         <ion-avatar slot="start" class="professional-image">
-          <ion-img *ngIf="professionalImage" [src]="professionalImage"></ion-img>
+          <ng-container *ngIf="professional?.hasProfilePic">
+            <ion-spinner *ngIf="showSpinner" name="crescent" color="medium"></ion-spinner>
+            <ion-img [class.ion-invisible]="showSpinner" (ionImgDidLoad)="imageLoaded()" [src]="professional?.profilePic"></ion-img>
+          </ng-container>
         </ion-avatar>
+
         <ion-label>
           <p>
             <ion-icon class="ion-padding-end" slot="icon-only" name="location"></ion-icon>{{professional.addressCity}}

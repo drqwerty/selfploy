@@ -23,8 +23,18 @@
     background-color: var(--ion-color-light);
     border: 8px solid #fff;
 
-    img {
-      border-radius: inherit;
+    ion-avatar {
+      height: 100%;
+      width: 100%;
+
+      ion-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 50%;
+        width: 50%;
+      }
     }
 
     .stars {
