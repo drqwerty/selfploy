@@ -10,6 +10,7 @@ import { ProfessionalListPage } from './professional-list.page';
 import { StatusBarModule } from 'src/app/components/utils/status-bar/status-bar.module';
 import { CustomHeaderModule } from 'src/app/components/utils/custom-header/custom-header.module';
 import { ProfessionalCardModule } from 'src/app/components/templates/professional-card/professional-card.module';
+import { ProfileModalModule } from 'src/app/components/modals/as-pages/profile/profile.module';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { ProfessionalCardModule } from 'src/app/components/templates/professiona
     StatusBarModule,
     CustomHeaderModule,
     ProfessionalCardModule,
+    ProfileModalModule,
   ],
   declarations: [ProfessionalListPage]
 })

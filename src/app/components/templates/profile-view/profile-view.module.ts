@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
-import { UserProfileComponent } from './user-profile.component';
+import { ProfileViewComponent } from './profile-view.component';
 import { MapPreviewModule } from '../map-preview/map-preview.module';
 import { StatusBarModule } from '../../utils/status-bar/status-bar.module';
 
@@ -17,10 +17,10 @@ import { StatusBarModule } from '../../utils/status-bar/status-bar.module';
     MapPreviewModule,
   ],
   declarations: [
-    UserProfileComponent,
+    ProfileViewComponent,
   ],
   exports: [
-    UserProfileComponent,
+    ProfileViewComponent,
   ],
 })
-export class UserProfileModule { }
+export class ProfileViewModule { }

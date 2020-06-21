@@ -1,5 +1,5 @@
 import { Component, ViewChild,  } from '@angular/core';
-import { NavController, ModalController, ToastController, LoadingController, AlertController, IonContent, IonButton } from '@ionic/angular';
+import { NavController, ModalController, ToastController, LoadingController, AlertController, IonContent } from '@ionic/angular';
 import { tabBarAnimateIn, tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';

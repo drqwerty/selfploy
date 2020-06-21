@@ -81,11 +81,7 @@ export class FirestoreService {
       .where(`services.${categoryName}`, 'array-contains', serviceName)
       .where('professionalProfileActivated', '==', true)
       .get()
-      .then((value: GeoQuerySnapshot) =>
-        value.docs
-          .map(snap => { return { id: snap.id, distance: snap.distance, ...snap.data() } as User; })
-          .sort(({ distance: a }, { distance: b }) => a - b)
-      );
+      .then(value => this.translateCoordinatesAndSortByDistance(value));
 
     return this.omitMyProfile(query, currentUserUid);
   }
@@ -99,15 +95,22 @@ export class FirestoreService {
       .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
       .where('name_splited', 'array-contains', Utils.normalize(userName))
       .get()
-      .then((value: GeoQuerySnapshot) =>
-        value.docs
-          .map(snap => { return { id: snap.id, distance: snap.distance, ...snap.data() } as User; })
-          .sort(({ distance: a }, { distance: b }) => a - b)
-      );
+      .then(value => this.translateCoordinatesAndSortByDistance(value));
 
     if (categoryFilter) query = query.filter(user => user.services[categoryFilter])
 
     return this.omitMyProfile(query, currentUserUid);
+  }
+
+  private translateCoordinatesAndSortByDistance(value: GeoQuerySnapshot) {
+    return value.docs
+      .sort(({ distance: a }, { distance: b }) => a - b)
+      .map(snap => {
+        const user: User = snap.data();
+        const coordinates: firestore.GeoPoint = user.coordinates as any;
+        if (coordinates) user.coordinates = new LatLng(coordinates.latitude, coordinates.longitude);
+        return { id: snap.id, distance: snap.distance, ...user } as User;
+      });
   }
 
   private omitMyProfile(profiles: User[], id: string) {

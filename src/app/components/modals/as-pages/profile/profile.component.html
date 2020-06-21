@@ -1,0 +1,20 @@
+<profile-view
+  [backgroundColor]="backgroundColor"
+  [user]="user"
+  mapId="pro-location"
+>
+  <ion-header class="ion-no-border">
+    <ion-toolbar [color]="backgroundColor">
+      <ion-buttons slot="start">
+        <ion-button (click)="goBack()">
+          <ion-icon color="light" slot="icon-only" name="chevron-back-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button (click)="toggleFav()">
+          <ion-icon color="light" slot="icon-only" name="heart-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+</profile-view>

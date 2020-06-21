@@ -1,18 +1,10 @@
 <status-bar [color]="backgroundColor"></status-bar>
 
-<ion-header class="ion-no-border">
-  <ion-toolbar [color]="backgroundColor">
-    <ion-buttons slot="end">
-      <ion-button (click)="presentPopover.emit($event)">
-        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<ng-content select="ion-header"></ng-content>
 
 <ion-content [color]="backgroundColor">
 
-  <div class="ion-padding content nav-bar-space">
+  <div class="ion-padding content" [class.nav-bar-space]="navBarSpace">
 
     <div class="image-profile">
       <img [src]="user?.profilePic">
@@ -56,14 +48,8 @@
         </ion-text>
       </div>
 
-      <ion-card *ngIf="user?.role === userRol.professional && !user?.professionalProfileActivated" mode="ios" color="danger" button (click)="activateProfessionalProfile.emit()">
-        <ion-card-header mode="md">
-          <ion-card-title color="light">Perfil profesional desactivado</ion-card-title>
-        </ion-card-header>
-        <ion-card-content color="light">
-          Puedes activarlo desde aquí
-        </ion-card-content>
-      </ion-card>
+      <ng-content select="[profileDisabledNotice]"></ng-content>
+
     </div>
 
 
@@ -129,16 +115,7 @@
       </ion-list>
     </div>
 
-    <div *ngIf="user?.role === userRol.client" class="ion-margin change-rol-wrapper">
-      <ion-text color="medium" class="change-rol-info">
-        Configura tu perfil para ofrecer servicios.
-        Podrás seguir solicitando encargos una vez seas
-        profesional
-      </ion-text>
-      <ion-button (click)="createProfessionalProfile.emit()" expand="block" mode="ios" class="ion-margin-top">
-        <ion-text>Convertirme en profesional</ion-text>
-      </ion-button>
-    </div>
+    <ng-content select="[beProfessionalNotice]"></ng-content>
 
   </div>
 </ion-content>

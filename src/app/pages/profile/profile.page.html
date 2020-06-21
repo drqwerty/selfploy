@@ -1,8 +1,37 @@
-<user-profile 
+<profile-view
   [backgroundColor]="backgroundColor"
   [user]="user"
   mapId="my-location"
-  (presentPopover)="presentPopover($event)"
-  (createProfessionalProfile)="createProfessionalProfile()"
-  (activateProfessionalProfile)="activateProfessionalProfile()"
-></user-profile>
+  navBarSpace="true"
+>
+  <ion-header class="ion-no-border">
+    <ion-toolbar [color]="backgroundColor">
+      <ion-buttons slot="end">
+        <ion-button (click)="presentPopover($event)">
+          <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-card profileDisabledNotice *ngIf="user?.role === userRol.professional && !user?.professionalProfileActivated" mode="ios" color="danger" button (click)="activateProfessionalProfile()">
+    <ion-card-header mode="md">
+      <ion-card-title color="light">Perfil profesional desactivado</ion-card-title>
+    </ion-card-header>
+    <ion-card-content color="light">
+      Puedes activarlo desde aquí
+    </ion-card-content>
+  </ion-card>
+
+  <div beProfessionalNotice *ngIf="user?.role === userRol.client" class="ion-margin change-rol-wrapper">
+    <ion-text color="medium" class="change-rol-info">
+      Configura tu perfil para ofrecer servicios.
+      Podrás seguir solicitando encargos una vez seas
+      profesional
+    </ion-text>
+    <ion-button (click)="createProfessionalProfile()" expand="block" mode="ios" class="ion-margin-top">
+      <ion-text>Convertirme en profesional</ion-text>
+    </ion-button>
+  </div>
+
+</profile-view>

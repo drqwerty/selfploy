@@ -1,9 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { User } from 'src/app/models/user-model';
+import { ProfileModalComponent } from 'src/app/components/modals/as-pages/profile/profile.component';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+const { StatusBar } = Plugins;
 
 @Component({
   selector: 'app-professional-list',
@@ -28,6 +31,7 @@ export class ProfessionalListPage {
     private router: Router,
     private navController: NavController,
     private firestoreService: FirestoreService,
+    private modalController: ModalController,
   ) {
     this.route.queryParams.subscribe(() => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -44,6 +48,7 @@ export class ProfessionalListPage {
   }
 
   ionViewWillEnter() {
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
     if (this.firstEnter) this.updateTitle(0);
     this.firstEnter = false;
   }
@@ -58,6 +63,15 @@ export class ProfessionalListPage {
 
   updateTitle(scrollTop: number) {
     this.customHeader.updateHeaderTitle(scrollTop);
+  }
+
+  async viewProfile(user: User) {
+    const modal = await this.modalController.create({
+      component: ProfileModalComponent,
+      componentProps: { backgroundColor: 'primary', user }
+    });
+
+    modal.present();
   }
 
 }

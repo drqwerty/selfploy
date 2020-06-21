@@ -38,7 +38,7 @@
       </ng-template>
 
       <ng-template #professionalList>
-        <professional-card *ngFor="let professional of professionals" [professional]="professional"></professional-card>
+        <professional-card (click)="viewProfile(professional)" *ngFor="let professional of professionals" [professional]="professional"></professional-card>
       </ng-template>
     </ng-template>
 

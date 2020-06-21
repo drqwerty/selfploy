@@ -7,7 +7,7 @@ import { PopoverController, NavController } from '@ionic/angular';
 import { ProfilePopoverComponent } from 'src/app/components/popovers/profile-popover/profile-popover.component';
 import { DataService } from 'src/app/providers/data.service';
 import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
-import { UserProfileComponent } from 'src/app/components/templates/user-profile/user-profile.component';
+import { ProfileViewComponent } from 'src/app/components/templates/profile-view/profile-view.component';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -17,7 +17,7 @@ const { StatusBar } = Plugins;
 })
 export class ProfilePage {
 
-  @ViewChild(UserProfileComponent) userProfile: UserProfileComponent;
+  @ViewChild(ProfileViewComponent) profileView: ProfileViewComponent;
 
   userRol = UserRole;
   user: User;
@@ -42,7 +42,7 @@ export class ProfilePage {
   }
 
   ionViewDidEnter() {
-    this.userProfile.initMap()
+    this.profileView.initMap()
   }
 
   updateBackgroundColor() {

@@ -4,19 +4,16 @@ import { User, UserRole } from 'src/app/models/user-model';
 
 
 @Component({
-  selector: 'user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.scss'],
+  selector: 'profile-view',
+  templateUrl: './profile-view.component.html',
+  styleUrls: ['./profile-view.component.scss'],
 })
-export class UserProfileComponent {
+export class ProfileViewComponent {
 
   @Input() backgroundColor: string;
   @Input() user: User;
   @Input() mapId: string;
-
-  @Output() presentPopover = new EventEmitter<MouseEvent>();
-  @Output() createProfessionalProfile = new EventEmitter<void>();
-  @Output() activateProfessionalProfile = new EventEmitter<void>();
+  @Input() navBarSpace = false;
 
 
   @ViewChild(MapPreviewComponent) private mapPreview: MapPreviewComponent;
@@ -25,9 +22,8 @@ export class UserProfileComponent {
 
   constructor() { }
 
-
   initMap() {
-    this.mapPreview?.initMap();
+    this.mapPreview.initMap();
   }
 
 }
