@@ -147,7 +147,7 @@ export class MapLocationComponent {
       if (data) this.map.flyToBounds(data);
     });
     
-    await this.animations.addElement(this.fab.el, 'light').startAnimation();
+    await this.animations.addElement(this.fab.el, '#fff').startAnimation();
     modal.present();
   }
   

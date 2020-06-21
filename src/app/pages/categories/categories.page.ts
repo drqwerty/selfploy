@@ -47,9 +47,6 @@ export class CategoriesPage {
       }
     });
 
-    modal.onWillDismiss().then(({ data }) => {
-    });
-
     await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
     modal.present();
   }
