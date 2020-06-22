@@ -4,15 +4,9 @@
   mapId="my-location"
   navBarSpace="true"
 >
-  <ion-header class="ion-no-border">
-    <ion-toolbar [color]="backgroundColor">
-      <ion-buttons slot="end">
-        <ion-button (click)="presentPopover($event)">
-          <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+  <ion-button buttonsEnd (click)="presentPopover($event)">
+    <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+  </ion-button>
 
   <ion-card profileDisabledNotice *ngIf="user?.role === userRol.professional && !user?.professionalProfileActivated" mode="ios" color="danger" button (click)="activateProfessionalProfile()">
     <ion-card-header mode="md">

@@ -39,10 +39,15 @@ export class ProfilePage {
     this.updateBackgroundColor();
     if (this.user !== this.data.user) this.user = this.data.user;
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
+    this.profileView.startProfileImageIntersectionObserver();
   }
 
   ionViewDidEnter() {
     this.profileView.initMap()
+  }
+
+  ionViewWillLeave() {
+    this.profileView.stopProfileImageIntersectionObserver();
   }
 
   updateBackgroundColor() {

@@ -1,9 +1,8 @@
-import { Component, ViewChild, Input, Output, EventEmitter, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, AfterViewInit, ElementRef } from '@angular/core';
 import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { User, UserRole } from 'src/app/models/user-model';
 import { IonContent } from '@ionic/angular';
-import { auditTime } from 'rxjs/operators';
-import { Subscription, fromEvent } from 'rxjs';
+import { auditTime, } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -25,6 +24,10 @@ export class ProfileViewComponent implements AfterViewInit {
 
   @ViewChild(IonContent) ionContent: IonContent;
   @ViewChild(MapPreviewComponent) private mapPreview: MapPreviewComponent;
+  @ViewChild('profileImageWrapper') private profileImageWrapper: ElementRef;
+
+  profileImageIntersectionObserver: IntersectionObserver;
+  bigProfileImageIsVisible = true;
 
   userRol = UserRole;
   showSpinner = true;
@@ -53,4 +56,16 @@ export class ProfileViewComponent implements AfterViewInit {
         .subscribe(({ detail }) => this.scrollEvent.emit(detail));
   }
 
+  startProfileImageIntersectionObserver() {
+    this.profileImageIntersectionObserver = new IntersectionObserver(entries => {
+      this.bigProfileImageIsVisible = entries[0].isIntersecting;
+      console.log(entries[0].isIntersecting);
+    },
+      { threshold: 0 });
+    this.profileImageIntersectionObserver.observe(this.profileImageWrapper.nativeElement);
+  }
+
+  stopProfileImageIntersectionObserver() {
+    this.profileImageIntersectionObserver.disconnect();
+  }
 }

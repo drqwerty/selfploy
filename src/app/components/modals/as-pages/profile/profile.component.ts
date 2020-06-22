@@ -24,9 +24,17 @@ export class ProfileModalComponent {
     private modalController: ModalController,
   ) { }
 
+  ionViewWillEnter() {
+    this.profileView.startProfileImageIntersectionObserver();
+  }
+
   ionViewDidEnter() {
     this.profileView.initMap()
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
+  }
+
+  ionViewWillLeave() {
+    this.profileView.stopProfileImageIntersectionObserver();
   }
 
   goBack() {

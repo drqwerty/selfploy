@@ -1,18 +1,37 @@
+<ng-template #profileImageTemplate>
+  <ng-container *ngIf="user?.hasProfilePic">
+    <ion-avatar>
+      <ion-spinner *ngIf="showSpinner" name="crescent" color="medium"></ion-spinner>
+      <ion-img [class.ion-invisible]="showSpinner" (ionImgDidLoad)="imageLoaded()" [src]="user?.profilePic"></ion-img>
+    </ion-avatar>
+  </ng-container>
+</ng-template>
+
 <status-bar [color]="backgroundColor"></status-bar>
 
-<ng-content select="ion-header"></ng-content>
+<ion-header class="ion-no-border">
+  <ion-toolbar [color]="backgroundColor">
+
+    <ion-buttons slot="start">
+      <ng-content select="[buttonsStart]"></ng-content>
+      <div class="image-profile-toolbar ion-opacity-transition" [class.ion-no-opacity]="bigProfileImageIsVisible">
+        <ng-container *ngTemplateOutlet="profileImageTemplate"></ng-container>
+      </div>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ng-content select="[buttonsEnd]"></ng-content>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [color]="backgroundColor" [scrollEvents]="scrollEvents">
 
   <div class="ion-padding content" [class.nav-bar-space]="navBarSpace">
 
-    <div class="image-profile">
-      <ng-container *ngIf="user?.hasProfilePic">
-        <ion-avatar>
-          <ion-spinner *ngIf="showSpinner" name="crescent" color="medium"></ion-spinner>
-          <ion-img [class.ion-invisible]="showSpinner" (ionImgDidLoad)="imageLoaded()" [src]="user?.profilePic"></ion-img>
-        </ion-avatar>
-      </ng-container>
+    <div #profileImageWrapper class="image-profile">
+      <ng-container *ngTemplateOutlet="profileImageTemplate"></ng-container>
       <div *ngIf="user?.role === userRol.professional" class="stars">
         <span class="number">4.5</span>
       </div>
