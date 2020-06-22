@@ -29,11 +29,8 @@ export class CategoriesPage {
   ) { }
 
   ionViewWillEnter() {
-    if (this.firstEnter) {
-      this.updateTitle(0);
-    } else if (Capacitor.isPluginAvailable('StatusBar')) {
-      StatusBar.setStyle({ style: StatusBarStyle.Light })
-    }
+    if (this.firstEnter) this.updateTitle(0);
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
     this.firstEnter = false;
   }
 

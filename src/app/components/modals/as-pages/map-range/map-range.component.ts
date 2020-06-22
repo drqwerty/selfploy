@@ -34,9 +34,7 @@ export class MapRangeComponent {
   ) { }
 
   ionViewWillEnter() {
-    if (Capacitor.isPluginAvailable('StatusBar')) { 
-      StatusBar.setStyle({ style: StatusBarStyle.Light });
-    };
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
   ionViewDidEnter() {

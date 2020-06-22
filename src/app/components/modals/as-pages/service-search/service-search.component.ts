@@ -3,7 +3,8 @@ import { Animations } from 'src/app/animations/animations';
 import { ModalController, IonSearchbar, NavController } from '@ionic/angular';
 import { Categories } from 'src/assets/categories';
 import { FirestoreService } from 'src/app/services/firestore.service';
-
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+const { StatusBar } = Plugins;
 import Utils from "src/app/utils";
 
 
@@ -34,6 +35,7 @@ export class ServiceSearchComponent {
 
   ionViewDidEnter() {
     setTimeout(() => this.searchbar.setFocus(), 250);
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
   async goBack() {

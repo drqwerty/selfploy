@@ -54,9 +54,7 @@ export class ProfilePopoverComponent {
           text: 'Cerrar sesión',
           handler: async () => {
             await this.popoverController.dismiss();
-            if (Capacitor.isPluginAvailable('StatusBar')) { 
-              StatusBar.setStyle({ style: StatusBarStyle.Dark });
-            };
+            if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
             this.auth.logout();
             await playLogoutAnimation(this.platform.height());
             this.navController.navigateRoot('main', { animated: false });

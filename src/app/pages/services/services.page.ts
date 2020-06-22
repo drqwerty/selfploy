@@ -8,6 +8,9 @@ import * as _ from 'lodash';
 import { Categories } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/categories';
 import { Animations } from 'src/app/animations/animations';
 import { ServiceSearchComponent } from 'src/app/components/modals/as-pages/service-search/service-search.component';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+const { StatusBar } = Plugins;
+
 
 @Component({
   selector: 'app-services',
@@ -40,6 +43,7 @@ export class ServicesPage {
 
   ionViewWillEnter() {
     if (this.firstEnter) this.updateTitle(0);
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
     this.firstEnter = false;
   }
 

@@ -53,9 +53,7 @@ export class MapLocationComponent {
 
   ionViewWillEnter() {
     this.createMyLocationAnimation();
-    if (Capacitor.isPluginAvailable('StatusBar')) {
-      StatusBar.setStyle({ style: StatusBarStyle.Light });
-    }
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
   ionViewDidEnter() {

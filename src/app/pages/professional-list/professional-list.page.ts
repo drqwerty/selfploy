@@ -46,8 +46,8 @@ export class ProfessionalListPage {
   }
 
   ionViewWillEnter() {
-    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
     if (this.firstEnter) this.updateTitle(0);
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
     this.firstEnter = false;
   }
 

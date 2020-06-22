@@ -16,9 +16,7 @@ export class FavoritesPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    if (Capacitor.isPluginAvailable('StatusBar')) { 
-      StatusBar.setStyle({ style: StatusBarStyle.Dark })
-    };
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
   }
 
 }

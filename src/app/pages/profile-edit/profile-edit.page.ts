@@ -83,9 +83,7 @@ export class ProfileEditPage {
   ionViewWillEnter() {
     this.getUser();
     tabBarAnimateOut();
-    if (Capacitor.isPluginAvailable('StatusBar')) {
-      StatusBar.setStyle({ style: StatusBarStyle.Light });
-    };
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
   ionViewDidEnter() {

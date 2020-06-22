@@ -36,6 +36,7 @@ export class ProfileViewComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.startScrollSubscription();
+    this.setCornersStyle();
   }
 
   initMap() {
@@ -56,11 +57,20 @@ export class ProfileViewComponent implements AfterViewInit {
         .subscribe(({ detail }) => this.scrollEvent.emit(detail));
   }
 
+  setCornersStyle() {
+    setTimeout(() => {
+      const shadowRoot = (this.ionContent as any).el.shadowRoot;
+      const background = shadowRoot.querySelector("#background-content") as HTMLElement;
+      const content = shadowRoot.querySelector(".inner-scroll") as HTMLElement;
+      
+      background.style.backgroundColor = `var(--ion-color-${this.backgroundColor})`;
+      content.style.borderRadius = '40px 40px 0 0';
+    });
+  }
+
   startProfileImageIntersectionObserver() {
-    this.profileImageIntersectionObserver = new IntersectionObserver(entries => {
-      this.bigProfileImageIsVisible = entries[0].isIntersecting;
-      console.log(entries[0].isIntersecting);
-    },
+    this.profileImageIntersectionObserver = new IntersectionObserver(entries =>
+      this.bigProfileImageIsVisible = entries[0].isIntersecting,
       { threshold: 0 });
     this.profileImageIntersectionObserver.observe(this.profileImageWrapper.nativeElement);
   }
