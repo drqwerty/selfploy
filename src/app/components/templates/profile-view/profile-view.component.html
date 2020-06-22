@@ -2,7 +2,7 @@
 
 <ng-content select="ion-header"></ng-content>
 
-<ion-content [color]="backgroundColor">
+<ion-content [color]="backgroundColor" [scrollEvents]="scrollEvents">
 
   <div class="ion-padding content" [class.nav-bar-space]="navBarSpace">
 
@@ -121,6 +121,9 @@
     </div>
 
     <ng-content select="[beProfessionalNotice]"></ng-content>
-
+    
   </div>
+  
+  <ng-content select="[requestServiceButton]"></ng-content>
+
 </ion-content>

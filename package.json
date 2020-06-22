@@ -32,6 +32,7 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^5.0.0",
     "@ionic/pwa-elements": "^1.5.2",
+    "@ngneat/until-destroy": "^7.2.0",
     "@rdlabo/capacitor-facebook-login": "^2.0.3",
     "@types/esri-leaflet-geocoder": "^2.2.2",
     "@types/leaflet": "^1.5.12",

@@ -10,13 +10,15 @@ const { StatusBar } = Plugins;
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
 })
-export class ProfileModalComponent  {
+export class ProfileModalComponent {
 
   @Input() backgroundColor: string;
   @Input() user: User;
 
 
   @ViewChild(ProfileViewComponent) profileView: ProfileViewComponent;
+
+  compactButton = false;
 
   constructor(
     private modalController: ModalController,
@@ -29,6 +31,10 @@ export class ProfileModalComponent  {
 
   goBack() {
     this.modalController.dismiss();
+  }
+
+  scrollEvent({ deltaY }) {
+    this.compactButton = 0 < deltaY;
   }
 
 }

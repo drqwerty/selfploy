@@ -1,0 +1,12 @@
+<ion-fab [vertical]="vertical" [horizontal]="horizontal" slot="fixed">
+  <ion-button shape="round" size="small">
+    <span>
+      <ion-icon [name]="name"></ion-icon>
+      <div #textWrapper class="text-wrapper" [class.compact]="compactButton">
+        <div class="space"></div>
+        <span>{{text}}</span>
+        <div class="space"></div>
+      </div>
+    </span>
+  </ion-button>
+</ion-fab>

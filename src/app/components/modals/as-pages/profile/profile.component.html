@@ -2,7 +2,10 @@
   [backgroundColor]="backgroundColor"
   [user]="user"
   mapId="pro-location"
+  scrollEvents="true"
+  (scrollEvent)="scrollEvent($event)"
 >
+
   <ion-header class="ion-no-border">
     <ion-toolbar [color]="backgroundColor">
       <ion-buttons slot="start">
@@ -17,4 +20,13 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
+
+  <fab-with-text requestServiceButton 
+    vertical="bottom" 
+    horizontal="end" 
+    name="add" 
+    text="Solicitar servicios"
+    [compactButton]="compactButton"
+  ></fab-with-text>
+  
 </profile-view>
