@@ -2,15 +2,15 @@
   <div class="card-content">
 
     <div class="left-content">
-      <ion-button (click)="toggleFav()" fill="clear">
+      <ion-button size="small" (click)="toggleFav()" fill="clear">
         <ion-icon color="light" slot="icon-only" name="heart-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="requestService()" fill="clear">
+      <ion-button size="small" (click)="requestService()" fill="clear">
         <ion-icon color="light" slot="icon-only" name="reader-outline"></ion-icon>
       </ion-button>
     </div>
 
-    <div class="main-content">
+    <div class="main-content" (click)="viewProfile(professional)" >
       <ion-item lines="none">
 
         <ion-avatar slot="start" class="professional-image">

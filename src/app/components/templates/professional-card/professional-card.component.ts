@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user-model';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
+import { ModalController } from '@ionic/angular';
+import { ProfileModalComponent } from '../../modals/as-pages/profile/profile.component';
 
 @Component({
   selector: 'professional-card',
@@ -18,6 +20,7 @@ export class ProfessionalCardComponent implements OnInit {
 
   constructor(
     private fStorage: FirebaseStorage,
+    private modalController: ModalController
   ) {
   }
 
@@ -32,5 +35,14 @@ export class ProfessionalCardComponent implements OnInit {
 
   imageLoaded() {
     this.showSpinner = false;
+  }
+
+  async viewProfile(user: User) {
+    const modal = await this.modalController.create({
+      component: ProfileModalComponent,
+      componentProps: { backgroundColor: 'primary', user }
+    });
+
+    modal.present();
   }
 }

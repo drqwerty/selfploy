@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfessionalCardComponent } from './professional-card.component';
+import { ProfileModalModule } from 'src/app/components/modals/as-pages/profile/profile.module';
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
 
 @NgModule({
@@ -11,6 +12,7 @@ import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-lette
     FormsModule,
     IonicModule,
     UpperCaseFirstLetterModule,
+    ProfileModalModule,
   ],
   declarations: [
     ProfessionalCardComponent,

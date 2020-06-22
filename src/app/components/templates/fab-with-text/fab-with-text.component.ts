@@ -9,7 +9,7 @@ export class FabWithTextComponent implements AfterViewInit {
 
   @Input() vertical: 'top' | 'center' | 'bottom';
   @Input() horizontal: 'center' | 'start' | 'end';
-  @Input() name: string;
+  @Input() iconName: string;
   @Input() text: string;
   @Input() compactButton: boolean;
 
