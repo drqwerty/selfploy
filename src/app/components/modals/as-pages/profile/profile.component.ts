@@ -18,7 +18,7 @@ export class ProfileModalComponent {
 
   @ViewChild(ProfileViewComponent) profileView: ProfileViewComponent;
 
-  compactButton = false;
+  collapsedFab = false;
 
   constructor(
     private modalController: ModalController,
@@ -42,7 +42,7 @@ export class ProfileModalComponent {
   }
 
   scrollEvent({ deltaY }) {
-    this.compactButton = 0 < deltaY;
+    this.collapsedFab = 0 < deltaY;
   }
 
 }

@@ -14,11 +14,10 @@
   </ion-button>
 
   <fab-with-text requestServiceButton 
-    vertical="bottom" 
-    horizontal="end" 
     iconName="reader-outline" 
     text="Solicitar servicios"
-    [compactButton]="compactButton"
+    [collapsed]="collapsedFab"
+    (clicked)="requestService()"
   ></fab-with-text>
   
 </profile-view>
