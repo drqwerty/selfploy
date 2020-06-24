@@ -7,6 +7,7 @@ import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/cu
 const { StatusBar } = Plugins;
 import { Animations } from 'src/app/animations/animations';
 import { ServiceSearchComponent } from 'src/app/components/modals/as-pages/service-search/service-search.component';
+import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/service-filter/service-filter.component';
 
 @Component({
   selector: 'app-categories',
@@ -32,11 +33,13 @@ export class CategoriesPage {
     if (this.firstEnter) this.updateTitle(0);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
     this.firstEnter = false;
+    this.search();
   }
 
   async search() {
     const modal = await this.modalController.create({
-      component: ServiceSearchComponent,
+      // component: ServiceSearchComponent,
+      component: ServiceFilterComponent,
       animated: false,
     });
 
