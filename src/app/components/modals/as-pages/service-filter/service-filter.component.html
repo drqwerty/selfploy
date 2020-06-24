@@ -1,0 +1,68 @@
+<status-bar color="#fff"></status-bar>
+
+<custom-header title="Filtros">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon color="tertiary" slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons #searchButton slot="end">
+      <ion-button (click)="apply()">
+        <ion-text color="tertiary" class="no-transform">
+          Aplicar
+        </ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</custom-header>
+
+<ion-content scrollEvents (ionScroll)="updateTitle($event.detail.scrollTop)">
+
+  <ion-toolbar></ion-toolbar>
+
+  <ion-grid class="ion-padding-horizontal" mode="ios">
+    <ion-label>{{filterValues.order.name}}</ion-label>
+    <ion-row>
+      <ion-col *ngFor="let option of filterValues.order.options">
+        <ion-button class="no-transform" (click)="onClick()" expand="block" [fill]="option.checked ? 'solid' : 'clear'">
+          {{option.name}}
+          <ion-icon *ngIf="option.checked" slot="end" [name]="filterValues.order.value.ascendent ? 'chevron-up-outline' : 'chevron-down-outline'" size="small"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-label>{{filterValues.classification.name}}</ion-label>
+    <ion-row>
+      <ion-col [size]="24 / filterValues.classification.options.length" *ngFor="let option of filterValues.classification.options">
+        <ion-button class="no-transform" (click)="onClick()" expand="block" [fill]="option.checked ? 'solid' : 'clear'">
+          {{option.name}}
+          <ion-icon *ngIf="option.value > 0" slot="end" name="star" size="small"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-label>{{filterValues.workingHours.name}}</ion-label>
+    <ion-row>
+      <ion-col [size]="24 / filterValues.workingHours.options.length"  *ngFor="let option of filterValues.workingHours.options">
+        <ion-button class="no-transform" (click)="onClick()" expand="block" [fill]="option.checked ? 'solid' : 'clear'">
+          <span upperCaseFirstLetter>{{option.name}}</span>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+
+    <ion-label>{{filterValues.distance.name}}</ion-label>
+    <ion-row>
+      <ion-col>
+        <custom-range pinPinned="true" [(value)]="filterValues.distance.value" (ionChange)="rangeChange()"></custom-range>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-button (click)="onClick()" class="restart-button no-transform" fill="clear" shape="round">
+    Reiniciar y aplicar
+  </ion-button>
+
+
+</ion-content>

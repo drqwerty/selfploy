@@ -1,10 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { User } from 'src/app/models/user-model';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/service-filter/service-filter.component';
+import { Animations } from 'src/app/animations/animations';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -15,6 +17,7 @@ const { StatusBar } = Plugins;
 export class ProfessionalListPage {
 
   @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
+  @ViewChild('filterButton') filterButton: any;
 
   professionals: User[]
 
@@ -30,6 +33,8 @@ export class ProfessionalListPage {
     private router: Router,
     private navController: NavController,
     private firestoreService: FirestoreService,
+    private modalController: ModalController,
+    private animations: Animations,
   ) {
     this.route.queryParams.subscribe(() => {
       if (this.router.getCurrentNavigation().extras.state) {
@@ -57,6 +62,18 @@ export class ProfessionalListPage {
 
   goBack() {
     this.navController.navigateBack('/tabs/categories/services', { state: { categoryName: this.categoryName } });
+  }
+
+  async filter() {
+    const modal = await this.modalController.create({
+      component: ServiceFilterComponent,
+      animated: false,
+      componentProps: { data: 'example' }
+    });
+
+    await this.animations.addElement(this.filterButton.el, '#fff').startAnimation();
+
+    modal.present();
   }
 
   updateTitle(scrollTop: number) {

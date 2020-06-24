@@ -11,6 +11,7 @@ export class CustomRangeComponent {
   @Input() min = 1;
   @Input() max = 30;
   @Input() value = 0;
+  @Input() pinPinned = false;
 
   @Output() valueChange = new EventEmitter<number>();
 
@@ -28,6 +29,8 @@ export class CustomRangeComponent {
     const rangeSliderRect = rangeSlider.getBoundingClientRect();
     const rangePing = this.ionRange.el.shadowRoot.querySelector('.range-pin') as HTMLElement;
     rangePing.style.whiteSpace = 'nowrap';
+
+    if (this.pinPinned) rangePing.style.transform = "none";
 
     const getValue = (ev) => {
       if (ev == null) return null;
