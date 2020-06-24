@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MapRangeComponent } from './map-range.component';
 import { StatusBarModule } from 'src/app/components/utils/status-bar/status-bar.module';
 import { FormsModule } from '@angular/forms';
+import { CustomRangeModule } from 'src/app/components/utils/custom-range/custom-range.module';
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import { FormsModule } from '@angular/forms';
     IonicModule,
     StatusBarModule,
     FormsModule,
+    CustomRangeModule,
   ],
   declarations: [
     MapRangeComponent,

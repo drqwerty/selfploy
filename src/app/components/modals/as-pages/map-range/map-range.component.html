@@ -30,8 +30,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-range mode="ios" [min]="min" [max]="max" pin color="primary" [(ngModel)]="radiusKm" (ionChange)="updateCircleRadius()">
-        </ion-range>
+        <custom-range [(value)]="radiusKm" (ionChange)="updateCircleRadius()"></custom-range>
       </ion-item>
     </ion-list>
   </ion-toolbar>

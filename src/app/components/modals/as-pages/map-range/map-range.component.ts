@@ -2,7 +2,8 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { Map as leafletMap, tileLayer, icon, circle, marker, LatLng, Circle } from 'leaflet';
 
 import { environment } from "src/environments/environment";
-import { ModalController, IonRange } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { CustomRangeComponent } from 'src/app/components/utils/custom-range/custom-range.component';
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { StatusBar } = Plugins;
@@ -21,10 +22,8 @@ export class MapRangeComponent {
 
   @Input() coordinates: LatLng;
 
-  @ViewChild(IonRange) ionRange: any;
 
-  min = 1;
-  max = 30;
+  @ViewChild(CustomRangeComponent) customRange: CustomRangeComponent;
 
   map: leafletMap;
   circleRadius: Circle;
@@ -41,7 +40,7 @@ export class MapRangeComponent {
     this.loadMap();
     this.createMarker();
     this.createCircle();
-    this.setPinText();
+    this.customRange.setPinText();
   }
 
   goBack() {
@@ -88,26 +87,6 @@ export class MapRangeComponent {
     this.circleRadius.setRadius(this.radiusKm * 1000);
     this.map.fitBounds(this.circleRadius.getBounds());
     setTimeout(() => this.map.fitBounds(this.circleRadius.getBounds()), 250);
-  }
-
-  setPinText() {
-    const rangeSlider = this.ionRange.el.shadowRoot.querySelector('.range-slider') as HTMLElement;
-    const rangeSliderRect = rangeSlider.getBoundingClientRect();
-    const rangePing = this.ionRange.el.shadowRoot.querySelector('.range-pin') as HTMLElement;
-    rangePing.style.whiteSpace = 'nowrap';
-
-    const getValue = (ev) => {
-      if (ev == null) return null;
-      const clamp = (min, n, max) => Math.max(min, Math.min(n, max));
-      const ratioToValue = (ratio, min, max) => clamp(min, Math.round((max - min) * ratio) + min, max);
-      const ratio = clamp(0, (ev.x - rangeSliderRect.left) / rangeSliderRect.width, 1);
-      return ratioToValue(ratio, this.min, this.max);
-    }
-    const setContent = (ev?) => rangePing.textContent = (getValue(ev) ?? this.radiusKm) + ' km';
-    setContent();
-
-    rangeSlider.addEventListener('pointerdown', ev => setContent(ev));
-    rangeSlider.addEventListener('pointermove', ev => setContent(ev));
   }
 
 }
