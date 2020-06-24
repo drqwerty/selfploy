@@ -34,6 +34,7 @@ export class ServiceSearchComponent {
   ) { }
 
   ionViewDidEnter() {
+    this.animations.modalLoaded();
     setTimeout(() => this.searchbar.setFocus(), 250);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }

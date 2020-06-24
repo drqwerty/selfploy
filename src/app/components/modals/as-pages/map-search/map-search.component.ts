@@ -29,6 +29,7 @@ export class MapSearchComponent {
   }
 
   ionViewDidEnter() {
+    this.animations.modalLoaded();
     setTimeout(() => this.searchbar.setFocus(), 250);
   }
 

@@ -15,6 +15,13 @@ export class Animations {
   private button: AnimationModel;
   private ionContentClientRect: {initial?: ClientRect, headerHeight?: number, footerHeight?: number} = {headerHeight: 0, footerHeight: 0};
 
+  private animationPromise: Promise<any>;
+  private modalLoadedPromise: Promise<any>;
+
+  /**
+   * Indica a la animación que el modal está cargado para poder terminar la animación
+   */
+  modalLoaded: any;
 
     /**
    * Establece un elemento inicial a la animación
@@ -111,7 +118,7 @@ export class Animations {
   private animate(animation: AnimationModel,
                    options: {firstAnimation?: boolean, reverse?: boolean} = {firstAnimation: false, reverse: false}) {
 
-    return new Promise(resolve => {
+    this.animationPromise = new Promise(resolve => {
       if (animation == null) resolve();
 
       if (options.reverse) {
@@ -136,8 +143,8 @@ export class Animations {
         scaleX = bodyDomRect.width / width,
         posX   = -left,
         posY   = -top;
-  
-        
+
+
       animation.elementAnimated.style.opacity = '0';
       document.body.appendChild(animation.elementAnimated);
   
@@ -146,20 +153,28 @@ export class Animations {
           .then(() => {   
             animation.elementAnimated.style.transform = `scale3d(${scaleY * 2}, ${scaleY * 2}, 1)`;
             animation.elementAnimated.style.borderRadius = '0px';
-            setTimeout(() => resolve(), this.duration - 100);
-            setTimeout(() => this.hideElement(animation.elementAnimated), this.duration);
+            setTimeout(() => resolve(), this.duration);
           });
       }, 50);
     });
 
+    if (!options.reverse) this.hideElement(animation.elementAnimated, true);
+
+    return this.animationPromise;
   }
 
 
     /**
    * Oculta un elemento del DOM
    * @param element Elemento que se quiere ocultar
+   * @param async Indica si hay que esperar hasta que el modal haya sido cargado antes de ocultar el elemento
    */
-  private hideElement(element: HTMLElement) {
+  private async hideElement(element: HTMLElement, async = false) {
+    if (async) {
+      this.modalLoadedPromise = new Promise(resolve => this.modalLoaded = resolve);
+      await Promise.all([this.animationPromise, this.modalLoadedPromise]);
+    };
+    
     return new Promise(resolve => {
       element.style.opacity = '0';
         setTimeout(() => {
