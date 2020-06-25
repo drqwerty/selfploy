@@ -16,21 +16,21 @@
 </custom-header>
 
 
-<ion-content scrollEvents="true" (ionScroll)="updateTitle($event.detail.scrollTop)">
+<ion-content>
 
-  <ion-toolbar></ion-toolbar>
-
-  <ion-list lines="none" class="sercice-list">
-    <ion-item *ngFor="let service of category?.services" button (click)="showProfessionals(category?.name, service?.name)">
-      <ion-label>
-        <ion-text color="primary">
-          <h2 upperCaseFirstLetter>{{category?.name}}</h2>
-        </ion-text>
-        <ion-text color="tertiary">
-          <h3 upperCaseFirstLetter class="ion-padding-start">{{service.name}}</h3>
-        </ion-text>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <div class="nav-bar-space">
+    <ion-list lines="none" class="sercice-list">
+      <ion-item *ngFor="let service of category?.services" button (click)="showProfessionals(category?.name, service?.name)">
+        <ion-label>
+          <ion-text color="primary">
+            <h2 upperCaseFirstLetter>{{category?.name}}</h2>
+          </ion-text>
+          <ion-text color="tertiary">
+            <h3 upperCaseFirstLetter class="ion-padding-start">{{service.name}}</h3>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
 
 </ion-content>

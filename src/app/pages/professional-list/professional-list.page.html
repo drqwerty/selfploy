@@ -16,9 +16,7 @@
 </custom-header>
 
 
-<ion-content scrollEvents="true" (ionScroll)="updateTitle($event.detail.scrollTop)">
-
-  <ion-toolbar></ion-toolbar>
+<ion-content>
 
   <div class="nav-bar-space" *ngIf="pageLoaded" [class.limit-height]="!professionals">
 

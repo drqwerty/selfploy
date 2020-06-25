@@ -1,7 +1,6 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Category } from 'src/assets/categories';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 import { NavController, ModalController } from '@ionic/angular';
 
 import * as _ from 'lodash';
@@ -19,11 +18,9 @@ const { StatusBar } = Plugins;
 })
 export class ServicesPage {
 
-  @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
   @ViewChild('searchButton') searchButton: any;
 
   category: Category;
-  firstEnter = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,9 +39,7 @@ export class ServicesPage {
   }
 
   ionViewWillEnter() {
-    if (this.firstEnter) this.updateTitle(0);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
-    this.firstEnter = false;
   }
 
   goBack() {
@@ -62,10 +57,6 @@ export class ServicesPage {
 
     await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
     modal.present();
-  }
-
-  updateTitle(scrollTop: number) {
-    this.customHeader.updateHeaderTitle(scrollTop);
   }
 
   showProfessionals(categoryName, serviceName) {

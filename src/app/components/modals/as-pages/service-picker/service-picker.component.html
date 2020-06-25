@@ -11,9 +11,7 @@
 </custom-header>
 
 
-<ion-content scrollEvents="true" (ionScroll)="updateTitle($event.detail.scrollTop)">
-
-  <ion-toolbar></ion-toolbar>
+<ion-content>
 
   <div *ngFor="let category of categories">
     <ion-list lines="none" class="item-category">

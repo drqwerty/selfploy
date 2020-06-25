@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
-import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { User } from 'src/app/models/user-model';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
@@ -16,12 +15,9 @@ const { StatusBar } = Plugins;
 })
 export class ProfessionalListPage {
 
-  @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
   @ViewChild('filterButton') filterButton: any;
 
   professionals: User[]
-
-  firstEnter = true;
 
   serviceName: string
   categoryName: string;
@@ -51,9 +47,7 @@ export class ProfessionalListPage {
   }
 
   ionViewWillEnter() {
-    if (this.firstEnter) this.updateTitle(0);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
-    this.firstEnter = false;
   }
 
   ionViewDidEnter() {
@@ -74,10 +68,6 @@ export class ProfessionalListPage {
     await this.animations.addElement(this.filterButton.el, '#fff').startAnimation();
 
     modal.present();
-  }
-
-  updateTitle(scrollTop: number) {
-    this.customHeader.updateHeaderTitle(scrollTop);
   }
 
 }

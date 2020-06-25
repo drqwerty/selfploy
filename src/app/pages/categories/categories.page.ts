@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, IonContent, ModalController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { Categories } from 'src/assets/categories';
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
-import { CustomHeaderComponent } from 'src/app/components/utils/custom-header/custom-header.component';
 const { StatusBar } = Plugins;
 import { Animations } from 'src/app/animations/animations';
 import { ServiceSearchComponent } from 'src/app/components/modals/as-pages/service-search/service-search.component';
@@ -15,11 +14,8 @@ import { ServiceSearchComponent } from 'src/app/components/modals/as-pages/servi
 })
 export class CategoriesPage {
 
-  @ViewChild(CustomHeaderComponent) customHeader: CustomHeaderComponent;
-  @ViewChild(IonContent) ionContent: IonContent;
   @ViewChild('searchButton') searchButton: any;
 
-  firstEnter = true;
   categories = Categories;
 
   constructor(
@@ -29,9 +25,7 @@ export class CategoriesPage {
   ) { }
 
   ionViewWillEnter() {
-    if (this.firstEnter) this.updateTitle(0);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
-    this.firstEnter = false;
   }
 
   async search() {
@@ -42,10 +36,6 @@ export class CategoriesPage {
 
     await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
     modal.present();
-  }
-
-  updateTitle(scrollTop: number) {
-    this.customHeader.updateHeaderTitle(scrollTop);
   }
 
   showServices(category) {
