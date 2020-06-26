@@ -11,6 +11,7 @@ export class CustomHeaderComponent implements AfterViewInit {
   private readonly constant = 100 / 56;
 
 
+  @Input() hideBorder = false;
   @Input() title: string;
   @Input() color = 'tertiary';
 
@@ -37,6 +38,7 @@ export class CustomHeaderComponent implements AfterViewInit {
     this.initVariables();
     this.moveTitle(0);
 
+    if ((ionContent as any).tagName !== "ION-CONTENT") return;
     const scrollEl = await ionContent.getScrollElement();
     this.addSpace(ionContent, scrollEl);
     this.addListeners(ionContent, scrollEl);
@@ -78,7 +80,7 @@ export class CustomHeaderComponent implements AfterViewInit {
     this.isScrollingTimeout = setTimeout(() => callBack(), 250);
   }
 
-  private moveContent(ionContent: IonContent) {
+  moveContent(ionContent: IonContent) {
     if (this.touchingContent) return;
     if (this.scroll < 56) {
       if (this.scroll < 28) ionContent.scrollToTop(250);
@@ -86,7 +88,7 @@ export class CustomHeaderComponent implements AfterViewInit {
     }
   }
 
-  private moveTitle(scroll: number) {
+  moveTitle(scroll: number) {
     this.scroll = scroll;
     const value = 56 - Math.min(scroll, 56);
     const translateX = (56 - value) / 2 * this.constant;

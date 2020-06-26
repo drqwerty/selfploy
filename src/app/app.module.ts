@@ -16,7 +16,7 @@ import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AuthGuardService } from './guards/auth-guard.service';
-
+import { SuperTabsModule } from '@ionic-super-tabs/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Animations } from './animations/animations';
 
@@ -28,6 +28,7 @@ import { Animations } from './animations/animations';
     IonicModule.forRoot({ mode: 'md', navAnimation: SlideAnimation }),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    SuperTabsModule.forRoot(),
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,

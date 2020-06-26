@@ -29,10 +29,7 @@
       <ng-template *ngIf="professionals.length then professionalList; else emptyContent"></ng-template>
 
       <ng-template #emptyContent>
-        <div class="content-empty">
-          <img src="/assets/background-drawings/no-professionals.svg">
-        <ion-text color="medium"><h1>Parece que no hay nadie por aquí...</h1></ion-text>
-        </div>
+        <empty-content image="no-professionals" text="Parece que no hay nadie por aquí..."></empty-content>
       </ng-template>
 
       <ng-template #professionalList>

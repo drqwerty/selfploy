@@ -1,9 +1,61 @@
-<ion-header class="ion-no-border">
+<status-bar color="#fff"></status-bar>
+
+<custom-header hideBorder="true" title="Favoritos">
   <ion-toolbar>
-    <ion-title color="tertiary">Favoritos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button #searchButton (click)="search()">
+        <ion-icon color="tertiary" slot="icon-only" name="search-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</custom-header>
 
-<ion-content>
 
+<ion-content class="wrapper-ion-content">
+
+  <ng-template *ngIf="favorites?.length then showFavorites; else emptyContent"></ng-template>
+
+  <ng-template #emptyContent>
+    <empty-content image="no-favs" text="Tus favoritos aparecerán aquí"></empty-content>
+  </ng-template>
+
+  <ng-template #showFavorites>
+
+    <super-tabs (tabChange)="scrollLastTabToTop($event)">
+
+      <super-tabs-toolbar slot="top" scrollable scrollablePadding="false">
+        <super-tab-button disabled (click)="goToTab()">
+          <ion-label upperCaseFirstLetter>Todos</ion-label>
+        </super-tab-button>
+        <ng-container *ngFor="let favoriteReferences of favoriteReferencesByCategory | keyvalue">
+          <super-tab-button disabled #superTabButton (click)="goToTab(superTabButton)" *ngIf="favoriteReferences.value.length">
+            <ion-label upperCaseFirstLetter>{{favoriteReferences.key}}</ion-label>
+          </super-tab-button>
+        </ng-container>
+      </super-tabs-toolbar>
+
+      <super-tabs-container autoScrollTop>
+        <super-tab>
+          <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+            <div class="nav-bar-space">
+              <professional-card *ngFor="let favorite of favorites" [professional]="favorite"></professional-card>
+              <ion-toolbar></ion-toolbar>
+            </div>
+          </ion-content>
+        </super-tab>
+        <ng-container *ngFor="let favoriteReferences of favoriteReferencesByCategory | keyvalue">
+          <super-tab *ngIf="favoriteReferences.value.length">
+            <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+              <div class="nav-bar-space">
+                <professional-card *ngFor="let reference of favoriteReferences.value" [professional]="favorites[reference]"></professional-card>
+                <ion-toolbar></ion-toolbar>
+              </div>
+            </ion-content>
+          </super-tab>
+        </ng-container>
+      </super-tabs-container>
+
+    </super-tabs>
+
+  </ng-template>
 </ion-content>

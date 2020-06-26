@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+  import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -17,9 +17,9 @@ export class ProfessionalListPage {
 
   @ViewChild('filterButton') filterButton: any;
 
-  professionals: User[]
+  professionals: User[];
 
-  serviceName: string
+  serviceName: string;
   categoryName: string;
 
   pageLoaded = false;

@@ -1,0 +1,6 @@
+<div class="content-empty ion-opacity-transition" [class.ion-no-opacity]="!imageLoaded">
+  <ion-img (ionImgDidLoad)="notifyImageLoaded()" [src]="image"></ion-img>
+  <ion-text color="medium">
+    <h1>{{text}}</h1>
+  </ion-text>
+</div>

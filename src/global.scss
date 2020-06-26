@@ -27,6 +27,12 @@
 
 @import "theme/fonts.scss";
 
+:host{
+  ion-ripple-effect {
+    color: red;
+  }
+}
+
 .header-big-size ion-title {
   font-size: 28.5px;
 }
@@ -424,15 +430,6 @@ image-cropper {
 span.new-line::before {
   content: "\A";
   white-space: pre;
-}
-
-.content-empty {
-  text-align: center;
-  width: 80%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .only-spinner .loading-wrapper {

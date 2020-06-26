@@ -12,6 +12,8 @@ import { CustomHeaderModule } from 'src/app/components/utils/custom-header/custo
 import { ProfessionalCardModule } from 'src/app/components/templates/professional-card/professional-card.module';
 import { CustomRangeModule } from 'src/app/components/utils/custom-range/custom-range.module';
 import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/service-filter/service-filter.component';
+import { EmptyContentModule } from 'src/app/components/templates/empty-content/empty-content.module';
+import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
 
 @NgModule({
   imports: [
@@ -23,6 +25,8 @@ import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/servi
     CustomHeaderModule,
     ProfessionalCardModule,
     CustomRangeModule,
+    EmptyContentModule,
+    UpperCaseFirstLetterModule,
   ],
   declarations: [
     ProfessionalListPage,

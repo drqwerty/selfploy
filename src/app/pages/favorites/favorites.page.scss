@@ -1,0 +1,16 @@
+:host {
+  --super-tabs-toolbar-background: #fff;
+  --st-indicator-color: var(--ion-color-primary);
+  --st-label-text-transform: no-transform;
+  --st-label-font-weight: 600;
+  --st-base-color-inactive: var(--ion-color-tertiary);
+  --st-base-color-active: var(--ion-color-primary);
+}
+
+.wrapper-ion-content {
+  --overflow: hidden;
+}
+
+:host(super-tab-button) {
+  color: red;
+}

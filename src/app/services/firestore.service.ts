@@ -118,4 +118,12 @@ export class FirestoreService {
     if (myUserIndex != -1) profiles.splice(myUserIndex, 1);
     return profiles;
   }
+
+  async getAllUsers() {
+    const query = await this.geofirestore
+      .collection('users')
+      .get();
+
+    return this.translateCoordinatesAndSortByDistance(query);
+  }
 }

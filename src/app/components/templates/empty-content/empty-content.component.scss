@@ -1,0 +1,18 @@
+:host {
+  display: contents;
+}
+
+.content-empty {
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  ion-img {
+    width: 70%;
+    margin: auto;
+  }
+}
