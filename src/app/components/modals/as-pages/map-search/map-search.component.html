@@ -12,7 +12,7 @@
 
 <ion-content>
 
-  <ion-searchbar class="custom-searchbar" (ionChange)="searchQuery($event)" placeholder="Busca un lugar"></ion-searchbar>
+  <ion-searchbar class="custom-searchbar" (ionClear)="clearResultData()" (ionChange)="searchQuery($event)" placeholder="Busca un lugar"></ion-searchbar>
   <div class="custom-searchbar border-bottom"></div>
 
   <ion-list lines="none">

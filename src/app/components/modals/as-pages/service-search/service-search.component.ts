@@ -53,6 +53,11 @@ export class ServiceSearchComponent {
     this.findUsers(detail.value);
   }
 
+  clearResultData() {
+    this.servicesQuery = [];
+    this.professionalsQuery = [];
+  }
+
   async showProfessionals(categoryName, serviceName) {
     this.navController.navigateForward('/tabs/categories/services/professional-list', { state: { categoryName, serviceName } });
     setTimeout(() => this.goBack(), 300);

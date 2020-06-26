@@ -49,6 +49,10 @@ export class MapSearchComponent {
     )
   }
 
+  clearResultData() {
+    this.suggestions = [];
+  }
+
   async getGeopoint(result) {
     
     try {
