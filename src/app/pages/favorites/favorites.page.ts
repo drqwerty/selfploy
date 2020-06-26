@@ -7,9 +7,11 @@ const { StatusBar } = Plugins;
 
 import { Categories } from 'src/assets/categories';
 import { User } from 'src/app/models/user-model';
-import { IonContent } from '@ionic/angular';
-import { SuperTab, SuperTabs, SuperTabButton } from '@ionic-super-tabs/angular';
+import { IonContent, ModalController } from '@ionic/angular';
+import { SuperTab, SuperTabs } from '@ionic-super-tabs/angular';
 import { FirestoreService } from 'src/app/services/firestore.service';
+import { Animations } from 'src/app/animations/animations';
+import { FavoriteSearchComponent } from 'src/app/components/modals/as-pages/favorite-search/favorite-search.component';
 
 @Component({
   selector: 'app-favorites',
@@ -18,6 +20,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
 })
 export class FavoritesPage implements AfterViewInit {
 
+  @ViewChild('searchButton') searchButton: any;
   @ViewChild(IonContent) ionContent: IonContent;
   @ViewChild(SuperTabs) superTabs: SuperTabs;
   @ViewChildren(SuperTab) superTabListQuery: QueryList<SuperTab>;
@@ -33,6 +36,8 @@ export class FavoritesPage implements AfterViewInit {
   constructor(
     private storage: StorageService,
     private fStorage: FirestoreService,
+    private modalController: ModalController,
+    private animations: Animations,
   ) {
     // setTimeout(async () => storage.saveFavorites(await fStorage.getAllUsers()), 1000);
     this.getFavorites();
@@ -62,8 +67,16 @@ export class FavoritesPage implements AfterViewInit {
       });
   }
 
-  search() {
+  async search() {
+    const modal = await this.modalController.create({
+      component: FavoriteSearchComponent,
+      componentProps: { favorites: this.favorites },
+      animated: false,
+    });
 
+    await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
+
+    modal.present();
   }
 
   propagateScroll(e) {

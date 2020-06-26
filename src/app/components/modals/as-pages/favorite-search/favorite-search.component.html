@@ -1,0 +1,19 @@
+<status-bar color="#fff"></status-bar>
+
+<ion-header [class.ion-no-border]="hideHeaderBorder">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-searchbar class="custom-searchbar" (ionClear)="clearResultData()" (ionChange)="findUsers($event.detail.value)" placeholder="¿A quién buscas?">
+  </ion-searchbar>
+  <div class="custom-searchbar border-bottom"></div>
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="updateHeaderShadow($event.detail.scrollTop)">
+  <professional-card *ngFor=" let professional of favoritesQuery" [professional]="professional"></professional-card>
+</ion-content>

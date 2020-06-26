@@ -13,6 +13,7 @@ import { EmptyContentModule } from 'src/app/components/templates/empty-content/e
 import { ProfessionalCardModule } from 'src/app/components/templates/professional-card/professional-card.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
+import { FavoriteSearchComponent } from 'src/app/components/modals/as-pages/favorite-search/favorite-search.component';
 
 @NgModule({
   imports: [
@@ -27,6 +28,9 @@ import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-lette
     SuperTabsModule,
     UpperCaseFirstLetterModule,
   ],
-  declarations: [FavoritesPage]
+  declarations: [
+    FavoritesPage,
+    FavoriteSearchComponent,
+  ]
 })
 export class FavoritesPageModule { }
