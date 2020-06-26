@@ -5,7 +5,6 @@ import { User, UserRole } from 'src/app/models/user-model';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { PopoverController, NavController } from '@ionic/angular';
 import { ProfilePopoverComponent } from 'src/app/components/popovers/profile-popover/profile-popover.component';
-import { DataService } from 'src/app/providers/data.service';
 import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
 import { ProfileViewComponent } from 'src/app/components/templates/profile-view/profile-view.component';
 const { StatusBar } = Plugins;
@@ -27,19 +26,13 @@ export class ProfilePage {
     private storage: StorageService,
     private popoverController: PopoverController,
     private navController: NavController,
-    private data: DataService,
-  ) {
-    storage.getUserProfile().then(user => {
-      this.user = data.user = user;
-      this.updateBackgroundColor();
-    });
-  }
+  ) { }
 
-  ionViewWillEnter() {
-    this.updateBackgroundColor();
-    if (this.user !== this.data.user) this.user = this.data.user;
+  async ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
     this.profileView.startProfileImageIntersectionObserver();
+    this.user = await this.storage.getUserProfile();
+    this.updateBackgroundColor();
   }
 
   ionViewDidEnter() {
@@ -52,6 +45,7 @@ export class ProfilePage {
 
   updateBackgroundColor() {
     this.backgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
+    this.profileView.setCornersStyle();
   }
 
   async presentPopover(ev: any) {

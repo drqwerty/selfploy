@@ -17,7 +17,7 @@ export class ServicePickerComponent {
   @Input() userServices: any = {};
 
 
-  categories = Categories;
+  categories = JSON.parse(JSON.stringify(Categories));
 
   constructor(
     private modalController: ModalController,

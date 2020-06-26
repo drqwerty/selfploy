@@ -22,14 +22,15 @@ export class StorageService {
     private data: DataService,
   ) { }
 
-  getUserProfile(): Promise<User> {
-    return this.getData(dbKeys.user);
+  async getUserProfile(): Promise<User> {
+    if (!this.data.user) this.data.user = await this.getData(dbKeys.user);
+    return this.data.user;
   }
 
   async getFavorites(): Promise<User[]> {
     const favorites: User[] = await this.getData(dbKeys.favorites);
 
-    const { coordinates: c1 } = this.data.user ?? await this.getUserProfile();
+    const { coordinates: c1 } = await this.getUserProfile();
     favorites.forEach(favorite => {
       const { coordinates: c2 } = favorite;
       favorite.distance = Utils.getDistanceFromLatLonInKm(c1.lat, c1.lng, c2.lat, c2.lng);

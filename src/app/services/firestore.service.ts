@@ -7,7 +7,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { GeoFirestore, GeoQuerySnapshot } from 'geofirestore';
 import { firestore } from 'firebase/app';
 import { LatLng } from 'leaflet';
-import { DataService } from '../providers/data.service';
 import { StorageService } from './storage.service';
 import * as _ from 'lodash';
 import Utils from "src/app/utils";
@@ -26,7 +25,6 @@ export class FirestoreService {
     private db: AngularFirestore,
     private fStorage: FirebaseStorage,
     private aFAuth: AngularFireAuth,
-    private data: DataService,
     private storage: StorageService,
   ) {
     this.geofirestore = new GeoFirestore(db.firestore);
@@ -73,7 +71,7 @@ export class FirestoreService {
 
   async findProfessionalOf(categoryName, serviceName) {
     const currentUserUid = (await this.aFAuth.currentUser).uid;
-    const user = this.data.user ?? await this.storage.getUserProfile();
+    const user = await this.storage.getUserProfile();
 
     const query = await this.geofirestore
       .collection('users')
@@ -88,7 +86,7 @@ export class FirestoreService {
 
   async findUserByName(userName, categoryFilter) {
     const currentUserUid = (await this.aFAuth.currentUser).uid;
-    const user = this.data.user ?? await this.storage.getUserProfile();
+    const user = await this.storage.getUserProfile();
 
     let query = await this.geofirestore
       .collection('users')

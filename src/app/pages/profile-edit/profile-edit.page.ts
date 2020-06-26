@@ -97,8 +97,7 @@ export class ProfileEditPage {
   }
 
   async getUser() {
-    if (!this.data.user) this.data.user = await this.storage.getUserProfile();
-    this.user = this.data.user;
+    this.user = await this.storage.getUserProfile();
     this.tempUser = new User();
     Object.assign(this.tempUser, this.data.user);
     this.tempUser.profileCompleted = !this.forceCompleteProfile;

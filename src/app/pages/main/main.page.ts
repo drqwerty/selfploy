@@ -7,7 +7,6 @@ import { ModalAnimationFadeWithMoveContentEnter, ModalAnimationFadeWithMoveConte
 import { ToastAnimationEnter, ToastAnimationLeave } from '../../animations/toast-transitions';
 import { BehaviorSubject } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
-import { DataService } from 'src/app/providers/data.service';
 
 @Component({
   selector: 'app-main',
@@ -29,7 +28,6 @@ export class MainPage {
     private modalController: ModalController,
     private loadingController: LoadingController,
     private toastController: ToastController,
-    private data: DataService,
   ) { }
 
   ionViewDidEnter() {

@@ -40,7 +40,7 @@ export class SettingsPage {
 
   async getUser() {
     this.tempUser = new User();
-    if (!this.data.user) this.data.user = await this.storage.getUserProfile();
+    if (!this.data.user) await this.storage.getUserProfile();
     this.hideLocationAccuracy = this.data.user.hideLocationAccuracy;
     Object.assign(this.tempUser, this.data.user);
   }

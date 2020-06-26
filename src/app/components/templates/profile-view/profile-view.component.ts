@@ -40,7 +40,7 @@ export class ProfileViewComponent implements AfterViewInit {
   }
 
   initMap() {
-    this.mapPreview.initMap();
+    if (this.user.role === this.userRol.professional) this.mapPreview.initMap();
   }
 
   imageLoaded() {
