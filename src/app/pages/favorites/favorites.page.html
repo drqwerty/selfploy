@@ -39,7 +39,7 @@
           <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
             <div class="nav-bar-space">
               <ng-container *ngFor="let favorite of favorites">
-                <professional-card @cardItem *ngIf="favorite.isFav" [user]="favorite" (@cardItem.done)="getFavorites()" (profileViewClosed)="getFavorites()"></professional-card>
+                <professional-card @cardItem *ngIf="favorite.isFav" [user]="favorite"></professional-card>
               </ng-container>
             </div>
           </ion-content>
@@ -49,7 +49,7 @@
             <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
               <div class="nav-bar-space">
                 <ng-container *ngFor="let reference of favoriteReferences.value">
-                  <professional-card @cardItem *ngIf="favorites[reference].isFav" [user]="favorites[reference]" (@cardItem.done)="getFavorites()" (profileViewClosed)="getFavorites()"></professional-card>
+                  <professional-card @cardItem *ngIf="favorites[reference].isFav" [user]="favorites[reference]"></professional-card>
                 </ng-container>
               </div>
             </ion-content>

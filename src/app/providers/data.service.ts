@@ -5,6 +5,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import Utils from 'src/app/utils';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class DataService {
 
   public user: User;
   public favorites: User[];
+  public favoritesChangedSubject = new Subject<void>();
 
   constructor(
     private storage: StorageService,
@@ -79,10 +81,12 @@ export class DataService {
 
   async saveFavorite(user: User) {
     this.favorites = await this.storage.saveFavorite(this.favorites, user);
+    this.favoritesChangedSubject.next();
   }
-
+  
   async removeFavorite(user: User) {
     this.favorites = await this.storage.removeFavorite(this.favorites, user);
+    this.favoritesChangedSubject.next();
   }
 
   async getFavorites(): Promise<User[]> {

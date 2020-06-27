@@ -12,7 +12,9 @@ import { Animations } from 'src/app/animations/animations';
 import { FavoriteSearchComponent } from 'src/app/components/modals/as-pages/favorite-search/favorite-search.component';
 import { trigger, transition, animate, style, sequence } from '@angular/animations';
 import { DataService } from 'src/app/providers/data.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.page.html',
@@ -48,7 +50,11 @@ export class FavoritesPage implements AfterViewInit {
     private data: DataService,
     private modalController: ModalController,
     private animations: Animations,
-  ) { }
+  ) {
+    data.favoritesChangedSubject
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.getFavorites());
+  }
 
   ngAfterViewInit() {
     this.superTabListQuery.changes.subscribe((change: QueryList<SuperTab>) => this.superTabList = change.toArray())
@@ -84,7 +90,6 @@ export class FavoritesPage implements AfterViewInit {
       componentProps: { favorites: this.favorites },
       animated: false,
     });
-    modal.onWillDismiss().then(() => this.getFavorites());
 
     await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
 

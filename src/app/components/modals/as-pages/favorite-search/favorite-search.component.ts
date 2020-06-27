@@ -5,8 +5,10 @@ import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { StatusBar } = Plugins;
 import Utils from "src/app/utils";
 import { User } from 'src/app/models/user-model';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DataService } from 'src/app/providers/data.service';
 
-
+@UntilDestroy()
 @Component({
   selector: 'app-favorite-search',
   templateUrl: './favorite-search.component.html',
@@ -22,16 +24,27 @@ export class FavoriteSearchComponent {
   hideHeaderBorder = true;
 
   favoritesQuery = [];
+  queryText: string;
 
   constructor(
     private modalController: ModalController,
     private animations: Animations,
+    private data: DataService,
   ) { }
 
   ionViewDidEnter() {
     this.animations.modalLoaded();
     setTimeout(() => this.searchbar.setFocus(), 250);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
+  }
+
+  ionViewWillEnter() {
+    this.data.favoritesChangedSubject
+      .pipe(untilDestroyed(this))
+      .subscribe(async () => {
+        this.favorites = await this.data.getFavorites();
+        this.findUsers();
+      })
   }
 
   async goBack() {
@@ -43,7 +56,8 @@ export class FavoriteSearchComponent {
     this.hideHeaderBorder = scrollTop === 0;
   }
 
-  findUsers(text: string) {
+  findUsers(text = this.queryText) {
+    this.queryText = text;
     this.clearResultData();
     if (text == '') return;
     this.favoritesQuery = this.favorites.filter(favorite =>

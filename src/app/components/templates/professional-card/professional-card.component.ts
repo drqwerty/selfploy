@@ -17,8 +17,6 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   @Input() user: User;
 
-  @Output() profileViewClosed = new EventEmitter<void>()
-
 
   @ViewChild('card') card: any;
 
@@ -82,10 +80,10 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
     modal.onWillDismiss().then(() => {
       if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
-      this.profileViewClosed.emit();
       this.checkFavState();
     });
 
+    this.toggleFav();
     modal.present();
   }
 
