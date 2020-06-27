@@ -25,7 +25,7 @@
     
     <ion-item button (click)="hideLocationAccuracy = !hideLocationAccuracy">
       <ion-label color="tertiary" class="break-spaces">Ocultar localización precisa</ion-label>
-      <ion-toggle [(ngModel)]="hideLocationAccuracy"></ion-toggle>
+      <ion-toggle [(ngModel)]="hideLocationAccuracy" (click)="hideLocationAccuracy = !hideLocationAccuracy"></ion-toggle>
     </ion-item>
   </ion-list>
   

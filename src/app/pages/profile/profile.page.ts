@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { StorageService } from 'src/app/services/storage.service';
 import { User, UserRole } from 'src/app/models/user-model';
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { PopoverController, NavController } from '@ionic/angular';
 import { ProfilePopoverComponent } from 'src/app/components/popovers/profile-popover/profile-popover.component';
-import { tabBarAnimateOut } from "../../animations/tab-bar-transition";
+import { tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 import { ProfileViewComponent } from 'src/app/components/templates/profile-view/profile-view.component';
+import { DataService } from 'src/app/providers/data.service';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -23,16 +23,16 @@ export class ProfilePage {
   backgroundColor: string;
 
   constructor(
-    private storage: StorageService,
+    private data: DataService,
     private popoverController: PopoverController,
     private navController: NavController,
   ) {
-    this.storage.getUserProfile().then(user => this.user = user);
+    this.data.getMyProfile().then(user => this.user = user);
   }
 
   async ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
-    this.user = await this.storage.getUserProfile();
+    this.user = await this.data.getMyProfile();
     this.updateBackgroundColor();
     this.profileView.startProfileImageIntersectionObserver();
   }

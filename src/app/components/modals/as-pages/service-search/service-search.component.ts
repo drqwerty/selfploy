@@ -2,10 +2,10 @@ import { Component, ViewChild, Input } from '@angular/core';
 import { Animations } from 'src/app/animations/animations';
 import { ModalController, IonSearchbar, NavController } from '@ionic/angular';
 import { Categories } from 'src/assets/categories';
-import { FirestoreService } from 'src/app/services/firestore.service';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { StatusBar } = Plugins;
 import Utils from "src/app/utils";
+import { DataService } from 'src/app/providers/data.service';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class ServiceSearchComponent {
   constructor(
     private modalController: ModalController,
     private animations: Animations,
-    private firestoreService: FirestoreService,
+    private data: DataService,
     private navController: NavController,
   ) { }
 
@@ -91,6 +91,6 @@ export class ServiceSearchComponent {
 
   async findUsers(text) {
     this.professionalsQuery = null;
-    this.professionalsQuery = (text == '') ? [] : await this.firestoreService.findUserByName(text, this.categoryFilter);
+    this.professionalsQuery = (text == '') ? [] : await this.data.findUserByName(text, this.categoryFilter);
   }
 }

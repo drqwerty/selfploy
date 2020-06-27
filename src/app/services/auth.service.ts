@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { User, UserRole } from '../models/user-model';
-import { StorageService } from './storage.service';
 
 import "@codetrix-studio/capacitor-google-auth";
 import { Plugins } from '@capacitor/core';
 const { GoogleAuth } = Plugins;
 import * as firebase from 'firebase/app';
-import { FirestoreService } from './firestore.service';
-import { FirebaseStorage } from './firebase-storage.service';
 import { DataService } from '../providers/data.service';
 import Utils from "src/app/utils";
 
@@ -33,9 +30,6 @@ export class AuthService {
 
   constructor(
     private aFAuth: AngularFireAuth,
-    private storageService: StorageService,
-    private firestoreService: FirestoreService,
-    private fStorage: FirebaseStorage,
     private data: DataService,
   ) { }
 
@@ -53,9 +47,9 @@ export class AuthService {
   async loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
     try {
       const userCrendential = await signInPromise;
-      const user = await this.firestoreService.getUserProfile(userCrendential.user.uid);
-      if (user.hasProfilePic) user.profilePic = await this.fStorage.getUserProfilePic(userCrendential.user.uid);
-      await this.storageService.saveUserProfile(user);
+      const user = await this.data.getMyProfile(userCrendential.user.uid)
+      if (user.hasProfilePic) user.profilePic = await this.data.getUserProfilePic(userCrendential.user.uid);
+      await this.data.saveUserProfile(user);
       return userCrendential;
     } catch (reason) {
       throw new Error(reason);
@@ -110,7 +104,7 @@ export class AuthService {
   }
 
   logout() {
-    this.storageService.removeUserProfile();
+    this.data.removeUserProfile();
     this.aFAuth.currentUser.then(({ providerData }) => {
       this.aFAuth.signOut();
       this.data.user == null;
@@ -144,11 +138,9 @@ export class AuthService {
 
     return new Promise((resolve, reject) => {
       signUpPromise
-        .then(userCrendential => {
-          Promise.all([
-            this.storageService.saveUserProfile(user),
-            this.firestoreService.createUserProfile(userCrendential.user.uid, user),
-          ]).then(() => resolve());
+        .then(async userCrendential => {
+          await this.data.createMyProfile(userCrendential.user.uid, user);
+          resolve();
         })
         .catch(reason => reject(reason));
     })

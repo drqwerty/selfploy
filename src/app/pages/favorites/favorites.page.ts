@@ -1,7 +1,6 @@
 import { Component, ViewChild, ViewChildren, QueryList, AfterViewChecked, AfterViewInit } from '@angular/core';
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
-import { StorageService } from 'src/app/services/storage.service';
 
 const { StatusBar } = Plugins;
 
@@ -9,10 +8,10 @@ import { Categories } from 'src/assets/categories';
 import { User } from 'src/app/models/user-model';
 import { IonContent, ModalController } from '@ionic/angular';
 import { SuperTab, SuperTabs } from '@ionic-super-tabs/angular';
-import { FirestoreService } from 'src/app/services/firestore.service';
 import { Animations } from 'src/app/animations/animations';
 import { FavoriteSearchComponent } from 'src/app/components/modals/as-pages/favorite-search/favorite-search.component';
 import { trigger, transition, animate, style, sequence } from '@angular/animations';
+import { DataService } from 'src/app/providers/data.service';
 
 @Component({
   selector: 'app-favorites',
@@ -46,8 +45,7 @@ export class FavoritesPage implements AfterViewInit {
   favoriteReferencesByCategory: { [key: string]: number[] } = {};
 
   constructor(
-    private storage: StorageService,
-    private fStorage: FirestoreService,
+    private data: DataService,
     private modalController: ModalController,
     private animations: Animations,
   ) { }
@@ -62,11 +60,9 @@ export class FavoritesPage implements AfterViewInit {
   }
 
   async getFavorites() {
-    const favs = await this.storage.getFavorites();
+    const favs = await this.data.getFavorites();
     if (favs !== this.favorites) {
-      console.log('distintos');
-      
-      this.favorites = await this.storage.getFavorites();
+      this.favorites = favs;
       this.classifyFavorites();
     }
   }

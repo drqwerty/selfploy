@@ -3,7 +3,7 @@ import { User } from 'src/app/models/user-model';
 import { ProfileViewComponent } from 'src/app/components/templates/profile-view/profile-view.component';
 import { ModalController } from '@ionic/angular';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
-import { StorageService } from 'src/app/services/storage.service';
+import { DataService } from 'src/app/providers/data.service';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -24,7 +24,7 @@ export class ProfileModalComponent {
 
   constructor(
     private modalController: ModalController,
-    private storage: StorageService,
+    private data: DataService,
   ) { }
 
   ionViewWillEnter() {
@@ -56,8 +56,8 @@ export class ProfileModalComponent {
 
   toggleFav() {
     if (this.user.isFav !== this.isFav) {
-      if (this.isFav) this.storage.saveFavorite(this.user);
-      else this.storage.removeFavorite(this.user);
+      if (this.isFav) this.data.saveFavorite(this.user);
+      else this.data.removeFavorite(this.user);
     }
 
 

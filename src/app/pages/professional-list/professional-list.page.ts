@@ -1,11 +1,11 @@
-  import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
-import { FirestoreService } from 'src/app/services/firestore.service';
 import { User } from 'src/app/models/user-model';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/service-filter/service-filter.component';
 import { Animations } from 'src/app/animations/animations';
+import { DataService } from 'src/app/providers/data.service';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -28,7 +28,7 @@ export class ProfessionalListPage {
     private route: ActivatedRoute,
     private router: Router,
     private navController: NavController,
-    private firestoreService: FirestoreService,
+    private data: DataService,
     private modalController: ModalController,
     private animations: Animations,
   ) {
@@ -42,7 +42,7 @@ export class ProfessionalListPage {
   }
 
   async getProfessionals() {
-    this.professionals = await this.firestoreService.findProfessionalOf(this.categoryName, this.serviceName);
+    this.professionals = await this.data.findProfessionalOf(this.categoryName, this.serviceName);
     console.table(this.professionals);
   }
 

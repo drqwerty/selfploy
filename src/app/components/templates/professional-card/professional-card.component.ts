@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { User } from 'src/app/models/user-model';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
-import { ModalController, IonCard } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { ProfileModalComponent } from '../../modals/as-pages/profile/profile.component';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
-import { StorageService } from 'src/app/services/storage.service';
+import { DataService } from 'src/app/providers/data.service';
 const { StatusBar } = Plugins;
 
 
@@ -31,8 +31,8 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
   cardIntersectionObserver: IntersectionObserver;
 
   constructor(
-    private storage: StorageService,
     private fStorage: FirebaseStorage,
+    private data: DataService,
     private modalController: ModalController
   ) {
   }
@@ -52,11 +52,11 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   async checkFavState() {
     if (!this.user) return;
-    this.isFav = (await this.storage.getFavorites()).find(user => user.id === this.user.id)?.isFav ?? false;
+    this.isFav = (await this.data.getFavorites()).find(user => user.id === this.user.id)?.isFav ?? false;
   }
 
   async getImage() {
-    if (this.user?.hasProfilePic) this.user.profilePic = await this.fStorage.getUserProfilePic(this.user.id);
+    if (this.user?.hasProfilePic) this.user.profilePic = await this.data.getUserProfilePic(this.user.id);
   }
 
   imageLoaded() {
@@ -69,8 +69,8 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   toggleFav() {
     if (this.user && this.user.isFav !== this.isFav) {
-      if (this.isFav) this.storage.saveFavorite(this.user);
-      else this.storage.removeFavorite(this.user);
+      if (this.isFav) this.data.saveFavorite(this.user);
+      else this.data.removeFavorite(this.user);
     }
   }
 

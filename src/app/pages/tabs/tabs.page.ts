@@ -32,11 +32,9 @@ export class TabsPage {
   ];
 
   constructor(private platform: Platform) {
-    setTimeout(() => {
-      playLoginAnimation(platform.height())
-        .then(() => {
-          if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light })
-        });
+    setTimeout(async () => {
+      await playLoginAnimation(platform.height())
+      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light })
     }, 500);
   }
 

@@ -69,13 +69,12 @@ export class FirestoreService {
     });
   }
 
-  async findProfessionalOf(categoryName, serviceName) {
+  async findProfessionalOf(categoryName, serviceName, coordinates) {
     const currentUserUid = (await this.aFAuth.currentUser).uid;
-    const user = await this.storage.getUserProfile();
 
     const query = await this.geofirestore
       .collection('users')
-      .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
+      .near({ center: new firestore.GeoPoint(coordinates.lat, coordinates.lng), radius: 1000 }) // 1000 km
       .where(`services.${categoryName}`, 'array-contains', serviceName)
       .where('professionalProfileActivated', '==', true)
       .get()

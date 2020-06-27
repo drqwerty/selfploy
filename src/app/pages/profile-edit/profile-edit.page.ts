@@ -4,7 +4,6 @@ import { tabBarAnimateIn, tabBarAnimateOut } from "src/app/animations/tab-bar-tr
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { User, UserRole } from 'src/app/models/user-model';
-import { StorageService } from 'src/app/services/storage.service';
 import { InputBottomSheetComponent } from 'src/app/components/bottom-sheets/input-bottom-sheet/input-bottom-sheet.component';
 import { CameraSourceActionSheetComponent } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.component';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -13,7 +12,6 @@ const { StatusBar } = Plugins;
 import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
 import { ServicePickerComponent } from 'src/app/components/modals/as-pages/service-picker/service-picker.component';
 import { WorkingHoursPickerComponent } from 'src/app/components/modals/working-hours-picker/working-hours-picker.component';
-import { FirestoreService } from 'src/app/services/firestore.service';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import { MapLocationComponent } from 'src/app/components/modals/as-pages/map-location/map-location.component';
 import { MapRangeComponent } from 'src/app/components/modals/as-pages/map-range/map-range.component';
@@ -56,12 +54,10 @@ export class ProfileEditPage {
 
   constructor(
     private navController: NavController,
-    private storage: StorageService,
     private modalController: ModalController,
     private toastController: ToastController,
     private loadingController: LoadingController,
     private formBuilder: FormBuilder,
-    private firestoreService: FirestoreService,
     private fStorage: FirebaseStorage,
     private data: DataService,
     private route: ActivatedRoute,
@@ -97,7 +93,7 @@ export class ProfileEditPage {
   }
 
   async getUser() {
-    this.user = await this.storage.getUserProfile();
+    this.user = await this.data.getMyProfile();
     this.tempUser = new User();
     Object.assign(this.tempUser, this.data.user);
     this.tempUser.profileCompleted = !this.forceCompleteProfile;
@@ -167,8 +163,7 @@ export class ProfileEditPage {
     updatedUser.name_splited = Utils.normalizeAndSplit(updatedUser.name);
     updatedUser.profileCompleted = this.profileIsComplete(updatedUser);
     if (this.updateImageProfile) await this.fStorage.uploadUserProfilePic(updatedUser.profilePic);
-    await this.firestoreService.updateUserProfile(updatedUser);
-    this.storage.saveUserProfile(updatedUser);
+    await this.data.updatedMyProfile(updatedUser);
     return updatedUser;
   }
 
