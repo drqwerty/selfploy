@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, Input, Renderer2 } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
-import { Map as leafletMap, tileLayer, control, Control, LatLng, LatLngBounds } from 'leaflet';
+import { Map as leafletMap, tileLayer, control, Control, LatLng, } from 'leaflet';
 import 'leaflet.locatecontrol';
 import * as Geocoding from 'esri-leaflet-geocoder';
 import { Animation, createAnimation } from '@ionic/core';
@@ -8,7 +8,6 @@ import { environment } from "src/environments/environment";
 import { Plugins, StatusBarStyle, PermissionType, Capacitor } from '@capacitor/core';
 import { MapSearchComponent } from '../map-search/map-search.component';
 import { Animations } from 'src/app/animations/animations';
-import { Subject } from 'rxjs';
 const { StatusBar, Geolocation, Permissions } = Plugins;
 
 @Component({

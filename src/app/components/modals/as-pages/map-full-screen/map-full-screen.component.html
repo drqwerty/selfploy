@@ -1,0 +1,22 @@
+<status-bar color="#fff"></status-bar>
+
+<ion-content>
+
+  <ion-fab vertical="top" horizontal="start" slot="fixed">
+    <ion-fab-button size="small" (click)="goBack()" color="light">
+      <ion-icon name="chevron-back-outline" color="tertiary"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" (click)="locate()" color="light">
+      <ion-icon name="locate-outline" [color]="myLocationColor"></ion-icon>
+      <div #innerLocationCircle [class.ion-invisible]="locationStatus == undefined" class="location-button-inner-circle"
+        [class]="myLocationColor"></div>
+    </ion-fab-button>
+  </ion-fab>
+
+  <img class="gradient top absolute" src="../../../assets/background-drawings/gradient.png">
+  <div id="map-full-screen">
+  </div>
+
+</ion-content>

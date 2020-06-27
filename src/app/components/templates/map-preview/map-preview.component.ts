@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Map as leafletMap, tileLayer, icon, circle, marker, LatLng, Circle, Marker } from 'leaflet';
 import { environment } from "src/environments/environment";
+import { ModalController } from '@ionic/angular';
+import { MapFullScreenComponent } from '../../modals/as-pages/map-full-screen/map-full-screen.component';
 
 
 @Component({
@@ -21,10 +23,13 @@ export class MapPreviewComponent {
   private circleRadius: Circle;
   private marker: Marker;
 
-  constructor() { }
+  constructor(
+    private modalController: ModalController,
+  ) { }
 
   initMap() {
     this.loadMap();
+    this.disableInteraction();
     this.createCircleRadius();
     this.createMarker();
   }
@@ -35,6 +40,15 @@ export class MapPreviewComponent {
 
     this.map = new leafletMap(this.idPrefix + this.id, { zoomControl: false, attributionControl: false }).setView(this.coordinates, 9);
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
+  }
+
+  private disableInteraction() {
+    this.map.dragging.disable();
+    this.map.touchZoom.disable();
+    this.map.doubleClickZoom.disable();
+    this.map.scrollWheelZoom.disable();
+    this.map.boxZoom.disable();
+    this.map.keyboard.disable();
   }
 
   private createCircleRadius() {
@@ -72,6 +86,17 @@ export class MapPreviewComponent {
       this.marker.setLatLng(this.coordinates);
       this.marker.setOpacity(this.hideMarker ? 0 : 1);
     }
+  }
+
+  async openFullScreenMap() {
+    (await this.modalController.create({
+      component: MapFullScreenComponent,
+      componentProps: {
+        coordinates: this.coordinates,
+        radiusKm: this.radiusKm,
+        hideMarker: this.hideMarker,
+      }
+    })).present();
   }
 
 }
