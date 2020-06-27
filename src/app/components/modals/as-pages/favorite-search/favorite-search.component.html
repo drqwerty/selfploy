@@ -15,5 +15,5 @@
 </ion-header>
 
 <ion-content scrollEvents="true" (ionScroll)="updateHeaderShadow($event.detail.scrollTop)">
-  <professional-card *ngFor=" let professional of favoritesQuery" [professional]="professional"></professional-card>
+  <professional-card *ngFor=" let professional of favoritesQuery" [user]="professional"></professional-card>
 </ion-content>

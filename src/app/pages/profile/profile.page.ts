@@ -26,13 +26,15 @@ export class ProfilePage {
     private storage: StorageService,
     private popoverController: PopoverController,
     private navController: NavController,
-  ) { }
+  ) {
+    this.storage.getUserProfile().then(user => this.user = user);
+  }
 
   async ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
-    this.profileView.startProfileImageIntersectionObserver();
     this.user = await this.storage.getUserProfile();
     this.updateBackgroundColor();
+    this.profileView.startProfileImageIntersectionObserver();
   }
 
   ionViewDidEnter() {

@@ -12,11 +12,23 @@ import { SuperTab, SuperTabs } from '@ionic-super-tabs/angular';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Animations } from 'src/app/animations/animations';
 import { FavoriteSearchComponent } from 'src/app/components/modals/as-pages/favorite-search/favorite-search.component';
+import { trigger, transition, animate, style, sequence } from '@angular/animations';
 
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.page.html',
   styleUrls: ['./favorites.page.scss'],
+  animations: [
+    trigger('cardItem', [
+      transition(':leave', [
+        style({ height: '*', opacity: '1' }),
+        sequence([
+          animate(".25s ease", style({ height: '*', opacity: '.2', })),
+          animate(".1s ease", style({ height: '0', opacity: 0 }))
+        ])
+      ])
+    ])
+  ]
 })
 export class FavoritesPage implements AfterViewInit {
 
@@ -38,22 +50,25 @@ export class FavoritesPage implements AfterViewInit {
     private fStorage: FirestoreService,
     private modalController: ModalController,
     private animations: Animations,
-  ) {
-    // setTimeout(async () => storage.saveFavorites(await fStorage.getAllUsers()), 1000);
-    this.getFavorites();
-  }
+  ) { }
 
   ngAfterViewInit() {
     this.superTabListQuery.changes.subscribe((change: QueryList<SuperTab>) => this.superTabList = change.toArray())
   }
 
   ionViewWillEnter() {
+    this.getFavorites();
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
   }
 
   async getFavorites() {
-    this.favorites = await this.storage.getFavorites();
-    this.classifyFavorites();
+    const favs = await this.storage.getFavorites();
+    if (favs !== this.favorites) {
+      console.log('distintos');
+      
+      this.favorites = await this.storage.getFavorites();
+      this.classifyFavorites();
+    }
   }
 
   classifyFavorites() {
@@ -73,6 +88,7 @@ export class FavoritesPage implements AfterViewInit {
       componentProps: { favorites: this.favorites },
       animated: false,
     });
+    modal.onWillDismiss().then(() => this.getFavorites());
 
     await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
 

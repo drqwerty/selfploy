@@ -2,7 +2,7 @@
 
 <custom-header hideBorder="true" title="Favoritos">
   <ion-toolbar>
-    <ion-buttons slot="end">
+    <ion-buttons slot="end" *ngIf="favorites?.length">
       <ion-button #searchButton (click)="search()">
         <ion-icon color="tertiary" slot="icon-only" name="search-outline"></ion-icon>
       </ion-button>
@@ -38,8 +38,9 @@
         <super-tab>
           <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
             <div class="nav-bar-space">
-              <professional-card *ngFor="let favorite of favorites" [professional]="favorite"></professional-card>
-              <ion-toolbar></ion-toolbar>
+              <ng-container *ngFor="let favorite of favorites">
+                <professional-card @cardItem *ngIf="favorite.isFav" [user]="favorite" (@cardItem.done)="getFavorites()" (profileViewClosed)="getFavorites()"></professional-card>
+              </ng-container>
             </div>
           </ion-content>
         </super-tab>
@@ -47,8 +48,9 @@
           <super-tab *ngIf="favoriteReferences.value.length">
             <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
               <div class="nav-bar-space">
-                <professional-card *ngFor="let reference of favoriteReferences.value" [professional]="favorites[reference]"></professional-card>
-                <ion-toolbar></ion-toolbar>
+                <ng-container *ngFor="let reference of favoriteReferences.value">
+                  <professional-card @cardItem *ngIf="favorites[reference].isFav" [user]="favorites[reference]" (@cardItem.done)="getFavorites()" (profileViewClosed)="getFavorites()"></professional-card>
+                </ng-container>
               </div>
             </ion-content>
           </super-tab>

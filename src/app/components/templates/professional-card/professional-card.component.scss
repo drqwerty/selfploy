@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 ion-card {
 
   --background: var(--ion-color-primary);
@@ -20,7 +24,7 @@ ion-card {
       overflow: hidden;
       width: 100%;
 
-      .professional-image {
+      .user-image {
         background: url('/assets/background-drawings/profile-picture.svg') bottom no-repeat;
         background-color: var(--ion-color-light);
         background-size: 70%;

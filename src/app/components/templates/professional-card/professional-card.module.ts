@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ProfessionalCardComponent } from './professional-card.component';
 import { ProfileModalModule } from 'src/app/components/modals/as-pages/profile/profile.module';
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
+import DebounceClickModule from 'src/app/directives/debounce-click.module';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-lette
     IonicModule,
     UpperCaseFirstLetterModule,
     ProfileModalModule,
+    DebounceClickModule,
   ],
   declarations: [
     ProfessionalCardComponent,

@@ -67,12 +67,12 @@ export class CustomHeaderComponent implements AfterViewInit {
     scrollEl.addEventListener('scroll', () => {
       this.moveTitle(scrollEl.scrollTop);
       this.onScrollStop(() => this.moveContent(ionContent));
-    });
+    }, { passive: true });
     scrollEl.addEventListener('touchend', () => {
       this.touchingContent = false;
       this.onScrollStop(() => this.moveContent(ionContent));
-    });
-    scrollEl.addEventListener('touchstart', () => this.touchingContent = true);
+    }, { passive: true });
+    scrollEl.addEventListener('touchstart', () => this.touchingContent = true, { passive: true });
   }
 
   private onScrollStop(callBack) {

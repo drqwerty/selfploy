@@ -34,4 +34,5 @@ export class User {
 
   id: string;
   distance: number;
+  isFav: boolean;
 }

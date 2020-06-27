@@ -1,36 +1,36 @@
-<ion-card *ngIf="professional; else demo" mode="ios" button>
+<ion-card #card *ngIf="user; else demo" mode="ios" button>
   <div class="card-content">
 
     <div class="left-content">
-      <ion-button size="small" (click)="toggleFav()" fill="clear">
-        <ion-icon color="light" slot="icon-only" name="heart-outline"></ion-icon>
+      <ion-button size="small" (click)="toggleIcon()" (debounceClick)="toggleFav()" fill="clear">
+        <ion-icon color="light" slot="icon-only" [name]="isFav ? 'heart' : 'heart-outline'"></ion-icon>
       </ion-button>
       <ion-button size="small" (click)="requestService()" fill="clear">
         <ion-icon color="light" slot="icon-only" name="reader-outline"></ion-icon>
       </ion-button>
     </div>
 
-    <div class="main-content" (click)="viewProfile(professional)" >
+    <div class="main-content" (click)="viewProfile(user)" >
       <ion-item lines="none">
 
-        <ion-avatar slot="start" class="professional-image">
-          <ng-container *ngIf="professional?.hasProfilePic">
+        <ion-avatar slot="start" class="user-image">
+          <ng-container *ngIf="user?.hasProfilePic">
             <ion-spinner *ngIf="showSpinner" name="crescent" color="medium"></ion-spinner>
-            <ion-img [class.ion-invisible]="showSpinner" (ionImgDidLoad)="imageLoaded()" [src]="professional?.profilePic"></ion-img>
+            <ion-img [class.ion-invisible]="showSpinner" (ionImgDidLoad)="imageLoaded()" [src]="user?.profilePic"></ion-img>
           </ng-container>
         </ion-avatar>
 
         <ion-label>
           <p>
-            <ion-icon class="ion-padding-end" slot="icon-only" name="location"></ion-icon>{{professional.addressCity}}
+            <ion-icon class="ion-padding-end" slot="icon-only" name="location"></ion-icon>{{user.addressCity}}
           </p>
-          <h2>{{professional.name}}</h2>
+          <h2>{{user.name}}</h2>
         </ion-label>
       </ion-item>
 
       <ion-card-content mode="md">
         <span upperCaseFirstLetter class="separate-childs-with-commas"
-          *ngFor="let category of professional.services | keyvalue">{{category.key}}</span>
+          *ngFor="let category of user.services | keyvalue">{{category.key}}</span>
       </ion-card-content>
 
       <ion-footer class="ion-no-border">
@@ -49,7 +49,7 @@
       <ion-footer>
         <ion-toolbar class="ion-text-center">
 
-          <ion-text *ngIf="professional.distance <= professional.radiusKm; else outsideRageMessage" color="success">
+          <ion-text *ngIf="user.distance <= user.radiusKm; else outsideRageMessage" color="success">
             Realiza servicios por tu zona
           </ion-text>
 

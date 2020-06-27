@@ -9,8 +9,8 @@
   <ion-button buttonsStart (click)="goBack()">
     <ion-icon color="light" slot="icon-only" name="chevron-back-outline"></ion-icon>
   </ion-button>
-  <ion-button buttonsEnd (click)="toggleFav()">
-    <ion-icon color="light" slot="icon-only" name="heart-outline"></ion-icon>
+  <ion-button buttonsEnd (click)="toggleIcon()" (debounceClick)="toggleFav()">
+    <ion-icon color="light" slot="icon-only" [name]="isFav ? 'heart' : 'heart-outline'"></ion-icon>
   </ion-button>
 
   <fab-with-text requestServiceButton 

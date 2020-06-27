@@ -3,6 +3,7 @@ import { User } from 'src/app/models/user-model';
 import { ProfileViewComponent } from 'src/app/components/templates/profile-view/profile-view.component';
 import { ModalController } from '@ionic/angular';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+import { StorageService } from 'src/app/services/storage.service';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -19,13 +20,16 @@ export class ProfileModalComponent {
   @ViewChild(ProfileViewComponent) profileView: ProfileViewComponent;
 
   collapsedFab = false;
+  isFav = false;
 
   constructor(
     private modalController: ModalController,
+    private storage: StorageService,
   ) { }
 
   ionViewWillEnter() {
     this.profileView.startProfileImageIntersectionObserver();
+    this.isFav = this.user.isFav ?? false;
   }
 
   ionViewDidEnter() {
@@ -35,6 +39,7 @@ export class ProfileModalComponent {
 
   ionViewWillLeave() {
     this.profileView.stopProfileImageIntersectionObserver();
+    this.toggleFav();
   }
 
   goBack() {
@@ -43,6 +48,38 @@ export class ProfileModalComponent {
 
   scrollEvent({ deltaY }) {
     this.collapsedFab = 0 < deltaY;
+  }
+
+  toggleIcon() {
+    this.isFav = !this.isFav;
+  }
+
+  toggleFav() {
+    if (this.user.isFav !== this.isFav) {
+      if (this.isFav) this.storage.saveFavorite(this.user);
+      else this.storage.removeFavorite(this.user);
+    }
+
+
+    /**
+    *   
+    *   logica para :
+    *   guardar en local ordenado POR NOMBRE
+    *   subir a firebase con la siguinte estructura 
+    *   favorites
+    *     |
+    *     |-uid: {uid: true, uid: true, uid: true}
+    *     |
+    *     |-uid
+    *     |
+    *     |-uid
+    * 
+    *  array de ids 
+    * mapear con un snapshot de firestore
+    * coger este array y esperar con un promise all
+    * tenemos usuarios! 
+    * 
+    */
   }
 
 }

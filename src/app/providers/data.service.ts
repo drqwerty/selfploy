@@ -10,6 +10,7 @@ export class DataService {
   static tabBarState: TabBarState;
 
   public user: User;
+  public favorites: User[];
 
   constructor() { }
 }
