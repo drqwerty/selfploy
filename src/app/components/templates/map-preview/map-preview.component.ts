@@ -29,7 +29,7 @@ export class MapPreviewComponent {
 
   initMap() {
     this.loadMap();
-    this.disableInteraction();
+    this.disableInteractions();
     this.createCircleRadius();
     this.createMarker();
   }
@@ -42,7 +42,7 @@ export class MapPreviewComponent {
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
   }
 
-  private disableInteraction() {
+  private disableInteractions() {
     this.map.dragging.disable();
     this.map.touchZoom.disable();
     this.map.doubleClickZoom.disable();

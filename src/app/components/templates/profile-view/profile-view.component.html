@@ -133,14 +133,13 @@
               </ion-label>
             </ion-item>
 
-            <ion-card mode="ios" *ngIf="user?.role === userRol.professional">
-              <map-preview 
-                [coordinates]="user?.coordinates"
-                [radiusKm]="user?.radiusKm"
-                [hideMarker]="user?.hideLocationAccuracy"
-                [id]="mapId"
-              ></map-preview>
-            </ion-card>
+            <map-preview 
+              *ngIf="user?.role === userRol.professional"
+              [coordinates]="user?.coordinates"
+              [radiusKm]="user?.radiusKm"
+              [hideMarker]="user?.hideLocationAccuracy"
+              [id]="mapId"
+            ></map-preview>
 
           </ng-container>
         </ion-list>
