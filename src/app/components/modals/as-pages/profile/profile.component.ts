@@ -55,27 +55,6 @@ export class ProfileModalComponent {
       if (this.isFav) this.data.saveFavorite(this.user);
       else this.data.removeFavorite(this.user);
     }
-
-
-    /**
-    *   
-    *   logica para :
-    *   guardar en local ordenado POR NOMBRE
-    *   subir a firebase con la siguinte estructura 
-    *   favorites
-    *     |
-    *     |-uid: {uid: true, uid: true, uid: true}
-    *     |
-    *     |-uid
-    *     |
-    *     |-uid
-    * 
-    *  array de ids 
-    * mapear con un snapshot de firestore
-    * coger este array y esperar con un promise all
-    * tenemos usuarios! 
-    * 
-    */
   }
 
 }

@@ -10,9 +10,7 @@ import { StorageService } from './storage.service';
 import * as _ from 'lodash';
 import Utils from "src/app/utils";
 const { GeoPoint } = firestore;
-
-import { dbKeys } from 'src/app/providers/data.service'
-
+import { dbKeys } from 'src/app/models/db-keys'
 
 @Injectable({
   providedIn: 'root'
@@ -40,13 +38,14 @@ export class FirestoreService {
 
   async getUserProfile(uid: string) {
     const user: User = (await this.db.collection(dbKeys.users).doc(uid).get().toPromise()).data().d;
+    user.id = uid;
     const coordinates: firestore.GeoPoint = user.coordinates as any;
     if (coordinates) user.coordinates = new LatLng(coordinates.latitude, coordinates.longitude);
     return user;
   }
 
   async updateUserProfile(user: User) {
-    const currentUser = await this.aFAuth.currentUser;
+    const { uid } = await this.aFAuth.currentUser;
     const { token, profilePic, coordinates, ...essentialUserData } = user;
 
     _.forEach(essentialUserData, (value, key) => {
@@ -59,18 +58,25 @@ export class FirestoreService {
         coordinates: new GeoPoint(coordinates.lat, coordinates.lng),
         ...essentialUserData
       }
-    return this.geofirestore.collection(dbKeys.users).doc(currentUser.uid).update(dataToUpdate);
+    return this.geofirestore.collection(dbKeys.users).doc(uid).update(dataToUpdate);
   }
 
   async updateUserLocationAccuracySetting(disable: boolean) {
-    const currentUser = await this.aFAuth.currentUser;
-    return this.db.collection(dbKeys.users).doc(currentUser.uid).update({
+    const { uid } = await this.aFAuth.currentUser;
+    return this.db.collection(dbKeys.users).doc(uid).update({
       [`d.${UserProperties.hideLocationAccuracy}`]: disable,
     });
   }
 
+  async hasFavoritesProperty(hasFavorites: boolean) {
+    const { uid } = await this.aFAuth.currentUser;
+    return this.db.collection(dbKeys.users).doc(uid).update({
+      [`d.${UserProperties.hasFavorites}`]: hasFavorites,
+    });
+  }
+
   async findProfessionalOf(categoryName, serviceName, coordinates) {
-    const currentUserUid = (await this.aFAuth.currentUser).uid;
+    const { uid } = await this.aFAuth.currentUser;
 
     const query = await this.geofirestore
       .collection(dbKeys.users)
@@ -80,11 +86,11 @@ export class FirestoreService {
       .get()
       .then(value => this.translateCoordinatesAndSortByDistance(value));
 
-    return this.omitMyProfile(query, currentUserUid);
+    return this.omitMyProfile(query, uid);
   }
 
   async findUserByName(userName, categoryFilter) {
-    const currentUserUid = (await this.aFAuth.currentUser).uid;
+    const { uid } = await this.aFAuth.currentUser;
     const user = await this.storage.getUserProfile();
 
     let query = await this.geofirestore
@@ -96,7 +102,7 @@ export class FirestoreService {
 
     if (categoryFilter) query = query.filter(user => user.services[categoryFilter])
 
-    return this.omitMyProfile(query, currentUserUid);
+    return this.omitMyProfile(query, uid);
   }
 
   private translateCoordinatesAndSortByDistance(value: GeoQuerySnapshot) {
@@ -122,5 +128,42 @@ export class FirestoreService {
       .get();
 
     return this.translateCoordinatesAndSortByDistance(query);
+  }
+
+  async saveFavorite(userId: string) {
+    const { uid } = await this.aFAuth.currentUser;
+    const docRef = this.db.collection(dbKeys.favorites).doc(uid);
+
+    try {
+      await docRef
+        .update({ [`${dbKeys.favoritesList}.${userId}`]: true });
+    } catch ({ code }) {
+      if (code === 'not-found') await docRef
+        .set({ [dbKeys.favoritesList]: { [userId]: true } });
+    }
+  }
+
+  async getFavorites() {
+    const favoriteList = await this.getFavoriteList();
+    return Promise.all(favoriteList.map(async id => {
+      const user = await this.getUserProfile(id);
+      user.isFav = true;
+      return user;
+    }));
+  }
+
+  private async getFavoriteList() {
+    const { uid } = await this.aFAuth.currentUser;
+    const docRef = this.db.collection(dbKeys.favorites).doc(uid);
+    const list = (await docRef.get().toPromise()).data()?.list ?? {};
+    return Object.keys(list);
+  }
+
+  async removeFavorite(userId: string) {
+    const { uid } = await this.aFAuth.currentUser;
+    const docRef = this.db.collection(dbKeys.favorites).doc(uid);
+    const value = { [`${dbKeys.favoritesList}.${userId}`]: firestore.FieldValue.delete() };
+
+    await docRef.update(value);
   }
 }

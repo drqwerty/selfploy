@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { User } from '../models/user-model';
+import { User } from 'src/app/models/user-model';
 import * as _ from 'lodash';
 import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins;
-import { dbKeys } from 'src/app/providers/data.service'
+import { dbKeys } from 'src/app/models/db-keys'
 
 @Injectable({
   providedIn: 'root'
@@ -38,8 +38,12 @@ export class StorageService {
     return Storage.set({ key, value: JSON.stringify(data) });
   }
 
+  private removeKeys(...keys) {
+    return keys.forEach(key => Storage.remove({ key }));
+  }
+
   removeUserProfile() {
-    return Storage.remove({ key: dbKeys.user })
+    return this.removeKeys(dbKeys.user, dbKeys.favorites);
   }
 
   async saveFavorite(favoritesI: User[], user: User) {

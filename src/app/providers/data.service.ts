@@ -7,12 +7,6 @@ import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import Utils from 'src/app/utils';
 import { Subject } from 'rxjs';
 
-export enum dbKeys {
-  user = 'user',
-  users = 'users',
-  favorites = 'favorites',
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -73,6 +67,14 @@ export class DataService {
     this.storage.saveUserProfile(this.user);
   }
 
+  private async updateUserHasFavoritesProperty(hasFavorites: boolean) {
+    if ((await this.getMyProfile()).hasFavorites !== hasFavorites) {
+      (await this.getMyProfile()).hasFavorites = hasFavorites;
+      this.firestore.hasFavoritesProperty(hasFavorites);
+      this.storage.saveUserProfile(this.user);
+    }
+  }
+
   getUserProfilePic(uid: string) {
     return this.fStorage.getUserProfilePic(uid);
   }
@@ -86,23 +88,35 @@ export class DataService {
   }
 
   async saveFavorite(user: User) {
-    this.favorites = await this.storage.saveFavorite(this.favorites, user);
+    this.favorites = (await Promise.all([
+      this.storage.saveFavorite(await this.getFavorites(), user),
+      this.firestore.saveFavorite(user.id),
+    ]))[0];
+    this.updateUserHasFavoritesProperty(!!this.favorites.length)
     this.favoritesChangedSubject.next();
   }
-  
+
   async removeFavorite(user: User) {
-    this.favorites = await this.storage.removeFavorite(this.favorites, user);
+    this.favorites = (await Promise.all([
+      this.storage.removeFavorite(await this.getFavorites(), user),
+      this.firestore.removeFavorite(user.id),
+    ]))[0];
+    this.updateUserHasFavoritesProperty(!!this.favorites.length)
     this.favoritesChangedSubject.next();
   }
 
   async getFavorites(): Promise<User[]> {
+    if (!(await this.getMyProfile()).hasFavorites) return [];
+
     if (!this.favorites) {
       this.favorites = await this.storage.getFavorites();
 
       if (!this.favorites) {
-        this.favorites = [];
+        this.favorites = await this.firestore.getFavorites();
+        await this.storage.saveFavorites(this.favorites);
+      }
 
-      } else {
+      if (this.favorites) {
         const { coordinates: c1 } = await this.getMyProfile();
         this.favorites.forEach(favorite => {
           const { coordinates: c2 } = favorite;
