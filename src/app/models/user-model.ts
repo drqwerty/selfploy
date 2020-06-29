@@ -12,27 +12,52 @@ export enum WorkingHours {
   flexible = 'flexible'
 }
 
-export class User {
-  email: string;
-  role: UserRole;
-  profilePic: string;
-  name: string;
-  name_splited: string[];
-  token: string;
-  hasProfilePic: boolean;
-  profileCompleted: boolean;
-  companyName: string;
-  about: string;
-  services: any;
-  workingHours: WorkingHours[];
-  hideLocationAccuracy: boolean;
-  addressFull: string;
-  addressCity: string;
-  coordinates: LatLng;
-  radiusKm: number;
-  professionalProfileActivated: boolean;
+export enum UserProperties {
+  email = 'email',
+  role = 'role',
+  profilePic = 'profilePic',
+  name = 'name',
+  name_splited = 'name_splited',
+  token = 'token',
+  hasProfilePic = 'hasProfilePic',
+  profileCompleted = 'profileCompleted',
+  companyName = 'companyName',
+  about = 'about',
+  services = 'services',
+  workingHours = 'workingHours',
+  hideLocationAccuracy = 'hideLocationAccuracy',
+  addressFull = 'addressFull',
+  addressCity = 'addressCity',
+  coordinates = 'coordinates',
+  radiusKm = 'radiusKm',
+  professionalProfileActivated = 'professionalProfileActivated',
 
-  id: string;
-  distance: number;
-  isFav: boolean;
+  id = 'id',
+  distance = 'distance',
+  isFav = 'isFav',
+}
+
+export class User {
+  [UserProperties.email]: string;
+  [UserProperties.role]: UserRole;
+  [UserProperties.profilePic]: string;
+  [UserProperties.name]: string;
+  [UserProperties.name_splited]: string[];
+  [UserProperties.token]: string;
+  [UserProperties.hasProfilePic]: boolean;
+  [UserProperties.profileCompleted]: boolean;
+  [UserProperties.companyName]: string;
+  [UserProperties.about]: string;
+  [UserProperties.services]: any;
+  [UserProperties.workingHours]: WorkingHours[];
+  [UserProperties.hideLocationAccuracy]: boolean;
+  [UserProperties.addressFull]: string;
+  [UserProperties.addressCity]: string;
+  [UserProperties.coordinates]: LatLng;
+  [UserProperties.radiusKm]: number;
+  [UserProperties.professionalProfileActivated]: boolean;
+
+  [UserProperties.id]: string;
+  [UserProperties.distance]: number;
+  [UserProperties.isFav]: boolean;
 }

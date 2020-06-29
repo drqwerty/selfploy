@@ -7,6 +7,12 @@ import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import Utils from 'src/app/utils';
 import { Subject } from 'rxjs';
 
+export enum dbKeys {
+  user = 'user',
+  users = 'users',
+  favorites = 'favorites',
+}
+
 @Injectable({
   providedIn: 'root'
 })

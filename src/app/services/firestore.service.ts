@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from '../models/user-model';
+import { User, UserProperties } from '../models/user-model';
 import { FirebaseStorage } from './firebase-storage.service';
 import { AngularFireAuth } from '@angular/fire/auth';
-
 import { GeoFirestore, GeoQuerySnapshot } from 'geofirestore';
 import { firestore } from 'firebase/app';
 import { LatLng } from 'leaflet';
 import { StorageService } from './storage.service';
 import * as _ from 'lodash';
 import Utils from "src/app/utils";
-
 const { GeoPoint } = firestore;
+
+import { dbKeys } from 'src/app/providers/data.service'
 
 
 @Injectable({
@@ -33,13 +33,13 @@ export class FirestoreService {
   async createUserProfile(uid: string, user: User) {
     const { token, profilePic, ...essentialUserData } = user;
     if (user.hasProfilePic) await this.fStorage.uploadUserProfilePic(user.profilePic, uid);
-    return this.db.collection('users').doc(uid).set({
+    return this.db.collection(dbKeys.users).doc(uid).set({
       d: essentialUserData,
     });
   }
 
   async getUserProfile(uid: string) {
-    const user: User = (await this.db.collection('users').doc(uid).get().toPromise()).data().d;
+    const user: User = (await this.db.collection(dbKeys.users).doc(uid).get().toPromise()).data().d;
     const coordinates: firestore.GeoPoint = user.coordinates as any;
     if (coordinates) user.coordinates = new LatLng(coordinates.latitude, coordinates.longitude);
     return user;
@@ -59,13 +59,13 @@ export class FirestoreService {
         coordinates: new GeoPoint(coordinates.lat, coordinates.lng),
         ...essentialUserData
       }
-    return this.geofirestore.collection('users').doc(currentUser.uid).update(dataToUpdate);
+    return this.geofirestore.collection(dbKeys.users).doc(currentUser.uid).update(dataToUpdate);
   }
 
   async updateUserLocationAccuracySetting(disable: boolean) {
     const currentUser = await this.aFAuth.currentUser;
-    return this.db.collection('users').doc(currentUser.uid).update({
-      'd.hideLocationAccuracy': disable,
+    return this.db.collection(dbKeys.users).doc(currentUser.uid).update({
+      [`d.${UserProperties.hideLocationAccuracy}`]: disable,
     });
   }
 
@@ -73,10 +73,10 @@ export class FirestoreService {
     const currentUserUid = (await this.aFAuth.currentUser).uid;
 
     const query = await this.geofirestore
-      .collection('users')
+      .collection(dbKeys.users)
       .near({ center: new firestore.GeoPoint(coordinates.lat, coordinates.lng), radius: 1000 }) // 1000 km
-      .where(`services.${categoryName}`, 'array-contains', serviceName)
-      .where('professionalProfileActivated', '==', true)
+      .where(`${UserProperties.services}.${categoryName}`, 'array-contains', serviceName)
+      .where(UserProperties.professionalProfileActivated, '==', true)
       .get()
       .then(value => this.translateCoordinatesAndSortByDistance(value));
 
@@ -88,9 +88,9 @@ export class FirestoreService {
     const user = await this.storage.getUserProfile();
 
     let query = await this.geofirestore
-      .collection('users')
+      .collection(dbKeys.users)
       .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
-      .where('name_splited', 'array-contains', Utils.normalize(userName))
+      .where(UserProperties.name_splited, 'array-contains', Utils.normalize(userName))
       .get()
       .then(value => this.translateCoordinatesAndSortByDistance(value));
 
@@ -118,7 +118,7 @@ export class FirestoreService {
 
   async getAllUsers() {
     const query = await this.geofirestore
-      .collection('users')
+      .collection(dbKeys.users)
       .get();
 
     return this.translateCoordinatesAndSortByDistance(query);

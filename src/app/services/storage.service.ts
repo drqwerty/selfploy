@@ -1,22 +1,16 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user-model';
 import * as _ from 'lodash';
-
 import { Plugins } from '@capacitor/core';
-
 const { Storage } = Plugins;
-
-enum dbKeys {
-  user = 'user',
-  favorites = 'favorites',
-}
+import { dbKeys } from 'src/app/providers/data.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
 
-  constructor( ) { }
+  constructor() { }
 
   async getUserProfile(): Promise<User> {
     return this.getData(dbKeys.user);
