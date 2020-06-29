@@ -28,13 +28,9 @@ export class ProfileModalComponent {
   ) { }
 
   ionViewWillEnter() {
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
     this.profileView.startProfileImageIntersectionObserver();
     this.isFav = this.user.isFav ?? false;
-  }
-
-  ionViewDidEnter() {
-    this.profileView.initMap()
-    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
   }
 
   ionViewWillLeave() {
