@@ -51,6 +51,8 @@ export class DataService {
   }
 
   removeUserProfile() {
+    this.user = null;
+    this.favorites = null;
     this.storage.removeUserProfile();
   }
 

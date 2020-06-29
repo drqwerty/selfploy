@@ -3,7 +3,10 @@
 
     <div class="left-content">
       <ion-button size="small" (click)="toggleIcon()" (debounceClick)="toggleFav()" fill="clear">
-        <ion-icon color="light" slot="icon-only" [name]="isFav ? 'heart' : 'heart-outline'"></ion-icon>
+        <!-- sometimes the icon was not updated with this line -->
+        <!-- <ion-icon color="light" slot="icon-only" [name]="isFav ? 'heart' : 'heart-outline'"></ion-icon> -->
+        <ion-icon *ngIf="isFav" color="light" slot="icon-only" name="heart"></ion-icon>
+        <ion-icon *ngIf="!isFav" color="light" slot="icon-only" name="heart-outline"></ion-icon>
       </ion-button>
       <ion-button size="small" (click)="requestService()" fill="clear">
         <ion-icon color="light" slot="icon-only" name="reader-outline"></ion-icon>

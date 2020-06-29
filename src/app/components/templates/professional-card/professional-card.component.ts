@@ -1,6 +1,5 @@
-import { Component, Input, OnInit, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, AfterViewInit, OnDestroy, AfterContentInit } from '@angular/core';
 import { User } from 'src/app/models/user-model';
-import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import { ModalController } from '@ionic/angular';
 import { ProfileModalComponent } from '../../modals/as-pages/profile/profile.component';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
@@ -20,7 +19,7 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   @ViewChild('card') card: any;
 
-  isFav = false;
+  isFav = true;
 
   stars = 3;
   jobs = 12;
@@ -29,18 +28,16 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
   cardIntersectionObserver: IntersectionObserver;
 
   constructor(
-    private fStorage: FirebaseStorage,
     private data: DataService,
     private modalController: ModalController
-  ) {
-  }
+  ) { }
 
   ngOnInit() {
-    this.checkFavState();
     this.getImage();
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    await this.checkFavState();
     if (this.user) this.startCardIntersectionObserver();
   }
 
@@ -50,7 +47,7 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   async checkFavState() {
     if (!this.user) return;
-    this.isFav = (await this.data.getFavorites()).find(user => user.id === this.user.id)?.isFav ?? false;
+    this.isFav = !!(await this.data.getFavorites()).find(user => user.id === this.user.id);
   }
 
   async getImage() {
@@ -88,8 +85,8 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   startCardIntersectionObserver() {
-    this.cardIntersectionObserver = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) this.checkFavState();
+    this.cardIntersectionObserver = new IntersectionObserver(async entries => {
+      if (entries[0].isIntersecting) await this.checkFavState();
     }, { threshold: 0 });
     this.cardIntersectionObserver.observe(this.card.el);
   }

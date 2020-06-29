@@ -49,6 +49,7 @@ export class AuthService {
       const userCrendential = await signInPromise;
       const user = await this.data.getMyProfile(userCrendential.user.uid)
       if (user.hasProfilePic) user.profilePic = await this.data.getUserProfilePic(userCrendential.user.uid);
+      await this.data.getFavorites();
       await this.data.saveUserProfile(user);
       return userCrendential;
     } catch (reason) {
@@ -107,7 +108,7 @@ export class AuthService {
     this.data.removeUserProfile();
     this.aFAuth.currentUser.then(({ providerData }) => {
       this.aFAuth.signOut();
-      this.data.user == null;
+      this.data.removeUserProfile();
       const providerId = providerData[0].providerId;
       if (providerId === 'facebook.com') Plugins.FacebookLogin.logout();
       if (providerId === 'google.com') GoogleAuth.signOut();
