@@ -12,6 +12,8 @@ export class InputBottomSheetComponent {
   @Input() type: 'input' | 'text-area';
   @Input() title: string;
   @Input() form: FormGroup;
+  @Input() keyboardType: 'text' | 'number' = 'text';
+  
 
   @ViewChild(IonInput) input: IonInput;
   @ViewChild(IonTextarea) textArea: IonTextarea;

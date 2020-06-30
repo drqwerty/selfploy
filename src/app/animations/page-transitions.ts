@@ -79,10 +79,10 @@ export const ModalAnimationSlideLeave = (baseEl: any) => {
   return ModalAnimationSlideEnter(baseEl).direction('reverse');
 };
 
-export const ModalAnimationSlideWithOpacityEnter = (baseEl: any, reverse = false) => {
+export const ModalAnimationSlideWithOpacityEnter = (baseEl: any, fromModal = false) => {
 
   const leaving = createAnimation()
-    .addElement(document.querySelector('app-tabs.ion-page'))
+    .addElement(document.querySelector(fromModal ? '.modal-wrapper' : 'app-tabs.ion-page'))
     .fromTo('transform', 'translateX(0%)', 'translateX(-50%)')
     .duration(ModalAnimationSlideWithOpacityDuration)
     .fromTo('opacity', '1', '0.3')
@@ -103,6 +103,14 @@ export const ModalAnimationSlideWithOpacityEnter = (baseEl: any, reverse = false
 };
 
 export const ModalAnimationSlideWithOpacityLeave = (baseEl: any) => {
+  return ModalAnimationSlideWithOpacityEnter(baseEl).direction('reverse');
+};
+
+export const ModalAnimationSlideWithOpacityEnterFromModal = (baseEl: any) => {
+  return ModalAnimationSlideWithOpacityEnter(baseEl, true);
+};
+
+export const ModalAnimationSlideWithOpacityLeaveFromModal = (baseEl: any) => {
   return ModalAnimationSlideWithOpacityEnter(baseEl, true).direction('reverse');
 };
 

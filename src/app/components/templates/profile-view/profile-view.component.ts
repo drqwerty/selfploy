@@ -23,6 +23,7 @@ export class ProfileViewComponent implements AfterViewInit {
 
 
   @ViewChild(IonContent) ionContent: IonContent;
+  @ViewChild(MapPreviewComponent) private mapPreview: MapPreviewComponent;
   @ViewChild('profileImageWrapper') private profileImageWrapper: ElementRef;
 
   profileImageIntersectionObserver: IntersectionObserver;
@@ -36,6 +37,10 @@ export class ProfileViewComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.startScrollSubscription();
     this.setCornersStyle();
+  }
+
+  initMap() {
+    if (this.user.role === this.userRol.professional) this.mapPreview.initMap();
   }
 
   imageLoaded() {

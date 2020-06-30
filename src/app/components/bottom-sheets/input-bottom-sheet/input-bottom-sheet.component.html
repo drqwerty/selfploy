@@ -7,7 +7,7 @@
     </ion-label>
 
     <form [formGroup]="form" (ngSubmit)="accept()">
-      <ion-input *ngIf="type === 'input'; else textArea" type="text" formControlName="value"></ion-input>
+      <ion-input *ngIf="type === 'input'; else textArea" [type]="keyboardType" formControlName="value"></ion-input>
 
       <ng-template #textArea>
         <ion-textarea rows="1" autosize [maxRows]="6" formControlName="value"></ion-textarea>

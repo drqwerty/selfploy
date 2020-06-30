@@ -3,7 +3,7 @@ import { NavController, ModalController, ToastController, LoadingController, Ale
 import { tabBarAnimateIn, tabBarAnimateOut } from "src/app/animations/tab-bar-transition";
 
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
-import { User, UserRole } from 'src/app/models/user-model';
+import { User, UserRole, UserProperties } from 'src/app/models/user-model';
 import { InputBottomSheetComponent } from 'src/app/components/bottom-sheets/input-bottom-sheet/input-bottom-sheet.component';
 import { CameraSourceActionSheetComponent } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.component';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -171,7 +171,7 @@ export class ProfileEditPage {
     if (updateUser.role === UserRole.client) {
       return updateUser.addressFull?.length > 0;
     } else if (!updateUser.profileCompleted) {
-      const properties = ["services", "workingHours", "coordinates"];
+      const properties = [UserProperties.services, UserProperties.workingHours, UserProperties.coordinates];
       for (const property of properties) if (_.isEmpty(updateUser[property])) return false;
       if (!updateUser.radiusKm) return false;
     }
@@ -250,15 +250,15 @@ export class ProfileEditPage {
   }
 
   editName() {
-    this.presentInputBottomSheet(this.headerName, 'name');
+    this.presentInputBottomSheet(this.headerName, UserProperties.name);
   }
 
   editCompany() {
-    this.presentInputBottomSheet(this.headerCompany, 'companyName', true);
+    this.presentInputBottomSheet(this.headerCompany, UserProperties.companyName, true);
   }
 
   editAbout() {
-    this.presentInputBottomSheet(this.headerAbout, 'about', true, 'text-area');
+    this.presentInputBottomSheet(this.headerAbout, UserProperties.about, true, 'text-area');
   }
 
   async editServices() {

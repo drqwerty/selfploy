@@ -33,6 +33,10 @@ export class ProfileModalComponent {
     this.isFav = this.user.isFav ?? false;
   }
 
+  ionViewDidEnter() {
+    this.profileView.initMap();
+  }
+
   ionViewWillLeave() {
     this.profileView.stopProfileImageIntersectionObserver();
     this.toggleFav();

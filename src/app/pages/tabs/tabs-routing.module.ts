@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     component: TabsPage,
     children: [
-      { path: '', redirectTo: 'favorites' },
+      { path: '', redirectTo: 'categories' },
       {
         path: 'categories',
         loadChildren: () => import('../categories/categories.module').then(m => m.CategoriesPageModule),

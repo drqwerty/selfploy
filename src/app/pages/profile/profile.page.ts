@@ -37,6 +37,10 @@ export class ProfilePage {
     this.profileView.startProfileImageIntersectionObserver();
   }
 
+  ionViewDidEnter() {
+    this.profileView.initMap();
+  }
+
   ionViewWillLeave() {
     this.profileView.stopProfileImageIntersectionObserver();
   }

@@ -1,5 +1,7 @@
 ion-card {
   box-shadow: none;
+  height: 150px;
+  --background: #dddddd;
 
   .map-wrapper {
     pointer-events: none;

@@ -171,6 +171,7 @@ fiv-app-bar {
   &.border {
     --fiv-appbar-background-color: #f0f0f0 !important;
     --fiv-radius: 70px !important;
+    transform: translateX(-1px);
     z-index: 4999;
   }
 
@@ -445,4 +446,8 @@ span.new-line::before {
     height: 100px;
     width: 100px;
   }
+}
+
+.background-black {
+  background-color: #000;
 }

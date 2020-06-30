@@ -1,9 +1,8 @@
-import { Component, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Map as leafletMap, tileLayer, icon, circle, marker, LatLng, Circle, Marker } from 'leaflet';
 import { environment } from "src/environments/environment";
 import { ModalController } from '@ionic/angular';
 import { MapFullScreenComponent } from '../../modals/as-pages/map-full-screen/map-full-screen.component';
-import { min } from 'lodash';
 
 
 @Component({
@@ -11,14 +10,13 @@ import { min } from 'lodash';
   templateUrl: './map-preview.component.html',
   styleUrls: ['./map-preview.component.scss'],
 })
-export class MapPreviewComponent implements AfterViewInit {
+export class MapPreviewComponent {
 
   @Input() id: string;
   @Input() private coordinates: LatLng;
   @Input() private radiusKm: number;
   @Input() private hideMarker: boolean;
 
-  @ViewChild('mapWrapper') miniMap: ElementRef;
 
   idPrefix = 'map-preview-';
   private map: leafletMap;
@@ -28,10 +26,6 @@ export class MapPreviewComponent implements AfterViewInit {
   constructor(
     private modalController: ModalController,
   ) { }
-
-  ngAfterViewInit() {
-    setTimeout(() => this.initMap());
-  }
 
   initMap() {
     this.loadMap();

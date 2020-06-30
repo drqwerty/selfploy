@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 import { Categories, Category } from 'src/assets/categories';
@@ -15,14 +15,18 @@ export class ServicePickerComponent {
 
   @Input() title: string;
   @Input() userServices: any = {};
+  @Input() limit = 0;
 
+
+  serviceSelectedWithLimit = [];
+  canUpdate = true;
 
   categories = JSON.parse(JSON.stringify(Categories));
 
   constructor(
     private modalController: ModalController,
   ) { }
-  
+
   ionViewWillEnter() {
     this.setServicesSelected();
   }
@@ -30,9 +34,11 @@ export class ServicePickerComponent {
   goBack() {
     this.modalController.dismiss();
   }
-  
+
   accept() {
-    this.getServicesSelected();
+    if (this.limit) this.getServicesSelectedWithLimit();
+    else this.getServicesSelected();
+
     this.modalController.dismiss(this.userServices);
   }
 
@@ -41,24 +47,22 @@ export class ServicePickerComponent {
   }
 
   private setServicesSelected() {
-    _.map(this.userServices, (srcServices: string[], srcCategory: string) => {
-      const dstCategory = this.categories.find(
-        category => category.name === srcCategory
-      );
+    this.canUpdate = false;
+    _.forEach(this.userServices, (srcServices: string[], srcCategory: string) => {
+      const dstCategory = this.categories.find(category => category.name === srcCategory);
 
-      if (srcServices.length === dstCategory.services.length) {
+      if (srcServices.length === dstCategory.services.length)
         dstCategory.checked = true;
-      } else {
-        dstCategory.indeterminateState = true;
-      }
+      else dstCategory.indeterminateState = true;
 
-      srcServices.map(
-        srcServiceName =>
-          (dstCategory.services.find(
-            dstService => dstService.name === srcServiceName
-          ).checked = true)
-      );
+      srcServices.forEach(srcServiceName => {
+        const service = dstCategory.services.find(dstService => dstService.name === srcServiceName);
+        service.checked = true;
+
+        if (this.limit) this.serviceSelectedWithLimit.push({ category: dstCategory, service });
+      });
     });
+    setTimeout(() => this.canUpdate = true);
   }
 
   private getServicesSelected() {
@@ -66,8 +70,7 @@ export class ServicePickerComponent {
     this.categories.forEach(category => {
       if (category.checked) {
         this.userServices[category.name] = category.services.map(service => service.name);
-      }
-      else if (category.indeterminateState) {
+      } else if (category.indeterminateState) {
         this.userServices[category.name] = [];
         category.services.forEach(service => {
           if (service.checked)
@@ -75,6 +78,16 @@ export class ServicePickerComponent {
         });
       }
     });
+  }
+
+  private getServicesSelectedWithLimit() {
+    this.userServices = {};
+    this.serviceSelectedWithLimit.forEach(el => {
+      if (this.userServices[el.category.name] != null)
+        this.userServices[el.category.name].push(el.service.name);
+      else this.userServices[el.category.name] = [el.service.name];
+    });
+    this.serviceSelectedWithLimit;
   }
 
   updateCollapseState(category: Category) {
@@ -86,7 +99,21 @@ export class ServicePickerComponent {
     setTimeout(() => category.services.forEach(service => service.checked = category.checked));
   }
 
-  updateCategoryCheckbox(category: Category) {
+  updateCategoryCheckbox(service: any, category: Category) {
+    if (this.limit) {
+      if (this.canUpdate) {
+        this.canUpdate = false;
+        if (service.checked) {
+          if (this.serviceSelectedWithLimit.length >= this.limit) this.serviceSelectedWithLimit.shift().service.checked = false;
+          this.serviceSelectedWithLimit.push({ category, service });
+        } else {
+          this.serviceSelectedWithLimit.pop();
+        }
+        setTimeout(() => this.canUpdate = true);
+      }
+      return;
+    }
+
     const allItems = category.services.length;
     let selected = 0;
 
