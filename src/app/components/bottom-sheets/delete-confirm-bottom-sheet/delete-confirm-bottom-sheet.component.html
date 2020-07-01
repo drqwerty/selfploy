@@ -1,0 +1,16 @@
+<ion-toolbar class="ion-padding">
+  Esta acción es irreversible, ¿quieres continuar?
+</ion-toolbar>
+
+<ion-footer class="ion-no-border buttons-cancel-confirm">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">
+        Cancelar
+      </ion-button>
+      <ion-button (click)="accept()">
+        Eliminar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

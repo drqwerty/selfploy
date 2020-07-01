@@ -8,12 +8,12 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-</custom-header >
+</custom-header>
 
 <ion-content class="ion-padding-bottom">
 
   <ion-list lines="none">
-      
+
     <ion-item button (click)="editService()">
       <ion-label position="stacked">
         <ion-text color="tertiary">
@@ -26,7 +26,7 @@
           Elige el servicio que mejor se adapta a tus necesidades
         </span>
       </ion-text>
-      <div class="user-options-list">
+      <div class="user-options-list" *ngIf="request.service">
         <ng-container *ngFor="let item of request.service | keyvalue">
           <span upperCaseFirstLetter>{{item.key}} - </span>
           <span upperCaseFirstLetter>{{item.value}}</span>
@@ -35,7 +35,7 @@
       <!-- <ion-textarea [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" rows="1" autosize readonly type="text" [value]="tempUser?.hideLocationAccuracy ? tempUser?.addressCity: tempUser?.addressFull"></ion-textarea> -->
     </ion-item>
 
-    
+
     <ion-item button (click)="editLocation()">
       <ion-label position="stacked">
         <ion-text color="tertiary">
@@ -81,26 +81,27 @@
     </ion-item>
 
 
-    <ion-item (click)="editLocation()">
+    <ion-item>
       <ion-label position="stacked">
         <ion-text color="tertiary">
           Imágenes - <span>Opcional</span>
         </ion-text>
       </ion-label>
-      <ion-text color="medium" slot="end">0/5</ion-text>
+      <ion-text color="medium" slot="end">{{images.length}}/5</ion-text>
       <ion-text color="medium" class="info">
         <span>
           Añade imágenes para ayudar a los profesionales a entender qué necesitas
         </span>
       </ion-text>
-      <!-- <ion-button (click)="onClick()" fill="outline" size="medium">
-        <ion-icon slot="icon-only" name="add"></ion-icon>
-      </ion-button> -->
-      <ion-fab-button size="small">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-      <!-- <ion-textarea [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" rows="1" autosize readonly type="text" [value]="tempUser?.hideLocationAccuracy ? tempUser?.addressCity: tempUser?.addressFull"></ion-textarea> -->
+
+      <gallery [images]="images" showRemoveButton="true">
+        <ion-fab-button size="small" *ngIf="images.length < 5" (click)="addImage()">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </gallery>
+
     </ion-item>
+
 
 
     <ion-item (click)="editBudget()">
@@ -111,7 +112,8 @@
       </ion-label>
       <ion-text color="medium" class="info">
         <span>
-          Puedes especificar de cuánto presupuesto dispones. Déjalo vacío para indicar que no especifícas un presupuesto (en euros)
+          Puedes especificar de cuánto presupuesto dispones. Déjalo vacío para indicar que no especifícas un presupuesto
+          (en euros)
         </span>
       </ion-text>
       <ion-input *ngIf="request.budget != null" readonly type="text" [value]="request.budget + ' €'"></ion-input>
@@ -130,11 +132,12 @@
           La localización es necesaria para mostrarte profesionales cerca. Basta con una ubicación aproximada
         </span>
       </ion-text>
-      <ion-textarea rows="1" autosize readonly type="text" [value]="request?.hideLocationAccuracy ? request?.addressCity: request?.addressFull"></ion-textarea>
+      <ion-textarea rows="1" autosize readonly type="text"
+        [value]="request?.hideLocationAccuracy ? request?.addressCity: request?.addressFull"></ion-textarea>
     </ion-item>
 
   </ion-list>
-  
+
 </ion-content>
 
 <div class="footer-border-radius"></div>

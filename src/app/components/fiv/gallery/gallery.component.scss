@@ -1,0 +1,32 @@
+:host {
+  display: contents;
+}
+
+.content {
+  display: flex;
+  overflow-x: auto;
+
+  .box {
+    display: flex;
+    min-height: min-content;
+    margin-bottom: 10px;
+
+    .img {
+      height: 50px;
+      width: 50px;
+      object-fit: cover;
+      margin: 5px;
+    }
+  }
+}
+
+fiv-gallery {
+  width: 100%;
+}
+
+fiv-gallery-image {
+  --height: 38px;
+  --width: 38px;
+  height: 38px;
+  width: 38px;
+}

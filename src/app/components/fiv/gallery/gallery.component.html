@@ -1,0 +1,44 @@
+<fiv-gallery #gallery [ambient]="false" (willOpen)="toggleImageVisibility(false, 300)" (didOpen)="didOpen()"
+  (willClose)="willClose()" (didClose)="toggleImageVisibility(true)">
+
+
+  <fiv-gallery-toolbar position="top">
+    <ion-toolbar color="transparent">
+      <ion-buttons slot="start">
+        <ion-button (click)="gallery.close()">
+          <ion-icon color="light" slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end" *ngIf="showRemoveButton">
+        <ion-button (click)="remove()">
+          <ion-icon color="light" slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </fiv-gallery-toolbar>
+
+  
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col *ngFor="let pic of images" size="2">
+        <fiv-gallery-image [src]="pic"></fiv-gallery-image>
+      </ion-col>
+      <ion-col>
+        <ng-content></ng-content>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <fiv-gallery-toolbar position="bottom">
+    <ion-toolbar color="transparent">
+      <div #bottomToolbar class="content">
+        <div class="box">
+          <ion-img *ngFor="let pic of images; let i = index" [src]="pic" class="img" (click)="goTo(i)"></ion-img>
+        </div>
+      </div>
+    </ion-toolbar>
+  </fiv-gallery-toolbar>
+
+
+</fiv-gallery>
