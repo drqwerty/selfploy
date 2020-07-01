@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, ViewChildren, QueryList, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, ViewChildren, QueryList, Input, Output, EventEmitter } from '@angular/core';
 import { FivGallery, FivGalleryImage } from '@fivethree/core';
 import { IonImg, ModalController } from '@ionic/angular';
 import { takeUntil } from 'rxjs/operators';
@@ -13,6 +13,8 @@ export class GalleryComponent {
 
   @Input() images: string[] = [];
   @Input() showRemoveButton = false;
+
+  @Output() imageDeleted = new EventEmitter
 
 
   @ViewChild('bottomToolbar') bottomToolbar: ElementRef;
@@ -102,6 +104,7 @@ export class GalleryComponent {
       if (data) {
         if (this.images.length > 1) { this.images.splice(this.fivGallery.activeIndex, 1); }
         else { this.fivGallery.close(); this.images.shift() }
+        this.imageDeleted.emit();
         setTimeout(() => this.fivGallery.updateImagesIndex(), 300);
       }
     })

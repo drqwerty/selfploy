@@ -14,6 +14,9 @@ import { AutosizeModule } from 'ngx-autosize';
 import { MapLocationModule } from 'src/app/components/modals/as-pages/map-location/map-location.module';
 import { CameraSourceActionSheetModule } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.module';
 import { GalleryModule } from 'src/app/components/fiv/gallery/gallery.module';
+import { RequestWorkingHoursPickerComponent } from 'src/app/components/modals/request-working-hours-picker/request-working-hours-picker.component';
+import { CalendarModule } from 'ion2-calendar';
+import { CalendarComponent } from 'src/app/components/modals/calendar/calendar.component';
 
 @NgModule({
   imports: [
@@ -32,10 +35,14 @@ import { GalleryModule } from 'src/app/components/fiv/gallery/gallery.module';
     MapLocationModule,
     CameraSourceActionSheetModule,
     GalleryModule,
+    CalendarModule,
   ],
   declarations: [
     TabsPage,
     RequestNewComponent,
+    RequestWorkingHoursPickerComponent,
+
+    CalendarComponent,
   ]
 })
 export class TabsPageModule { }

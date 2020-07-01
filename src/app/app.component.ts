@@ -1,14 +1,13 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
-
 import { Platform, IonApp } from '@ionic/angular';
 import { Router } from '@angular/router';
-
 import { registerWebPlugin, StatusBarStyle, KeyboardInfo, Capacitor } from '@capacitor/core';
 import { FacebookLogin } from '@rdlabo/capacitor-facebook-login';
 import { AngularFireAuth } from '@angular/fire/auth';
-
 import { Plugins } from '@capacitor/core';
 const { StatusBar, SplashScreen, Keyboard, StatusBarPlugin } = Plugins;
+import * as moment from 'moment';
+import 'moment/locale/es';
 
 @Component({
   selector: 'app-root',
@@ -40,6 +39,7 @@ export class AppComponent {
     }
     this.platform.ready().then(() => {
       SplashScreen.hide();
+      moment.locale("es");
       if (isAndroid) this.setStatusBarTransparent();
       this.authObserver();
     });

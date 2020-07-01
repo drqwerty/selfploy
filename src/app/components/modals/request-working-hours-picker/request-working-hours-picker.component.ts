@@ -1,16 +1,17 @@
 import { Component, Input } from '@angular/core';
-import { ModalController } from '@ionic/angular';
 import { WorkingHours } from 'src/app/models/user-model';
+import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-working-hours-picker',
-  templateUrl: './working-hours-picker.component.html',
+  selector: 'app-request-working-hours-picker',
+  templateUrl: './request-working-hours-picker.component.html',
+  styleUrls: ['./request-working-hours-picker.component.scss'],
 })
-export class WorkingHoursPickerComponent {
+export class RequestWorkingHoursPickerComponent  {
 
-  @Input() title: string;
-  @Input() userWorkingHours: WorkingHours[] = [];
-
+  @Input() dateString: string;
+  @Input() requestWorkingHours: WorkingHours[] = [];
+  
 
   workingHours = [
     {
@@ -41,7 +42,7 @@ export class WorkingHoursPickerComponent {
 
   accept() {
     this.getWorkingHoursSelected();
-    this.modalController.dismiss(this.userWorkingHours);
+    this.modalController.dismiss(this.requestWorkingHours);
   }
 
   cancel() {
@@ -50,14 +51,14 @@ export class WorkingHoursPickerComponent {
 
   setWorkingHoursSelected() {
     this.workingHours.forEach(workingHour =>
-      workingHour.checked = this.userWorkingHours?.includes(workingHour.name)
+      workingHour.checked = this.requestWorkingHours?.includes(workingHour.name)
     );
   }
 
   getWorkingHoursSelected() {
-    this.userWorkingHours = [];
+    this.requestWorkingHours = [];
     this.workingHours.forEach(workingHour => {
-      if (workingHour.checked) this.userWorkingHours.push(workingHour.name);
+      if (workingHour.checked) this.requestWorkingHours.push(workingHour.name);
     });
   }
 

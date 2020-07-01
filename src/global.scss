@@ -27,7 +27,7 @@
 
 @import "theme/fonts.scss";
 
-:host{
+:host {
   ion-ripple-effect {
     color: red;
   }
@@ -37,7 +37,8 @@
   font-size: 28.5px;
 }
 
-.no-transform {
+.no-transform,
+.no-transform * {
   transform: none !important;
   text-transform: none !important;
 }
@@ -52,6 +53,11 @@
 
 .ion-no-opacity {
   opacity: 0;
+}
+
+.border-radius-10 {
+  border-radius: 10px;
+  --border-radius: 10px;
 }
 
 .border-radius {
@@ -450,4 +456,29 @@ span.new-line::before {
 
 .background-black {
   background-color: #000;
+}
+
+.calendar-modal {
+
+  ion-backdrop {
+    --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
+  }
+
+  .modal-wrapper {
+    --height: 430px;
+    --width: 300px;
+    border-radius: 15px;
+
+    ion-calendar {
+      overflow: hidden;
+
+      .month-packer-item {
+        margin: 22px 0;
+
+        &:nth-last-child(-n+4) {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
 }

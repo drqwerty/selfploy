@@ -1,0 +1,18 @@
+<ion-content>
+  <ion-calendar [(ngModel)]="dateRange"
+                (selectStart)="startSelected($event)"
+                (selectEnd)="endSelected($event)"
+                [options]="optionsRange"
+                [type]="type"
+                [format]="'YYYY-MM-DD'">
+</ion-calendar>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end" style="margin-right: 10px;" class="no-transform">
+      <ion-button color="primary" (click)="cancel()">Cancelar</ion-button>
+      <ion-button color="primary" (click)="done()">Aceptar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

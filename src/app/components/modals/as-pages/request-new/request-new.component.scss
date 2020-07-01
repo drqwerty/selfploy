@@ -77,3 +77,16 @@ ion-fab-button {
   --color: var(--ion-color-primary);
   margin: 0;
 }
+
+.when-buttons-wrapper {
+  margin-top: 8px;
+  display: flex;
+  width: 100%;
+
+  ion-button {
+    height: 38px;
+    width: inherit;
+    margin: 0 6px;
+    --box-shadow: none;
+  }
+}

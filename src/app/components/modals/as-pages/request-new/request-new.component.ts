@@ -2,13 +2,17 @@ import { Component, ViewChild } from '@angular/core';
 import { Animations } from 'src/app/animations/animations';
 import { ModalController } from '@ionic/angular';
 import { Request, RequestProperties } from 'src/app/models/request-model';
-import { MapLocationComponent } from '../map-location/map-location.component';
+import { MapLocationComponent } from 'src/app/components/modals/as-pages/map-location/map-location.component';
 import { ModalAnimationSlideWithOpacityEnterFromModal, ModalAnimationSlideWithOpacityLeaveFromModal } from 'src/app/animations/page-transitions';
 import { Validators, FormControl, FormBuilder } from '@angular/forms';
 import { InputBottomSheetComponent } from 'src/app/components/bottom-sheets/input-bottom-sheet/input-bottom-sheet.component';
-import { ServicePickerComponent } from '../service-picker/service-picker.component';
+import { ServicePickerComponent } from 'src/app/components/modals/as-pages/service-picker/service-picker.component';
 import { CameraSourceActionSheetComponent } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.component';
 import { GalleryComponent } from 'src/app/components/fiv/gallery/gallery.component';
+import { RequestWorkingHoursPickerComponent } from 'src/app/components/modals/request-working-hours-picker/request-working-hours-picker.component';
+import { CalendarComponent } from 'src/app/components/modals/calendar/calendar.component';
+import * as moment from 'moment';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-request-new',
@@ -21,6 +25,8 @@ export class RequestNewComponent {
 
   request: Request;
   images: string[] = [];
+
+  chooseDayDefaultText = 'Elige una fecha';
 
   constructor(
     private modalController: ModalController,
@@ -37,6 +43,10 @@ export class RequestNewComponent {
   async goBack() {
     // await this.anim.startReverseAnimation();
     this.modalController.dismiss();
+  }
+
+  updateHasImageProperty() {
+    this.request.hasImages = this.images.length > 0;
   }
 
   async editService() {
@@ -61,6 +71,69 @@ export class RequestNewComponent {
     modal.present();
   }
 
+  async setNow() {
+    // this.chooseWorkingHours(true);
+    delete this.request.startDate;
+    delete this.request.endDate;
+    delete this.request.workingHours;
+    this.request.priority = true;
+  }
+
+  async chooseDay() {
+    const modal = await this.modalController.create({
+      cssClass: 'calendar-modal',
+      component: CalendarComponent,
+      componentProps: {
+        dateRange: { from: this.request.startDate, to: this.request.endDate },
+      },
+    });
+
+    modal.onDidDismiss().then(async ({ data }) => {
+      if (data?.from) {
+        let dateString = data.from.format('L');
+        if (!(data.from).isSame(data.to)) dateString += ' - ' + data.to.format('L');
+        try {
+          const selectedWorkingHours = await this.chooseWorkingHours(false, dateString);
+          delete this.request.startDate;
+          delete this.request.endDate;
+          if (selectedWorkingHours) {
+            this.request.priority = false;
+            this.request.startDate = data.from;
+            if (!(data.from).isSame(data.to)) this.request.endDate = data.to;
+          }
+        } catch { }
+      }
+    })
+
+    modal.present();
+  }
+
+  chooseWorkingHours(priority: boolean, dateString = moment().format('L')): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+
+      const modal = await this.modalController.create({
+        component: RequestWorkingHoursPickerComponent,
+        cssClass: 'modal-working-hours',
+        componentProps: {
+          dateString,
+          requestWorkingHours: this.request.workingHours ?? []
+        }
+      });
+
+      modal.onWillDismiss().then(({ data }) => {
+        if (data) {
+          this.request.workingHours = data;
+          if (data.length) this.request.priority = priority;
+          resolve(data.length);
+        } else {
+          reject();
+        }
+      });
+
+      modal.present();
+    });
+  }
+
   async addImage() {
     if (this.images.length > 5) return;
 
@@ -75,6 +148,7 @@ export class RequestNewComponent {
     modal.onWillDismiss().then(({ data }) => {
       if (data?.image) {
         this.images.push(data.image);
+        this.updateHasImageProperty();
         this.gallery.updateImages();
       }
     });

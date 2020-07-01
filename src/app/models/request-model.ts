@@ -1,5 +1,6 @@
 import { WorkingHours } from './user-model';
 import { LatLng } from 'leaflet';
+import { Moment } from 'moment';
 
 export enum RequestProperties {
   service = 'service',
@@ -21,8 +22,8 @@ export enum RequestProperties {
 export class Request {
   [RequestProperties.service]: {};
   [RequestProperties.category]: string;
-  [RequestProperties.startDate]: Date;
-  [RequestProperties.endDate]: Date;
+  [RequestProperties.startDate]: Moment;
+  [RequestProperties.endDate]: Moment;
   [RequestProperties.workingHours]: WorkingHours[];
   [RequestProperties.priority]: boolean;
   [RequestProperties.title]: string;
@@ -33,4 +34,10 @@ export class Request {
   [RequestProperties.addressFull]: string;
   [RequestProperties.addressCity]: string;
   [RequestProperties.coordinates]: LatLng;
+
+  constructor() {
+    this.hideLocationAccuracy = false;
+    this.hasImages = false;
+    this.priority = false;
+  }
 }
