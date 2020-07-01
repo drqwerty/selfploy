@@ -27,10 +27,9 @@
         </span>
       </ion-text>
       <div class="user-options-list">
-        <ng-container *ngFor="let item of request.service | keyvalue">
-          <span upperCaseFirstLetter>{{item.key}} - </span>
-          <span upperCaseFirstLetter>{{item.value}}</span>
-        </ng-container>
+        <span *ngIf="request.category" upperCaseFirstLetter>{{request.category}}</span>
+        <ng-container *ngIf="request.service"> - </ng-container>
+        <span *ngIf="request.service" upperCaseFirstLetter>{{request.service}}</span>
       </div>
     </ion-item>
 
@@ -165,7 +164,7 @@
   <ion-toolbar color="tertiary">
     <ion-buttons slot="end" mode="ios">
       <ion-button (click)="goBack()">Cancelar</ion-button>
-      <ion-button (click)="onClick()" class="confirm-button">Continuar</ion-button>
+      <ion-button (click)="continue()" class="confirm-button">Continuar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

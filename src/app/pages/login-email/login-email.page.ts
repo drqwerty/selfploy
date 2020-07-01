@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { NavController, ModalController, Platform, LoadingController } from '@ionic/angular';
 import { createAnimation, Animation } from '@ionic/core';
 import { LoginPasswordComponent } from 'src/app/components/modals/as-pages/login-password/login-password.component';

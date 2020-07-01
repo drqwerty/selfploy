@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Animations } from 'src/app/animations/animations';
 import { ModalController } from '@ionic/angular';
 import { Request, RequestProperties } from 'src/app/models/request-model';
@@ -12,7 +12,6 @@ import { GalleryComponent } from 'src/app/components/fiv/gallery/gallery.compone
 import { RequestWorkingHoursPickerComponent } from 'src/app/components/modals/request-working-hours-picker/request-working-hours-picker.component';
 import { CalendarComponent } from 'src/app/components/modals/calendar/calendar.component';
 import * as moment from 'moment';
-import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-request-new',
@@ -45,6 +44,9 @@ export class RequestNewComponent {
     this.modalController.dismiss();
   }
 
+  continue() {
+  }
+
   updateHasImageProperty() {
     this.request.hasImages = this.images.length > 0;
   }
@@ -56,17 +58,23 @@ export class RequestNewComponent {
       leaveAnimation: ModalAnimationSlideWithOpacityLeaveFromModal,
       componentProps: {
         title: 'Busco...',
-        userServices: this.request.service,
+        userServices: { [this.request.category]: [this.request.service] },
         limit: 1,
       }
     });
 
     modal.onWillDismiss().then(({ data }) => {
       if (data) {
-        this.request.service = data;
-        if (!Object.keys(data).length) delete this.request.service;
+        delete this.request.category;
+        delete this.request.service;
+        if (Object.keys(data).length) {
+          setTimeout(() => {
+            this.request.category = Object.keys(data)[0]; 
+            this.request.service  = Object.values(data)[0][0];
+          });
+        }
       }
-    });
+    })
 
     modal.present();
   }

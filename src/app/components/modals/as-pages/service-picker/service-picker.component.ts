@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 export class ServicePickerComponent {
 
   @Input() title: string;
-  @Input() userServices: any = {};
+  @Input() userServices: { [key: string]: string[] } = {};
   @Input() limit = 0;
 
 
@@ -49,6 +49,8 @@ export class ServicePickerComponent {
   private setServicesSelected() {
     this.canUpdate = false;
     _.forEach(this.userServices, (srcServices: string[], srcCategory: string) => {
+      if (!srcServices[0]) return;
+      
       const dstCategory = this.categories.find(category => category.name === srcCategory);
 
       if (srcServices.length === dstCategory.services.length)

@@ -20,7 +20,7 @@ export enum RequestProperties {
 }
 
 export class Request {
-  [RequestProperties.service]: {};
+  [RequestProperties.service]: string;
   [RequestProperties.category]: string;
   [RequestProperties.startDate]: Moment;
   [RequestProperties.endDate]: Moment;
