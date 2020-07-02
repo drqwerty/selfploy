@@ -1,0 +1,38 @@
+<ion-list lines="none" class="ion-padding-vertical">
+
+  <ng-container *ngIf="requestIsComplete">
+
+    <ion-item button (click)="dismiss('notifyAll')">
+      <ion-icon slot="start" src="/assets/icon/notify-all.svg"></ion-icon>
+      <ion-label>
+        <ion-text color="tertiary">
+          <h2 class="font-weight-600">Enviar a todos</h2>
+        </ion-text>
+        <p class="break-spaces">Envía el encargo a todos los profesionales de la zona que se ajusten a lo que necesitas
+        </p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item button (click)="dismiss('choose')">
+      <ion-icon slot="start" src="/assets/icon/choose-professional.svg"></ion-icon>
+      <ion-label>
+        <ion-text color="tertiary">
+          <h2 class="font-weight-600">Elegir profesionales</h2>
+        </ion-text>
+        <p class="break-spaces">Elige a qué profesionales enviar el encargo</p>
+      </ion-label>
+    </ion-item>
+
+  </ng-container>
+
+  <ion-item button (click)="dismiss('save')">
+    <ion-icon slot="start" src="/assets/icon/save.svg"></ion-icon>
+    <ion-label>
+      <ion-text color="tertiary">
+        <h2 class="font-weight-600">Guardar</h2>
+      </ion-text>
+      <p class="break-spaces">Guarda el encargo para continuar más tarde</p>
+    </ion-label>
+  </ion-item>
+
+</ion-list>

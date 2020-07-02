@@ -51,8 +51,8 @@
           Ahora
         </ion-button>
         <ion-button (click)="chooseDay()" class="border-radius-10" size="default" expand="block"
-          [fill]="request.startDate ? 'solid' : 'outline'">
-          <ng-container *ngIf="request.startDate; else defaultText">
+          [fill]="request.startDate && !request.priority ? 'solid' : 'outline'">
+          <ng-container *ngIf="request.startDate && !request.priority; else defaultText">
             {{request.startDate.format('L')}}<ng-container *ngIf="request.endDate"> -
               {{request.endDate.format('L')}}</ng-container>
           </ng-container>

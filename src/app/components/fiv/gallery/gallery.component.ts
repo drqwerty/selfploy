@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, ViewChildren, QueryList, Input, Outpu
 import { FivGallery, FivGalleryImage } from '@fivethree/core';
 import { IonImg, ModalController } from '@ionic/angular';
 import { takeUntil } from 'rxjs/operators';
-import { DeleteConfirmBottomSheetComponent } from '../../bottom-sheets/delete-confirm-bottom-sheet/delete-confirm-bottom-sheet.component';
+import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
 
 @Component({
   selector: 'gallery',
@@ -96,7 +96,7 @@ export class GalleryComponent {
 
   async remove() {
     const modal = await this.modalController.create({
-      component: DeleteConfirmBottomSheetComponent,
+      component: DeleteConfirmActionSheetComponent,
       cssClass: 'action-sheet border-top-radius',
     })
 

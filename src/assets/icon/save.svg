@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42">
+  <g id="Grupo_1" data-name="Grupo 1" transform="translate(-127 -315)">
+    <path id="Icon_ionic-md-save" data-name="Icon ionic-md-save" d="M18.4,4.5H6.488A1.986,1.986,0,0,0,4.5,6.488v13.9a1.986,1.986,0,0,0,1.988,1.988h13.9a1.993,1.993,0,0,0,1.988-1.988V8.475ZM13.439,20.386a2.976,2.976,0,1,1,2.108-.872A2.979,2.979,0,0,1,13.439,20.386Zm2.979-9.928H6.488V6.488h9.928Z" transform="translate(134.561 322.561)" fill="#1f3b5b"/>
+    <path id="Trazado_1" data-name="Trazado 1" d="M0,0H42V42H0Z" transform="translate(127 315)" fill="rgba(255,255,255,0)"/>
+  </g>
+</svg>

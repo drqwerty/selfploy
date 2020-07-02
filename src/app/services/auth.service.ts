@@ -50,6 +50,7 @@ export class AuthService {
       const user = await this.data.getMyProfile(userCrendential.user.uid)
       if (user.hasProfilePic) user.profilePic = await this.data.getUserProfilePic(userCrendential.user.uid);
       await this.data.getFavorites();
+      await this.data.getRequests();
       await this.data.saveUserProfile(user);
       return userCrendential;
     } catch (reason) {
@@ -105,7 +106,6 @@ export class AuthService {
   }
 
   logout() {
-    this.data.removeUserProfile();
     this.aFAuth.currentUser.then(({ providerData }) => {
       this.aFAuth.signOut();
       this.data.removeUserProfile();

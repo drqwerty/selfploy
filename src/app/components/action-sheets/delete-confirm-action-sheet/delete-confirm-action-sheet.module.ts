@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DeleteConfirmBottomSheetComponent } from './delete-confirm-bottom-sheet.component';
+import { DeleteConfirmActionSheetComponent } from './delete-confirm-action-sheet.component';
 
 
 @NgModule({
@@ -12,10 +12,10 @@ import { DeleteConfirmBottomSheetComponent } from './delete-confirm-bottom-sheet
     IonicModule,
   ],
   declarations: [
-    DeleteConfirmBottomSheetComponent,
+    DeleteConfirmActionSheetComponent,
   ],
   exports: [
-    DeleteConfirmBottomSheetComponent,
+    DeleteConfirmActionSheetComponent,
   ],
 })
-export class DeleteConfirmBottomSheetModule { }
+export class DeleteConfirmActionSheetModule { }

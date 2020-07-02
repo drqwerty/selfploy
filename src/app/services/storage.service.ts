@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins;
 import { dbKeys } from 'src/app/models/db-keys'
+import { Request } from 'src/app/models/request-model';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +44,7 @@ export class StorageService {
   }
 
   removeUserProfile() {
-    return this.removeKeys(dbKeys.user, dbKeys.favorites);
+    return this.removeKeys(dbKeys.user, dbKeys.favorites, dbKeys.requests);
   }
 
   async saveFavorite(favoritesI: User[], user: User) {
@@ -61,6 +62,28 @@ export class StorageService {
     for (const userSaved of favoritesI) if (userSaved.id !== user.id) favorites.push(userSaved);
     await this.saveFavorites(favorites);
     return favorites;
+  }
+
+  getRequests(): Promise<Request[]> {
+    return this.getData(dbKeys.requests);
+  }
+
+  saveRequests(requests: Request[]) {
+    return this.saveData(dbKeys.requests, requests)
+  }
+
+  async saveRequest(requestsI: Request[], request: Request) {
+    const requests = [...requestsI];
+    if (!requests.some(requestSaved => requestSaved.id === request.id)) requests.push(request);
+    await this.saveRequests(requests);
+    return requests;
+  }
+
+  async removeRequest(requestsI: Request[], request: Request) {
+    const requests = [];
+    for (const requestSaved of requestsI) if (requestSaved.id !== request.id) requests.push(requestSaved);
+    await this.saveRequests(requests);
+    return requests;
   }
 
 }

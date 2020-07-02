@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { GalleryComponent } from './gallery.component';
 import { FivGalleryModule, FivGalleryImage } from '@fivethree/core';
 import { FormsModule } from '@angular/forms';
-import { DeleteConfirmBottomSheetModule } from '../../bottom-sheets/delete-confirm-bottom-sheet/delete-confirm-bottom-sheet.module';
+import { DeleteConfirmActionSheetModule } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.module';
 
 @NgModule({
   imports: [
@@ -12,7 +12,7 @@ import { DeleteConfirmBottomSheetModule } from '../../bottom-sheets/delete-confi
     FormsModule,
     IonicModule,
     FivGalleryModule,
-    DeleteConfirmBottomSheetModule,
+    DeleteConfirmActionSheetModule,
   ],
   declarations: [
     GalleryComponent,

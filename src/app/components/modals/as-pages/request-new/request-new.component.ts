@@ -1,7 +1,7 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Animations } from 'src/app/animations/animations';
-import { ModalController } from '@ionic/angular';
-import { Request, RequestProperties } from 'src/app/models/request-model';
+import { ModalController, IonContent, LoadingController } from '@ionic/angular';
+import { Request, RequestProperties, RequestStatus } from 'src/app/models/request-model';
 import { MapLocationComponent } from 'src/app/components/modals/as-pages/map-location/map-location.component';
 import { ModalAnimationSlideWithOpacityEnterFromModal, ModalAnimationSlideWithOpacityLeaveFromModal } from 'src/app/animations/page-transitions';
 import { Validators, FormControl, FormBuilder } from '@angular/forms';
@@ -12,6 +12,8 @@ import { GalleryComponent } from 'src/app/components/fiv/gallery/gallery.compone
 import { RequestWorkingHoursPickerComponent } from 'src/app/components/modals/request-working-hours-picker/request-working-hours-picker.component';
 import { CalendarComponent } from 'src/app/components/modals/calendar/calendar.component';
 import * as moment from 'moment';
+import { RequestNewActionSheetComponent } from 'src/app/components/action-sheets/request-new-action-sheet/request-new-action-sheet.component';
+import { DataService } from 'src/app/providers/data.service';
 
 @Component({
   selector: 'app-request-new',
@@ -20,6 +22,7 @@ import * as moment from 'moment';
 })
 export class RequestNewComponent {
 
+  @ViewChild(IonContent) ionContent: IonContent;
   @ViewChild(GalleryComponent) gallery: GalleryComponent;
 
   request: Request;
@@ -31,12 +34,15 @@ export class RequestNewComponent {
     private modalController: ModalController,
     private anim: Animations,
     private formBuilder: FormBuilder,
+    private loadingController: LoadingController,
+    private data: DataService,
   ) {
     this.request = new Request();
   }
 
   ionViewWillEnter() {
     // this.anim.modalLoaded();
+    this.continue();
   }
 
   async goBack() {
@@ -44,7 +50,79 @@ export class RequestNewComponent {
     this.modalController.dismiss();
   }
 
-  continue() {
+  async continue() {
+
+    // let status = 'borrador';
+    // if (this.requestIsComplete()) status = 'completado';
+
+    const modal = await this.modalController.create({
+      cssClass: 'action-sheet border-top-radius',
+      component: RequestNewActionSheetComponent,
+      componentProps: {
+        requestIsComplete: this.requestIsComplete(),
+      }
+    });
+
+    modal.onDidDismiss().then(({ data }) => {
+      switch (data) {
+        case 'save':
+          this.saveRequest(RequestStatus.draft);
+          break;
+
+        case 'choose':
+          console.log('c', data);
+
+          break;
+
+        case 'notifyAll':
+          console.log('n', data);
+
+          break;
+      }
+    })
+
+    modal.present();
+  }
+
+  async saveRequest(status: RequestStatus) {
+    this.request.status = status;
+    const loading = await this.loadingController.create();
+
+    await Promise.all([
+      loading.present(),
+      this.data.saveRequest(this.request),
+    ]);
+
+    loading.dismiss().then(() => this.modalController.dismiss());
+  }
+
+  requestIsComplete() {
+    const validations = {
+      service: this.request?.service?.length > 0,
+      category: this.request?.category?.length > 0,
+      now: !!((this.request.priority && this.request.startDate)),
+      date1: !!(!this.request.priority && this.request.startDate && !this.request.endDate),
+      date2: !!(!this.request.priority && this.request.startDate && this.request.endDate),
+      hours: this.request?.workingHours?.length > 0,
+      title: this.request?.title?.length > 0,
+      description: this.request?.description?.length > 0,
+      imgs: this.request.hasImages,
+      budget: this.request?.budget >= 0,
+      location: this.request?.coordinates != null
+    };
+
+    const isComplete =
+      validations.service
+      && validations.category
+      && (validations.now || (validations.date1 || validations.date2) && validations.hours)
+      && validations.title
+      && validations.description
+      && validations.location;
+
+    // console.log({ isComplete });
+    // console.table(validations);
+
+    return isComplete;
   }
 
   updateHasImageProperty() {
@@ -69,8 +147,8 @@ export class RequestNewComponent {
         delete this.request.service;
         if (Object.keys(data).length) {
           setTimeout(() => {
-            this.request.category = Object.keys(data)[0]; 
-            this.request.service  = Object.values(data)[0][0];
+            this.request.category = Object.keys(data)[0];
+            this.request.service = Object.values(data)[0][0];
           });
         }
       }
@@ -81,19 +159,23 @@ export class RequestNewComponent {
 
   async setNow() {
     // this.chooseWorkingHours(true);
-    delete this.request.startDate;
     delete this.request.endDate;
     delete this.request.workingHours;
+    this.request.startDate = moment();
     this.request.priority = true;
   }
 
   async chooseDay() {
+    console.log(this.request);
+
+    let componentProps;
+    if (!this.request.priority)
+      componentProps = { dateRange: { from: this.request.startDate, to: this.request.endDate } }
+
     const modal = await this.modalController.create({
       cssClass: 'calendar-modal',
       component: CalendarComponent,
-      componentProps: {
-        dateRange: { from: this.request.startDate, to: this.request.endDate },
-      },
+      componentProps,
     });
 
     modal.onDidDismiss().then(async ({ data }) => {
@@ -102,10 +184,10 @@ export class RequestNewComponent {
         if (!(data.from).isSame(data.to)) dateString += ' - ' + data.to.format('L');
         try {
           const selectedWorkingHours = await this.chooseWorkingHours(false, dateString);
+          this.request.priority = false;
           delete this.request.startDate;
           delete this.request.endDate;
           if (selectedWorkingHours) {
-            this.request.priority = false;
             this.request.startDate = data.from;
             if (!(data.from).isSame(data.to)) this.request.endDate = data.to;
           }
@@ -132,6 +214,7 @@ export class RequestNewComponent {
         if (data) {
           this.request.workingHours = data;
           if (data.length) this.request.priority = priority;
+          else delete this.request.workingHours;
           resolve(data.length);
         } else {
           reject();
@@ -196,8 +279,6 @@ export class RequestNewComponent {
     modal.onWillDismiss().then(({ data }) => {
       if (data) this.request[userProperty] = data.value;
       if (this.request[userProperty] === '') delete this.request[userProperty];
-      console.log(this.request);
-
     });
 
     modal.present();
@@ -222,6 +303,7 @@ export class RequestNewComponent {
         this.request.addressFull = data.addressFull;
         this.request.addressCity = data.addressCity;
         this.request.coordinates = data.coordinates;
+        this.ionContent.scrollToBottom();
       }
     });
 

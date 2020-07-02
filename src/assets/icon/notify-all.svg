@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="42" height="44.279" viewBox="0 0 42 44.279">
+  <g id="Grupo_373" data-name="Grupo 373" transform="translate(-23.25 -445.795)">
+    <path id="Icon_awesome-user" data-name="Icon awesome-user" d="M10.128,11.575A5.788,5.788,0,1,0,4.341,5.788a5.788,5.788,0,0,0,5.787,5.787Zm4.051,1.447h-.755a7.871,7.871,0,0,1-6.592,0H6.077A6.078,6.078,0,0,0,0,19.1V20.98a2.171,2.171,0,0,0,2.17,2.17H18.086a2.171,2.171,0,0,0,2.17-2.17V19.1a6.078,6.078,0,0,0-6.077-6.078Z" transform="translate(29.25 464.832)" fill="#fff" stroke="#f69837" stroke-width="1.5"/>
+    <g id="Icon_feather-wifi" data-name="Icon feather-wifi" transform="translate(50.33 440.261) rotate(45)">
+      <path id="Trazado_686" data-name="Trazado 686" d="M7.5,17.762a11.91,11.91,0,0,1,15.245,0" transform="translate(-1.494 -2.086)" fill="none" stroke="#f69837" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Trazado_687" data-name="Trazado 687" d="M2.13,11.832a17.324,17.324,0,0,1,22.91,0" fill="none" stroke="#f69837" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Trazado_688" data-name="Trazado 688" d="M12.8,23.7a6.5,6.5,0,0,1,7.525,0" transform="translate(-2.967 -4.172)" fill="none" stroke="#f69837" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+      <path id="Trazado_689" data-name="Trazado 689" d="M18,30" transform="translate(-4.415 -6.258)" fill="none" stroke="#f69837" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    </g>
+    <rect id="Rectángulo_2" data-name="Rectángulo 2" width="42" height="42" transform="translate(23.25 448.073)" fill="rgba(255,255,255,0)"/>
+  </g>
+</svg>

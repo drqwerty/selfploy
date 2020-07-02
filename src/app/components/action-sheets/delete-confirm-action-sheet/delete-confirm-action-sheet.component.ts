@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-delete-confirm-bottom-sheet',
-  templateUrl: './delete-confirm-bottom-sheet.component.html',
-  styleUrls: ['./delete-confirm-bottom-sheet.component.scss'],
+  selector: 'app-delete-confirm-action-sheet',
+  templateUrl: './delete-confirm-action-sheet.component.html',
 })
-export class DeleteConfirmBottomSheetComponent {
+export class DeleteConfirmActionSheetComponent {
 
   constructor(
     private modalController: ModalController,

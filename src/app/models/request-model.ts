@@ -1,6 +1,14 @@
 import { WorkingHours } from './user-model';
 import { LatLng } from 'leaflet';
 import { Moment } from 'moment';
+import { firestore } from 'firebase';
+
+export enum RequestStatus {
+  draft,
+  open,
+  closed,
+  completed,
+}
 
 export enum RequestProperties {
   service = 'service',
@@ -17,13 +25,17 @@ export enum RequestProperties {
   addressFull = 'addressFull',
   addressCity = 'addressCity',
   coordinates = 'coordinates',
+  status = 'status',
+  notifyAll = 'notifyAll',
+  owner = 'owner',
+  id = 'id',
 }
 
 export class Request {
   [RequestProperties.service]: string;
   [RequestProperties.category]: string;
-  [RequestProperties.startDate]: Moment;
-  [RequestProperties.endDate]: Moment;
+  [RequestProperties.startDate]: Moment | firestore.Timestamp;
+  [RequestProperties.endDate]: Moment | firestore.Timestamp;
   [RequestProperties.workingHours]: WorkingHours[];
   [RequestProperties.priority]: boolean;
   [RequestProperties.title]: string;
@@ -33,11 +45,17 @@ export class Request {
   [RequestProperties.hideLocationAccuracy]: boolean;
   [RequestProperties.addressFull]: string;
   [RequestProperties.addressCity]: string;
-  [RequestProperties.coordinates]: LatLng;
+  [RequestProperties.coordinates]: LatLng | firestore.GeoPoint;
+  [RequestProperties.status]: RequestStatus;
+  [RequestProperties.notifyAll]: boolean;
+  [RequestProperties.owner]: string;
+  [RequestProperties.id]: string;
 
   constructor() {
     this.hideLocationAccuracy = false;
     this.hasImages = false;
     this.priority = false;
+    this.notifyAll = false;
+    this.status = RequestStatus.draft;
   }
 }

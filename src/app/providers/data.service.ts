@@ -6,6 +6,7 @@ import { FirestoreService } from 'src/app/services/firestore.service';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import Utils from 'src/app/utils';
 import { Subject } from 'rxjs';
+import { Request } from 'src/app/models/request-model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,9 @@ export class DataService {
 
   public user: User;
   public favorites: User[];
+  public requests: Request[];
+  public myRequests: Request[];
+  public followingRequests: Request[];
   public favoritesChangedSubject = new Subject<void>();
 
   constructor(
@@ -53,6 +57,7 @@ export class DataService {
   removeUserProfile() {
     this.user = null;
     this.favorites = null;
+    this.requests = null;
     this.storage.removeUserProfile();
   }
 
@@ -128,6 +133,24 @@ export class DataService {
     }
 
     return this.favorites;
+  }
+
+  async getRequests(): Promise<Request[]> {
+    if (!this.requests) {
+      this.requests = await this.storage.getRequests();
+
+      if (!this.requests) {
+        this.requests = await this.firestore.getRequests((await this.getMyProfile()).requests);
+        await this.storage.saveRequests(this.requests);
+      }
+    }
+
+    return this.requests;
+  }
+
+  async saveRequest(request: Request) {
+    await this.firestore.saveRequest(request);
+    this.requests = await this.storage.saveRequest(await this.getRequests(), request);
   }
 
 }

@@ -13,8 +13,8 @@ export class CalendarComponent {
   @Input() dateRange: { from: moment.Moment; to: moment.Moment; } = { from: null, to: null };
   type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
   optionsRange: CalendarComponentOptions = {
-    from: this.dateRange.from?.date(),
-    to: this.dateRange.to?.date(),
+    from: this.dateRange.from?.date() ?? new Date(),
+    to: this.dateRange.to?.date() ?? 0,
     pickMode: 'range',
     weekStart: 1,
     weekdays: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],

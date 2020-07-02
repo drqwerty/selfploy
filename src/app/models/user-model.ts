@@ -32,6 +32,8 @@ export enum UserProperties {
   radiusKm = 'radiusKm',
   professionalProfileActivated = 'professionalProfileActivated',
   hasFavorites = 'hasFavorites',
+  requests = 'requests',
+  requestsFollowing = 'requestsFollowing',
 
   id = 'id',
   distance = 'distance',
@@ -58,6 +60,8 @@ export class User {
   [UserProperties.radiusKm]: number;
   [UserProperties.professionalProfileActivated]: boolean;
   [UserProperties.hasFavorites]: boolean;
+  [UserProperties.requests]: any;
+  [UserProperties.requestsFollowing]: any;
 
   [UserProperties.id]: string;
   [UserProperties.distance]: number;
