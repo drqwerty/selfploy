@@ -40,7 +40,8 @@ export class FirestoreService {
   }
 
   async getUserProfile(uid: string) {
-    const user: User = (await this.db.collection(dbKeys.users).doc(uid).get().toPromise()).data().d;
+    const user: User = (await this.db.collection(dbKeys.users).doc(uid).get().toPromise()).data()?.d;
+    if (!user) throw { code: "Perfil eliminado", error: new Error() };
     user.id = uid;
     const coordinates: firestore.GeoPoint = user.coordinates as any;
     if (coordinates) user.coordinates = new LatLng(coordinates.latitude, coordinates.longitude);
@@ -186,10 +187,12 @@ export class FirestoreService {
     }
     request.id = docRef.id;
 
-    await this.addRequestToUserList(UserProperties.requests, docRef)
+    await this.addRequestToUserList(UserProperties.requests, docRef);
+    return { id: docRef.id, path: docRef.path };
   }
 
   getRequests(requestsObject) {
+    if (!requestsObject) return null;
     return Promise.all(Object.values(requestsObject).map((path: string) => this.getRequestFromPath(path)));
   }
 

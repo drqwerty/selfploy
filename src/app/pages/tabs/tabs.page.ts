@@ -44,7 +44,7 @@ export class TabsPage {
       await playLoginAnimation(platform.height())
       this.ionFab = document.querySelector('ion-fab');
       if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light })
-      this.requestNewService();
+      // this.requestNewService();
     }, 500);
   }
   

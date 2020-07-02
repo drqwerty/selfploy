@@ -1,5 +1,11 @@
 :host {
   display: contents;
+
+  &.super-tabs {
+    .content-empty {
+      top: 40% !important;
+    }
+  }
 }
 
 .content-empty {

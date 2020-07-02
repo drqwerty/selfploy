@@ -69,6 +69,7 @@ export class StorageService {
   }
 
   saveRequests(requests: Request[]) {
+    if (!requests) return this.removeKeys(dbKeys.requests);
     return this.saveData(dbKeys.requests, requests)
   }
 

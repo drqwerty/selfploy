@@ -10,13 +10,17 @@ export class ProfileCompletedGuardService implements CanActivate {
   constructor(
     private router: Router,
     private data: DataService,
-    ) { }
+  ) { }
 
-  canActivate(route: ActivatedRouteSnapshot) {
-    return this.data.getMyProfile().then(user => {
+  async canActivate(route: ActivatedRouteSnapshot) {
+    try {
+      const user = await this.data.getMyProfile();
       if (user.profileCompleted) return true;
       this.router.navigateByUrl('tabs/profile/edit');
       return false;
-    })
+
+    } catch (error) {
+      return false;
+    }
   }
 }

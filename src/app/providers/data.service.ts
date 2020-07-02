@@ -21,6 +21,7 @@ export class DataService {
   public myRequests: Request[];
   public followingRequests: Request[];
   public favoritesChangedSubject = new Subject<void>();
+  public requestsChangedSubject = new Subject<void>();
 
   constructor(
     private storage: StorageService,
@@ -136,6 +137,8 @@ export class DataService {
   }
 
   async getRequests(): Promise<Request[]> {
+    if (!(await this.getMyProfile()).requests) return [];
+
     if (!this.requests) {
       this.requests = await this.storage.getRequests();
 
@@ -149,8 +152,17 @@ export class DataService {
   }
 
   async saveRequest(request: Request) {
-    await this.firestore.saveRequest(request);
+    const docInfo = await this.firestore.saveRequest(request);
     this.requests = await this.storage.saveRequest(await this.getRequests(), request);
+    await this.updateRequestList(docInfo);
+  }
+  
+  private async updateRequestList({ id, path }) {
+    const user = await this.getMyProfile();
+    if (!user.requests) user.requests = {};
+    user.requests[id] = path;
+    await this.saveUserProfile(this.user);
+    this.requestsChangedSubject.next();
   }
 
 }

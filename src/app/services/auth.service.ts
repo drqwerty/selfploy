@@ -54,7 +54,7 @@ export class AuthService {
       await this.data.saveUserProfile(user);
       return userCrendential;
     } catch (reason) {
-      throw new Error(reason);
+      throw reason;
     }
   }
 

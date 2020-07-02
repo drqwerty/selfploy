@@ -1,9 +1,6 @@
 import { Component, ViewChild, ViewChildren, QueryList, AfterViewChecked, AfterViewInit } from '@angular/core';
-
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
-
 const { StatusBar } = Plugins;
-
 import { Categories } from 'src/assets/categories';
 import { User } from 'src/app/models/user-model';
 import { IonContent, ModalController } from '@ionic/angular';
@@ -62,7 +59,7 @@ export class FavoritesPage implements AfterViewInit {
 
   ionViewWillEnter() {
     this.getFavorites();
-    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
   async getFavorites() {
@@ -101,11 +98,15 @@ export class FavoritesPage implements AfterViewInit {
   }
 
   async scrollLastTabToTop({ detail }) {
-    this.propagateScrollEvent = false;
-    (await this.superTabList[this.lastTabIndex].getRootScrollableEl()).scrollTo(0, 0);
-    this.ionContent.scrollToTop(350);
-    this.lastTabIndex = detail.index;
-    this.propagateScrollEvent = true;
+    const { index } = detail;
+
+    if(this.lastTabIndex != index) {
+      this.propagateScrollEvent = false;
+      (await this.superTabList[this.lastTabIndex].getRootScrollableEl()).scrollTo(0, 0);
+      this.ionContent.scrollToTop(350);
+      this.lastTabIndex = index;
+      this.propagateScrollEvent = true;
+    }
   }
 
   goToTab(event = null) {

@@ -1,9 +1,82 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-title color="tertiary">Encargos</ion-title>
-  </ion-toolbar>
-</ion-header>
+<status-bar [color]="statusBarColor"></status-bar>
 
-<ion-content>
+<custom-header [hideBorder]="!imAClient" title="Encargos" [class.pro-header]="!imAClient">
+  <div class="top-background" [class]="statusBarColor"></div>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="options()">
+        <ion-icon color="tertiary" slot="icon-only" name="options"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</custom-header>
+
+<ion-content [class.wrapper-ion-content]="!imAClient">
+
+  <ng-template *ngIf="imAClient then clientView; else professionalView"></ng-template>
+
+
+
+  <ng-template #clientView>
+
+    <ng-template *ngIf="requestList?.length then showClientContent; else clientEmptyContent"></ng-template>
+
+    <ng-template #clientEmptyContent>
+      <empty-content image="no-requests-client" text="Aún sin encargos"></empty-content>
+    </ng-template>
+
+    <ng-template #showClientContent>
+      <div class="nav-bar-space">
+        <request-card *ngFor="let request of requestList" [request]="request"></request-card>
+      </div>
+    </ng-template>
+
+  </ng-template>
+
+
+
+  <ng-template #professionalView>
+
+    <super-tabs (tabChange)="scrollLastTabToTop($event)">
+
+      <super-tabs-toolbar slot="top">
+        <super-tab-button disabled (click)="goToTab(0)">
+          <ion-label upperCaseFirstLetter>Profesional</ion-label>
+        </super-tab-button>
+        <super-tab-button disabled (click)="goToTab(1)">
+          <ion-label upperCaseFirstLetter>Cliente</ion-label>
+        </super-tab-button>
+      </super-tabs-toolbar>
+
+      <super-tabs-container autoScrollTop>
+        <super-tab>
+          <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+            <div class="nav-bar-space">
+              <ng-container *ngIf="followingRequestList?.length; else proEmptyContentFollowing">
+                <request-card *ngFor="let request of followingRequestList" [request]="request"></request-card>
+              </ng-container>
+              <ng-template #proEmptyContentFollowing>
+                <empty-content class="super-tabs" image="no-requests-professional" text="Aún sin encargos"></empty-content>
+              </ng-template>
+            </div>
+          </ion-content>
+        </super-tab>
+        <super-tab>
+          <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+            <div class="nav-bar-space">
+              <ng-container *ngIf="myRequestList?.length; else proEmptyContentOwn">
+                <request-card *ngFor="let request of myRequestList" [request]="request"></request-card>
+              </ng-container>
+              <ng-template #proEmptyContentOwn>
+                <empty-content class="super-tabs" image="no-requests-client" text="Aún sin encargos"></empty-content>
+              </ng-template>
+            </div>
+          </ion-content>
+        </super-tab>
+      </super-tabs-container>
+
+    </super-tabs>
+
+  </ng-template>
 
 </ion-content>
