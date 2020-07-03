@@ -154,13 +154,25 @@ export class DataService {
   async saveRequest(request: Request) {
     const docInfo = await this.firestore.saveRequest(request);
     this.requests = await this.storage.saveRequest(await this.getRequests(), request);
-    await this.updateRequestList(docInfo);
+    await this.updateRequestList(docInfo.id, docInfo.path);
   }
-  
-  private async updateRequestList({ id, path }) {
+
+  async removeRequest(request: Request) {
+    this.requests = await this.storage.removeRequest(await this.getRequests(), request);
+    this.firestore.removeRequest(request);
+    this.updateRequestList(request.id, null, true)
+  }
+
+  private async updateRequestList(id, path, remove = false) {
     const user = await this.getMyProfile();
-    if (!user.requests) user.requests = {};
-    user.requests[id] = path;
+
+    if (remove) {
+      delete user.requests.id;
+    } else {
+      if (!user.requests) user.requests = {};
+      user.requests[id] = path;
+    }
+
     await this.saveUserProfile(this.user);
     this.requestsChangedSubject.next();
   }

@@ -191,12 +191,26 @@ export class FirestoreService {
     return { id: docRef.id, path: docRef.path };
   }
 
-  getRequests(requestsObject) {
-    if (!requestsObject) return null;
-    return Promise.all(Object.values(requestsObject).map((path: string) => this.getRequestFromPath(path)));
+  async removeRequest(request: Request) {
+    await this.removeRequestFromUserList(request);
+    this.db.collection(dbKeys.requests).doc(request.id).update({
+      [`d.${RequestProperties.status}`]: RequestStatus.delete,
+    });
   }
 
-  async getRequestFromPath(path: string) {
+  async getRequests(requestsObject) {
+    if (!requestsObject) return null;
+    const requestList = [];
+    const requests = await Promise.all(Object.values(requestsObject).map((path: string) => this.getRequestFromPath(path)));
+    requests.forEach(request => {
+      if (request.status == RequestStatus.delete) this.removeRequestFromUserList(request);
+      else requestList.push(request);
+    });
+
+    return requestList.length ? requestList : null;
+  }
+
+  async getRequestFromPath(path: string): Promise<Request> {
     return (await this.db.doc(path).get().toPromise()).data().d;
   }
 
@@ -234,12 +248,13 @@ export class FirestoreService {
     }
   }
 
-  private async removeRequestFromUserList(list: UserProperties.requests | UserProperties.requestsFollowing, requestId: string) {
+  private async removeRequestFromUserList(request: Request) {
     const { uid } = await this.aFAuth.currentUser;
     const docRef = this.db.collection(dbKeys.users).doc(uid);
+    const list = request.owner == uid ? UserProperties.requests : UserProperties.requestsFollowing;
 
     try {
-      await docRef.update({ [`d.${list}.${requestId}`]: firestore.FieldValue.delete() });
+      await docRef.update({ [`d.${list}.${request.id}`]: firestore.FieldValue.delete() });
     } catch  { }
   }
 }

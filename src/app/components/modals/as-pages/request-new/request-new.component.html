@@ -1,13 +1,7 @@
 <status-bar color="#fff"></status-bar>
 
 <custom-header title="Nuevo encargo">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="goBack()">
-        <ion-icon color="tertiary" slot="icon-only" name="close-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+  <ion-toolbar></ion-toolbar>
 </custom-header>
 
 <ion-content class="ion-padding-bottom">
@@ -45,12 +39,12 @@
           Especifica cuándo te gustaría empezar el encargo. También puedes seleccionar un rango
         </span>
       </ion-text>
-      <div class="no-transform when-buttons-wrapper ion-justify-content-evenly">
-        <ion-button (click)="setNow()" class="border-radius-10" color="danger" size="default" expand="block"
+      <div class="when-buttons-wrapper ion-justify-content-evenly">
+        <ion-button (click)="setNow()" class="no-transform border-radius-10" color="danger" size="default" expand="block"
           [fill]="request.priority ? 'solid' : 'outline'">
           Ahora
         </ion-button>
-        <ion-button (click)="chooseDay()" class="border-radius-10" size="default" expand="block"
+        <ion-button (click)="chooseDay()" class="no-transform border-radius-10" size="default" expand="block"
           [fill]="request.startDate && !request.priority ? 'solid' : 'outline'">
           <ng-container *ngIf="request.startDate && !request.priority; else defaultText">
             {{request.startDate.format('L')}}<ng-container *ngIf="request.endDate"> -
