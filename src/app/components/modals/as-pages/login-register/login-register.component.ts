@@ -159,7 +159,7 @@ export class LoginRegisterComponent {
   async createTermsAndConditionsModal() {
     const modal = await this.modalController.create({
       component: TermsAndConditionsComponent,
-      cssClass: 'modal-terms-and-conditions',
+      cssClass: 'modal',
     });
     modal.onWillDismiss().then(({ data }) => {
       if (data?.terms && data?.gprd) {

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
 import { RequestCardComponent } from './request-card.component';
+import { RequestCardActionSheetModule } from '../../action-sheets/request-card-action-sheet/request-card-action-sheet.module';
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import { RequestCardComponent } from './request-card.component';
     FormsModule,
     IonicModule,
     UpperCaseFirstLetterModule,
+    RequestCardActionSheetModule,
   ],
   declarations: [
     RequestCardComponent,

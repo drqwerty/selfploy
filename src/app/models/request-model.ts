@@ -8,6 +8,8 @@ export enum RequestStatus {
   open,
   closed,
   completed,
+  edit,
+  delete,
 }
 
 export enum RequestProperties {

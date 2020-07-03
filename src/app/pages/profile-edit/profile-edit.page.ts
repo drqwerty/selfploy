@@ -282,7 +282,7 @@ export class ProfileEditPage {
   async editWorkingHours() {
     const modal = await this.modalController.create({
       component: WorkingHoursPickerComponent,
-      cssClass: 'modal-working-hours',
+      cssClass: 'modal',
       componentProps: {
         title: this.headerWorkingHours,
         userWorkingHours: this.tempUser.workingHours

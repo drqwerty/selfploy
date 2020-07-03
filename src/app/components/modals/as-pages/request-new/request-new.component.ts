@@ -203,7 +203,7 @@ export class RequestNewComponent {
 
       const modal = await this.modalController.create({
         component: RequestWorkingHoursPickerComponent,
-        cssClass: 'modal-working-hours',
+        cssClass: 'modal',
         componentProps: {
           dateString,
           requestWorkingHours: this.request.workingHours ?? []

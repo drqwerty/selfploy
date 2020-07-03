@@ -1,0 +1,23 @@
+<ion-header class="ion-no-border" mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="medium">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-list lines="none" class="ion-padding">
+
+  <ng-container *ngFor="let item of infoList">
+
+    <ion-item *ngIf="item.show">
+      <ion-label>{{item.title}}
+        <p class="break-spaces">{{item.description}}</p>
+      </ion-label>
+    </ion-item>
+
+  </ng-container>
+
+</ion-list>
