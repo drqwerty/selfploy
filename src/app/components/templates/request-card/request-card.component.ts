@@ -1,16 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { Request, RequestStatus } from 'src/app/models/request-model';
 import { ModalController } from '@ionic/angular';
 import { RequestCardActionSheetComponent } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.component';
 import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'request-card',
   templateUrl: './request-card.component.html',
   styleUrls: ['./request-card.component.scss'],
 })
-export class RequestCardComponent implements OnInit {
+export class RequestCardComponent implements AfterViewInit {
 
   @Input() request: Request;
 
@@ -20,9 +22,8 @@ export class RequestCardComponent implements OnInit {
     private data: DataService,
   ) { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log(this.request);
-
   }
 
   async presentOptions(ev: any) {

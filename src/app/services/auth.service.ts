@@ -47,11 +47,9 @@ export class AuthService {
   async loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
     try {
       const userCrendential = await signInPromise;
-      const user = await this.data.getMyProfile(userCrendential.user.uid)
-      if (user.hasProfilePic) user.profilePic = await this.data.getUserProfilePic(userCrendential.user.uid);
-      await this.data.getFavorites();
-      await this.data.getRequests();
-      await this.data.saveUserProfile(user);
+      await this.data.getMyProfile(userCrendential.user.uid)
+      await this.data.getFavoriteList();
+      await this.data.getRequestList();
       return userCrendential;
     } catch (reason) {
       throw reason;

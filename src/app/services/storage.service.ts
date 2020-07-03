@@ -65,7 +65,7 @@ export class StorageService {
     return favorites;
   }
 
-  getRequests(): Promise<Request[]> {
+  getRequestList(): Promise<Request[]> {
     return this.getData(dbKeys.requests);
   }
 
@@ -78,6 +78,13 @@ export class StorageService {
     const requests = [...requestsI];
     if (!requests.some(requestSaved => requestSaved.id === request.id)) requests.push(request);
     await this.saveRequests(requests);
+    return requests;
+  }
+
+  async updateRequest(requests: Request[], request: Request) {
+    const index = requests.findIndex(requestI => request.id == requestI.id)
+    requests[index] = request;
+    await this.saveRequests(requests)
     return requests;
   }
 

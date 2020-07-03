@@ -47,7 +47,7 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   async checkFavState() {
     if (!this.user) return;
-    this.isFav = !!(await this.data.getFavorites()).find(user => user.id === this.user.id);
+    this.isFav = !!(await this.data.getFavoriteList()).find(user => user.id === this.user.id);
   }
 
   async getImage() {

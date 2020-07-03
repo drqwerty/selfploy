@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import Utils from "src/app/utils";
 const { GeoPoint } = firestore;
 import { dbKeys } from 'src/app/models/db-keys'
-import { Request, RequestStatus } from 'src/app/models/request-model';
+import { Request, RequestStatus, RequestProperties } from 'src/app/models/request-model';
 import * as moment from 'moment';
 
 @Injectable({
@@ -34,15 +34,20 @@ export class FirestoreService {
   async createUserProfile(uid: string, user: User) {
     const { token, profilePic, ...essentialUserData } = user;
     if (user.hasProfilePic) await this.fStorage.uploadUserProfilePic(user.profilePic, uid);
-    return this.db.collection(dbKeys.users).doc(uid).set({
-      d: essentialUserData,
+    await this.db.collection(dbKeys.users).doc(uid).set({
+      d: {
+        [UserProperties.lastEditAt]: firestore.FieldValue.serverTimestamp(),
+        ...essentialUserData,
+      },
     });
+    return this.getUserProfile(uid);
   }
 
   async getUserProfile(uid: string) {
     const user: User = (await this.db.collection(dbKeys.users).doc(uid).get().toPromise()).data()?.d;
     if (!user) throw { code: "Perfil eliminado", error: new Error() };
     user.id = uid;
+    if (user.hasProfilePic) user.profilePic = await this.fStorage.getUserProfilePic(uid);
     const coordinates: firestore.GeoPoint = user.coordinates as any;
     if (coordinates) user.coordinates = new LatLng(coordinates.latitude, coordinates.longitude);
     return user;
@@ -50,33 +55,42 @@ export class FirestoreService {
 
   async updateUserProfile(user: User) {
     const { uid } = await this.aFAuth.currentUser;
-    const { token, profilePic, coordinates, ...essentialUserData } = user;
+    const { token, profilePic, coordinates, lastEditAt, ...essentialUserData } = user;
 
     _.forEach(essentialUserData, (value, key) => {
       if (value === null) essentialUserData[key] = firestore.FieldValue.delete();
     });
 
     const dataToUpdate = coordinates == null
-      ? essentialUserData
+      ? {
+        ...essentialUserData,
+        [UserProperties.lastEditAt]: firestore.FieldValue.serverTimestamp(),
+      }
       : {
         coordinates: new GeoPoint(coordinates.lat, coordinates.lng),
-        ...essentialUserData
+        [UserProperties.lastEditAt]: firestore.FieldValue.serverTimestamp(),
+        ...essentialUserData,
       }
-    return this.geofirestore.collection(dbKeys.users).doc(uid).update(dataToUpdate);
+    await this.geofirestore.collection(dbKeys.users).doc(uid).update(dataToUpdate);
+    return this.getUserProfile(uid);
   }
 
   async updateUserLocationAccuracySetting(disable: boolean) {
     const { uid } = await this.aFAuth.currentUser;
-    return this.db.collection(dbKeys.users).doc(uid).update({
+    await this.db.collection(dbKeys.users).doc(uid).update({
       [`d.${UserProperties.hideLocationAccuracy}`]: disable,
+      [`d.${UserProperties.lastEditAt}`]: firestore.FieldValue.serverTimestamp(),
     });
+    return this.getUserProfile(uid);
   }
 
-  async hasFavoritesProperty(hasFavorites: boolean) {
+  async updateUserHasFavoritesProperty(hasFavorites: boolean) {
     const { uid } = await this.aFAuth.currentUser;
-    return this.db.collection(dbKeys.users).doc(uid).update({
+    await this.db.collection(dbKeys.users).doc(uid).update({
       [`d.${UserProperties.hasFavorites}`]: hasFavorites,
+      [`d.${UserProperties.lastEditAt}`]: firestore.FieldValue.serverTimestamp(),
     });
+    return this.getUserProfile(uid);
   }
 
   async findProfessionalOf(categoryName, serviceName, coordinates) {
@@ -140,10 +154,10 @@ export class FirestoreService {
 
     try {
       await docRef
-        .update({ [`${dbKeys.favoritesList}.${userId}`]: true });
+        .update({ [`${dbKeys.favoriteList}.${userId}`]: true });
     } catch ({ code }) {
       if (code === 'not-found') await docRef
-        .set({ [dbKeys.favoritesList]: { [userId]: true } });
+        .set({ [dbKeys.favoriteList]: { [userId]: true } });
     }
   }
 
@@ -166,9 +180,35 @@ export class FirestoreService {
   async removeFavorite(userId: string) {
     const { uid } = await this.aFAuth.currentUser;
     const docRef = this.db.collection(dbKeys.favorites).doc(uid);
-    const value = { [`${dbKeys.favoritesList}.${userId}`]: firestore.FieldValue.delete() };
+    const value = { [`${dbKeys.favoriteList}.${userId}`]: firestore.FieldValue.delete() };
 
     await docRef.update(value);
+  }
+
+  async removeRequest(request: Request) {
+    await this.removeRequestFromUserList(request);
+    this.db.collection(dbKeys.requests).doc(request.id).update({
+      [`d.${RequestProperties.status}`]: RequestStatus.delete,
+    });
+  }
+
+  async getRequestList(requestListObject) {
+    if (!requestListObject) return null;
+    const requestList = [];
+    const requests = await Promise.all(Object.values(requestListObject).map((path: string) => this.getRequestFromPath(path)));
+    requests.forEach(request => {
+      if (request.status == RequestStatus.delete) this.removeRequestFromUserList(request);
+      else requestList.push(request);
+    });
+
+    return requestList.length ? requestList : null;
+  }
+
+  async getRequestFromPath(path: string): Promise<Request> {
+    const docData = (await this.db.doc(path).get().toPromise());
+    const request = <Request>docData.data().d;
+    request.id = docData.id;
+    return request;
   }
 
   async saveRequest(request: Request) {
@@ -185,37 +225,15 @@ export class FirestoreService {
     } else {
       docRef = await this.saveRequestWithoutGeopoint(docData);
     }
-    request.id = docRef.id;
 
     await this.addRequestToUserList(UserProperties.requests, docRef);
-    return { id: docRef.id, path: docRef.path };
-  }
-
-  async removeRequest(request: Request) {
-    await this.removeRequestFromUserList(request);
-    this.db.collection(dbKeys.requests).doc(request.id).update({
-      [`d.${RequestProperties.status}`]: RequestStatus.delete,
-    });
-  }
-
-  async getRequests(requestsObject) {
-    if (!requestsObject) return null;
-    const requestList = [];
-    const requests = await Promise.all(Object.values(requestsObject).map((path: string) => this.getRequestFromPath(path)));
-    requests.forEach(request => {
-      if (request.status == RequestStatus.delete) this.removeRequestFromUserList(request);
-      else requestList.push(request);
-    });
-
-    return requestList.length ? requestList : null;
-  }
-
-  async getRequestFromPath(path: string): Promise<Request> {
-    return (await this.db.doc(path).get().toPromise()).data().d;
+    const requestSaved = await this.getRequestFromPath(docRef.path);
+    return { id: docRef.id, path: docRef.path, requestSaved };
   }
 
   private async saveRequestWithGeopoint(docData): Promise<DocumentReference> {
     docData.coordinates = new GeoPoint(docData.coordinates.lat, docData.coordinates.lng);
+    docData.lastEditAt = firestore.FieldValue.serverTimestamp();
     if (docData.id) {
       await this.geofirestore.collection(dbKeys.requests).doc(docData.id).set(docData);
     } else {
@@ -226,6 +244,7 @@ export class FirestoreService {
   }
 
   private async saveRequestWithoutGeopoint(docData): Promise<DocumentReference> {
+    docData.lastEditAt = firestore.FieldValue.serverTimestamp();
     let docRef;
     if (docData.id) {
       docRef = this.db.collection(dbKeys.requests).doc(docData.id).ref;
@@ -256,5 +275,14 @@ export class FirestoreService {
     try {
       await docRef.update({ [`d.${list}.${request.id}`]: firestore.FieldValue.delete() });
     } catch  { }
+  }
+
+  getObservableFromPath(path: string) {
+    return this.db.doc(path).snapshotChanges();
+  }
+
+  getMyRequestsAsObservableList(requestListObject: {}) {
+    return Object.values(requestListObject)
+      .map((path: string) => this.getObservableFromPath(path));
   }
 }

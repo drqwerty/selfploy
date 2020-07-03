@@ -63,7 +63,7 @@ export class RequestListPage {
   }
 
   async updateRequestLists() {
-    const storedRequests = await this.data.getRequests();
+    const storedRequests = await this.data.getRequestList();
     if (storedRequests !== this.requestList) {
       this.requestList = storedRequests;
       this.myRequestList = [];

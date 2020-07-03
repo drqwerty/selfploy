@@ -5,8 +5,10 @@ import { StorageService } from 'src/app/services/storage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import Utils from 'src/app/utils';
-import { Subject } from 'rxjs';
-import { Request } from 'src/app/models/request-model';
+import { Subject, Observable } from 'rxjs';
+import { Request, RequestStatus } from 'src/app/models/request-model';
+import { map, takeUntil, takeWhile } from 'rxjs/operators';
+import { Action, DocumentSnapshot } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -29,11 +31,9 @@ export class DataService {
     private firestore: FirestoreService,
   ) { }
 
-  createMyProfile(uid: string, user: User) {
-    return Promise.all([
-      this.firestore.createUserProfile(uid, user),
-      this.storage.saveUserProfile(user),
-    ]);
+  async createMyProfile(uid: string, user: User) {
+    user = await this.firestore.createUserProfile(uid, user);
+    await this.storage.saveUserProfile(user);
   }
 
   getUserProfile(uid: string): Promise<User> {
@@ -43,12 +43,28 @@ export class DataService {
   async getMyProfile(uid?: string): Promise<User> {
     if (!this.user) {
       this.user = await this.storage.getUserProfile();
-      if (!this.user) {
+
+      if (this.user) {
+        this.syncProfile();
+      } else {
         this.user = await this.firestore.getUserProfile(uid);
         await this.storage.saveUserProfile(this.user);
       }
     }
     return this.user;
+  }
+
+  private syncProfile() {
+    this.firestore.getUserProfile(this.user.id).then(userF => {
+
+      const { seconds: s1, nanoseconds: n1 } = this.user.lastEditAt;
+      const { seconds: s2, nanoseconds: n2 } = userF.lastEditAt;
+
+      if (s1 != s2 || n1 != n2) {
+        this.user = userF;
+        this.storage.saveUserProfile(this.user);
+      }
+    });
   }
 
   saveUserProfile(user: User) {
@@ -62,23 +78,21 @@ export class DataService {
     this.storage.removeUserProfile();
   }
 
-  updatedMyProfile(user: User) {
-    return Promise.all([
-      this.firestore.updateUserProfile(user),
-      this.storage.saveUserProfile(user),
-    ])
+  async updatedMyProfile(user: User) {
+    user = await this.firestore.updateUserProfile(user);
+    this.storage.saveUserProfile(user);
   }
 
   async updateUserLocationAccuracySetting(hideLocationAccuracy: boolean) {
     (await this.getMyProfile()).hideLocationAccuracy = hideLocationAccuracy;
-    this.firestore.updateUserLocationAccuracySetting(hideLocationAccuracy);
+    this.user = await this.firestore.updateUserLocationAccuracySetting(hideLocationAccuracy);
     this.storage.saveUserProfile(this.user);
   }
 
   private async updateUserHasFavoritesProperty(hasFavorites: boolean) {
     if ((await this.getMyProfile()).hasFavorites !== hasFavorites) {
-      (await this.getMyProfile()).hasFavorites = hasFavorites;
-      this.firestore.hasFavoritesProperty(hasFavorites);
+      this.user.hasFavorites = hasFavorites;
+      this.user = await this.firestore.updateUserHasFavoritesProperty(hasFavorites);
       this.storage.saveUserProfile(this.user);
     }
   }
@@ -97,7 +111,7 @@ export class DataService {
 
   async saveFavorite(user: User) {
     this.favorites = (await Promise.all([
-      this.storage.saveFavorite(await this.getFavorites(), user),
+      this.storage.saveFavorite(await this.getFavoriteList(), user),
       this.firestore.saveFavorite(user.id),
     ]))[0];
     this.updateUserHasFavoritesProperty(!!this.favorites.length)
@@ -106,44 +120,79 @@ export class DataService {
 
   async removeFavorite(user: User) {
     this.favorites = (await Promise.all([
-      this.storage.removeFavorite(await this.getFavorites(), user),
+      this.storage.removeFavorite(await this.getFavoriteList(), user),
       this.firestore.removeFavorite(user.id),
     ]))[0];
     this.updateUserHasFavoritesProperty(!!this.favorites.length)
     this.favoritesChangedSubject.next();
   }
 
-  async getFavorites(): Promise<User[]> {
+  async getFavoriteList(): Promise<User[]> {
     if (!(await this.getMyProfile()).hasFavorites) return [];
 
     if (!this.favorites) {
       this.favorites = await this.storage.getFavorites();
 
-      if (!this.favorites) {
+      if (this.favorites) {
+        this.syncFavorites();
+
+      } else {
         this.favorites = await this.firestore.getFavorites();
         await this.storage.saveFavorites(this.favorites);
+        await this.translateCoors();
       }
 
-      if (this.favorites) {
-        const { coordinates: c1 } = await this.getMyProfile();
-        this.favorites.forEach(favorite => {
-          const { coordinates: c2 } = favorite;
-          favorite.distance = Utils.getDistanceFromLatLonInKm(c1.lat, c1.lng, c2.lat, c2.lng);
-        });
-      }
+    } else {
+      this.syncFavorites();
     }
 
     return this.favorites;
   }
 
-  async getRequests(): Promise<Request[]> {
+  private async syncFavorites() {
+    let sync = false;
+    const favoritesF = await this.firestore.getFavorites();
+
+    if (this.favorites.length != favoritesF.length) {
+      this.favorites = favoritesF;
+      sync = true;
+
+    } else {
+      favoritesF.forEach(favoriteF => {
+        const index = this.favorites.findIndex(favorite => favorite.id == favoriteF.id);
+
+        if (index > -1) {
+          const { seconds: s1, nanoseconds: n1 } = this.favorites[index].lastEditAt;
+          const { seconds: s2, nanoseconds: n2 } = favoriteF.lastEditAt;
+
+          if (s1 != s2 || n1 != n2) {
+            this.favorites[index] = favoriteF;
+            sync = true;
+          }
+        }
+      });
+    }
+
+    if (sync) this.storage.saveFavorites(this.favorites);
+    this.translateCoors();
+  }
+
+  private async translateCoors() {
+    const { coordinates: c1 } = await this.getMyProfile();
+    this.favorites.forEach(favorite => {
+      const { coordinates: c2 } = favorite;
+      favorite.distance = Utils.getDistanceFromLatLonInKm(c1.lat, c1.lng, c2.lat, c2.lng);
+    });
+  }
+
+  async getRequestList(): Promise<Request[]> {
     if (!(await this.getMyProfile()).requests) return [];
 
     if (!this.requests) {
-      this.requests = await this.storage.getRequests();
+      this.requests = await this.storage.getRequestList();
 
       if (!this.requests) {
-        this.requests = await this.firestore.getRequests((await this.getMyProfile()).requests);
+        this.requests = await this.firestore.getRequestList((await this.getMyProfile()).requests);
         await this.storage.saveRequests(this.requests);
       }
     }
@@ -152,15 +201,21 @@ export class DataService {
   }
 
   async saveRequest(request: Request) {
-    const docInfo = await this.firestore.saveRequest(request);
-    this.requests = await this.storage.saveRequest(await this.getRequests(), request);
-    await this.updateRequestList(docInfo.id, docInfo.path);
+    const { id, path, requestSaved } = await this.firestore.saveRequest(request);
+    request = requestSaved;
+    this.requests = await this.storage.saveRequest(await this.getRequestList(), request);
+    this.observeRequest(this.firestore.getObservableFromPath(path));
+    await this.updateRequestList(id, path);
+  }
+
+  async updateLocalRequest(request: Request) {
+    this.requests = await this.storage.updateRequest(await this.getRequestList(), request);
   }
 
   async removeRequest(request: Request) {
-    this.requests = await this.storage.removeRequest(await this.getRequests(), request);
+    this.requests = await this.storage.removeRequest(await this.getRequestList(), request);
     this.firestore.removeRequest(request);
-    this.updateRequestList(request.id, null, true)
+    this.updateRequestList(request.id, null, true);
   }
 
   private async updateRequestList(id, path, remove = false) {
@@ -175,6 +230,34 @@ export class DataService {
 
     await this.saveUserProfile(this.user);
     this.requestsChangedSubject.next();
+  }
+
+  async observeMyRequests() {
+    const { requests } = await this.getMyProfile();
+    if (!requests) return;
+    const obsevableList = await this.firestore.getMyRequestsAsObservableList(requests);
+
+    obsevableList.forEach(observable => this.observeRequest(observable));
+  }
+
+  private async observeRequest(observable: Observable<Action<DocumentSnapshot<any>>>) {
+    const requestList = await this.getRequestList();
+    observable
+      .pipe(
+        map(({ payload }) => {
+          const id = payload.id;
+          const data = <Request>(payload.data()).d;
+          return { id, ...data };
+        }),
+        takeWhile(request => request.status != RequestStatus.closed, true),
+      )
+      .subscribe(requestChanged => {
+        const request = requestList.find(request => request.id == requestChanged.id);
+        if (requestChanged.lastEditAt.seconds != request.lastEditAt.seconds) {
+          requestChanged.id = request.id;
+          this.updateLocalRequest(requestChanged);
+        }
+      });
   }
 
 }

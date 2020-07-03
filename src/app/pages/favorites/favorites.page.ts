@@ -63,7 +63,7 @@ export class FavoritesPage implements AfterViewInit {
   }
 
   async getFavorites() {
-    const favs = await this.data.getFavorites();
+    const favs = await this.data.getFavoriteList();
     if (favs !== this.favorites) {
       this.favorites = favs;
       this.classifyFavorites();

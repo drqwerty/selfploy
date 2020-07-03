@@ -42,7 +42,7 @@ export class FavoriteSearchComponent {
     this.data.favoritesChangedSubject
       .pipe(untilDestroyed(this))
       .subscribe(async () => {
-        this.favorites = await this.data.getFavorites();
+        this.favorites = await this.data.getFavoriteList();
         this.findUsers();
       })
   }

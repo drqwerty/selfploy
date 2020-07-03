@@ -1,4 +1,5 @@
 import { LatLng } from 'leaflet';
+import { firestore } from 'firebase';
 
 export enum UserRole {
   client,
@@ -34,7 +35,7 @@ export enum UserProperties {
   hasFavorites = 'hasFavorites',
   requests = 'requests',
   requestsFollowing = 'requestsFollowing',
-
+  lastEditAt = 'lastEditAt',
   id = 'id',
   distance = 'distance',
   isFav = 'isFav',
@@ -62,7 +63,7 @@ export class User {
   [UserProperties.hasFavorites]: boolean;
   [UserProperties.requests]: any;
   [UserProperties.requestsFollowing]: any;
-
+  [UserProperties.lastEditAt]: firestore.Timestamp;
   [UserProperties.id]: string;
   [UserProperties.distance]: number;
   [UserProperties.isFav]: boolean;

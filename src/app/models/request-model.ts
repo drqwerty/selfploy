@@ -32,13 +32,14 @@ export enum RequestProperties {
   owner = 'owner',
   id = 'id',
   unreadMesseages = 'unreadMesseages',
+  lastEditAt = 'lastEditAt',
 }
 
 export class Request {
   [RequestProperties.service]: string;
   [RequestProperties.category]: string;
-  [RequestProperties.startDate]: Moment | firestore.Timestamp;
-  [RequestProperties.endDate]: Moment | firestore.Timestamp;
+  [RequestProperties.startDate]: any; /* Moment | firestore.Timestamp */
+  [RequestProperties.endDate]: any; /* Moment | firestore.Timestamp */
   [RequestProperties.workingHours]: WorkingHours[];
   [RequestProperties.priority]: boolean;
   [RequestProperties.title]: string;
@@ -54,6 +55,7 @@ export class Request {
   [RequestProperties.owner]: string;
   [RequestProperties.id]: string;
   [RequestProperties.unreadMesseages]: boolean;
+  [RequestProperties.lastEditAt]: firestore.Timestamp;
 
   constructor() {
     this.hideLocationAccuracy = false;
