@@ -32,6 +32,7 @@ export class StorageService {
   }
 
   saveFavorites(favorites: User[]) {
+    if (!favorites.length) return this.removeKeys(dbKeys.favorites);
     return this.saveData(dbKeys.favorites, favorites)
   }
 

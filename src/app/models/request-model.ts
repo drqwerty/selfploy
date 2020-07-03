@@ -29,6 +29,7 @@ export enum RequestProperties {
   notifyAll = 'notifyAll',
   owner = 'owner',
   id = 'id',
+  unreadMesseages = 'unreadMesseages',
 }
 
 export class Request {
@@ -50,6 +51,7 @@ export class Request {
   [RequestProperties.notifyAll]: boolean;
   [RequestProperties.owner]: string;
   [RequestProperties.id]: string;
+  [RequestProperties.unreadMesseages]: boolean;
 
   constructor() {
     this.hideLocationAccuracy = false;

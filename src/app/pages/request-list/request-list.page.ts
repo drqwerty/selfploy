@@ -111,12 +111,17 @@ export class RequestListPage {
   updateBackgroundColor(index) {
     if (this.imAClient) return;
 
-    if (index) {
-      this.superTabsToolbarStyle.setProperty('--st-indicator-color', 'var(--ion-color-secondary)');
-      this.statusBarColor = 'secondary';
+    if (!Capacitor.isPluginAvailable('StatusBar')) {
+      this.statusBarColor = 'white';
+
     } else {
-      this.superTabsToolbarStyle.removeProperty('--st-indicator-color');
-      this.statusBarColor = 'primary';
+      if (index) {
+        this.superTabsToolbarStyle.setProperty('--st-indicator-color', 'var(--ion-color-secondary)');
+        this.statusBarColor = 'secondary';
+      } else {
+        this.superTabsToolbarStyle.removeProperty('--st-indicator-color');
+        this.statusBarColor = 'primary';
+      }
     }
   }
 }

@@ -1,10 +1,42 @@
 <ion-card mode="ios" button>
-  <ion-card-header>
-    <ion-card-title>Awesome Title</ion-card-title>
-    <ion-card-subtitle>{{request?.title}}</ion-card-subtitle>
-  </ion-card-header>
-  <ion-card-content>
-    Awesome content
-    {{request?.owner}}
-  </ion-card-content>
+
+  <div class="card-content">
+
+    <div class="left-content">
+      <ion-img [src]="image"></ion-img>
+    </div>
+
+    <div class="main-content">
+      <ion-button (click)="onClick()" class="ion-float-right" fill="clear" size="small">
+        <ion-icon slot="icon-only" name="ellipsis-vertical" color="medium"></ion-icon>
+      </ion-button>
+
+      <ion-card-header mode="md">
+        <ion-card-title>Awesome Title</ion-card-title>
+        <ion-card-subtitle>subtitle</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-footer class="ion-no-border" mode="md">
+        <ion-toolbar class="ion-padding-bottom">
+          <ion-row class="ion-padding-horizontal">
+            <ion-col size="12">
+              Fehcita
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-padding-horizontal">
+            <ion-col size="6" class="ion-justify-content-start ion-no-padding">
+              <ion-text color="tertiary" class="margin-end">Estado:</ion-text>
+              <ion-text color="medium">Abierto</ion-text>
+            </ion-col>
+            <ion-col size="6" class="ion-justify-content-end ion-no-padding">
+              <ion-text color="tertiary" class="margin-end">Contactos:</ion-text>
+              <ion-badge mode="ios" class="font-weight-500" [class.unread-messages]="request.unreadMesseages">14</ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+    </div>
+
+  </div>
+
 </ion-card>

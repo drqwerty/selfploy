@@ -1,0 +1,47 @@
+.ion-float-right {
+  z-index: 1;
+  position: relative;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: row;
+
+  .left-content {
+    width: 100px;
+    background-color: lightcoral;
+  }
+
+  .main-content {
+    width: 100%;
+
+    ion-button {
+      height: auto;
+      --padding-top: 12px;
+      --padding-end: 8px;
+    }
+
+    ion-col {
+      display: flex;
+      align-items: center;
+
+      .margin-end {
+        margin-right: 8px;
+      }
+
+      ion-badge {
+        --background: transparent;
+        --color: var(--ion-color-medium);
+
+        &:not(.unread-messages) {
+          --padding-start: 0;
+        }
+
+        &.unread-messages {
+          --background: var(--ion-color-danger);
+          --color: var(--ion-color-light);
+        }
+      }
+    }
+  }
+}

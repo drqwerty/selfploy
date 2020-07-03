@@ -10,7 +10,7 @@ import { RequestListPage } from './request-list.page';
 import { StatusBarModule } from 'src/app/components/utils/status-bar/status-bar.module';
 import { CustomHeaderModule } from 'src/app/components/utils/custom-header/custom-header.module';
 import { EmptyContentModule } from 'src/app/components/templates/empty-content/empty-content.module';
-import { RequestCardComponent } from 'src/app/components/templates/request-card/request-card.component';
+import { RequestCardModule } from 'src/app/components/templates/request-card/request-card.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
 
 @NgModule({
@@ -23,10 +23,10 @@ import { SuperTabsModule } from '@ionic-super-tabs/angular';
     CustomHeaderModule,
     EmptyContentModule,
     SuperTabsModule,
+    RequestCardModule,
   ],
   declarations: [
     RequestListPage,
-    RequestCardComponent,
   ]
 })
 export class RequestListPageModule {}

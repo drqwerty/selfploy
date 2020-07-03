@@ -41,5 +41,9 @@ super-tab-button {
     &.secondary {
       background-color: var(--ion-color-secondary);
     }
+
+    &.white {
+      background-color: #ffffff;
+    }
   }
 }
