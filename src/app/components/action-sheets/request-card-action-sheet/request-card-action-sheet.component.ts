@@ -10,8 +10,8 @@ import { RequestStatus } from 'src/app/models/request-model';
 })
 export class RequestCardActionSheetComponent {
 
-  @Input() isMine = true;
-  @Input() isDraft = true;
+  @Input() isMine: boolean;
+  @Input() isDraft: boolean;
 
 
   states = RequestStatus;
@@ -29,17 +29,17 @@ export class RequestCardActionSheetComponent {
           {
             title: 'Cerrar',
             description: 'Dejarás de recibir nuevas propuestas, pero podrás seguir comunicándote con los contactos',
-            show: !this.isDraft,
+            show: this.isMine && !this.isDraft,
           },
           {
             title: 'Marcar como ejecutado',
             description: 'El encargo se cerrará y se deshabilitará la comunicación',
-            show: !this.isDraft,
+            show: this.isMine && !this.isDraft,
           },
           {
             title: 'Editar',
             description: 'Añade más detalles a tu solicitud',
-            show: this.isDraft,
+            show: this.isMine && this.isDraft,
           },
           {
             title: 'Eliminar',

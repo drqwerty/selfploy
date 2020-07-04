@@ -6,4 +6,6 @@ export enum dbKeys {
   requests = 'requests',
   draft = 'draft',
   published = 'published ',
+
+  profilePics = 'profilePics',
 }

@@ -10,7 +10,7 @@
 
 <ion-list lines="none" class="ion-padding-vertical">
 
-  <ng-container *ngIf="true">
+  <ng-container *ngIf="isMine && !isDraft">
 
     <ion-item button (click)="dismiss(states.closed)">
       <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
@@ -32,7 +32,7 @@
     
   </ng-container>
   
-  <ng-container *ngIf="true">
+  <ng-container *ngIf="isMine && isDraft">
     
     <ion-item button (click)="dismiss(states.edit)">
       <ion-icon slot="start" name="create-outline"></ion-icon>

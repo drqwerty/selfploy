@@ -200,8 +200,8 @@ export class DataService {
     return this.requests;
   }
 
-  async saveRequest(request: Request) {
-    const { id, path, requestSaved } = await this.firestore.saveRequest(request);
+  async saveRequest(request: Request, images: string[]) {
+    const { id, path, requestSaved } = await this.firestore.saveRequest(request, images);
     request = requestSaved;
     this.requests = await this.storage.saveRequest(await this.getRequestList(), request);
     this.observeRequest(this.firestore.getObservableFromPath(path));
@@ -222,7 +222,7 @@ export class DataService {
     const user = await this.getMyProfile();
 
     if (remove) {
-      delete user.requests.id;
+      delete user.requests[id];
     } else {
       if (!user.requests) user.requests = {};
       user.requests[id] = path;
@@ -241,17 +241,19 @@ export class DataService {
   }
 
   private async observeRequest(observable: Observable<Action<DocumentSnapshot<any>>>) {
-    const requestList = await this.getRequestList();
+    const { id: userId } = await this.getMyProfile();
     observable
       .pipe(
         map(({ payload }) => {
           const id = payload.id;
           const data = <Request>(payload.data()).d;
-          return { id, ...data };
+          const isMine = data.owner == userId;
+          return { id, isMine, ...data };
         }),
         takeWhile(request => request.status != RequestStatus.closed, true),
       )
-      .subscribe(requestChanged => {
+      .subscribe(async requestChanged => {
+        const requestList = await this.getRequestList();
         const request = requestList.find(request => request.id == requestChanged.id);
         if (requestChanged.lastEditAt.seconds != request.lastEditAt.seconds) {
           requestChanged.id = request.id;

@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     component: TabsPage,
     children: [
-      { path: '', redirectTo: 'categories' },
+      { path: '', redirectTo: 'request-list' },
       {
         path: 'categories',
         loadChildren: () => import('../categories/categories.module').then(m => m.CategoriesPageModule),

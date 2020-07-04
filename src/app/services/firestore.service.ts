@@ -20,6 +20,8 @@ import * as moment from 'moment';
 })
 export class FirestoreService {
 
+  private prodMode = true;
+
   geofirestore: GeoFirestore;
 
   constructor(
@@ -30,6 +32,8 @@ export class FirestoreService {
   ) {
     this.geofirestore = new GeoFirestore(db.firestore);
   }
+
+  /* user profile */
 
   async createUserProfile(uid: string, user: User) {
     const { token, profilePic, ...essentialUserData } = user;
@@ -93,6 +97,8 @@ export class FirestoreService {
     return this.getUserProfile(uid);
   }
 
+  /* find users */
+
   async findProfessionalOf(categoryName, serviceName, coordinates) {
     const { uid } = await this.aFAuth.currentUser;
 
@@ -148,6 +154,8 @@ export class FirestoreService {
     return this.translateCoordinatesAndSortByDistance(query);
   }
 
+  /* favorites */
+
   async saveFavorite(userId: string) {
     const { uid } = await this.aFAuth.currentUser;
     const docRef = this.db.collection(dbKeys.favorites).doc(uid);
@@ -185,11 +193,23 @@ export class FirestoreService {
     await docRef.update(value);
   }
 
+  /* requests */
+
   async removeRequest(request: Request) {
     await this.removeRequestFromUserList(request);
-    this.db.collection(dbKeys.requests).doc(request.id).update({
-      [`d.${RequestProperties.status}`]: RequestStatus.delete,
-    });
+
+    if (this.prodMode) {
+      if (request.isMine) {
+        this.db.collection(dbKeys.requests).doc(request.id).delete();
+      }
+
+    } else {
+      if (request.isMine) {
+        this.db.collection(dbKeys.requests).doc(request.id).update({
+          [`d.${RequestProperties.status}`]: RequestStatus.delete,
+        });
+      }
+    }
   }
 
   async getRequestList(requestListObject) {
@@ -206,12 +226,18 @@ export class FirestoreService {
 
   async getRequestFromPath(path: string): Promise<Request> {
     const docData = (await this.db.doc(path).get().toPromise());
+    const { uid } = await this.aFAuth.currentUser;
+
     const request = <Request>docData.data().d;
     request.id = docData.id;
+    request.isMine = request.owner == uid;
+
+    if (request.hasImages) request.images = await this.fStorage.getRequestImages(request.id);
+    
     return request;
   }
 
-  async saveRequest(request: Request) {
+  async saveRequest(request: Request, images: string[]) {
     request.owner = (await this.aFAuth.currentUser).uid;
 
     const docData = Object.assign({}, request);
@@ -225,6 +251,8 @@ export class FirestoreService {
     } else {
       docRef = await this.saveRequestWithoutGeopoint(docData);
     }
+    if (request.hasImages) await this.fStorage.uploadRequestImages(images, docRef.id);
+
 
     await this.addRequestToUserList(UserProperties.requests, docRef);
     const requestSaved = await this.getRequestFromPath(docRef.path);

@@ -22,6 +22,7 @@ export enum RequestProperties {
   title = 'title',
   description = 'description',
   hasImages = 'hasImages',
+  images = 'images',
   budget = 'budget',
   hideLocationAccuracy = 'hideLocationAccuracy',
   addressFull = 'addressFull',
@@ -33,6 +34,7 @@ export enum RequestProperties {
   id = 'id',
   unreadMesseages = 'unreadMesseages',
   lastEditAt = 'lastEditAt',
+  isMine = 'isMine',
 }
 
 export class Request {
@@ -45,6 +47,7 @@ export class Request {
   [RequestProperties.title]: string;
   [RequestProperties.description]: string;
   [RequestProperties.hasImages]: boolean;
+  [RequestProperties.images]: string[];
   [RequestProperties.budget]: number;
   [RequestProperties.hideLocationAccuracy]: boolean;
   [RequestProperties.addressFull]: string;
@@ -56,6 +59,7 @@ export class Request {
   [RequestProperties.id]: string;
   [RequestProperties.unreadMesseages]: boolean;
   [RequestProperties.lastEditAt]: firestore.Timestamp;
+  [RequestProperties.isMine]: boolean;
 
   constructor() {
     this.hideLocationAccuracy = false;

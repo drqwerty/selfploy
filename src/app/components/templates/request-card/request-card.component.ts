@@ -33,6 +33,10 @@ export class RequestCardComponent implements AfterViewInit {
       enterAnimation: ActionSheetEnter,
       leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet border-top-radius',
+      componentProps: {
+        isDraft: this.request.status == RequestStatus.draft,
+        isMine: this.request.isMine,
+      }
     });
 
     modal.onDidDismiss().then(({ data }) => {
@@ -71,6 +75,9 @@ export class RequestCardComponent implements AfterViewInit {
     });
 
     modal.present();
+  }
+
+  onClick() {
   }
 
 }

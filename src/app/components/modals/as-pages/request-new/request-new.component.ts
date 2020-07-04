@@ -93,7 +93,7 @@ export class RequestNewComponent {
 
     await Promise.all([
       loading.present(),
-      this.data.saveRequest(this.request),
+      this.data.saveRequest(this.request, this.images),
     ]);
 
     loading.dismiss().then(() => this.modalController.dismiss());
