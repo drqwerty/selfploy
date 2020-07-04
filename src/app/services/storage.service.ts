@@ -82,7 +82,7 @@ export class StorageService {
   }
 
   async updateRequest(requests: Request[], request: Request) {
-    const index = requests.findIndex(requestI => request.id == requestI.id)
+    const index = requests.findIndex(requestI => request.id == requestI.id);
     requests[index] = request;
     await this.saveRequests(requests)
     return requests;

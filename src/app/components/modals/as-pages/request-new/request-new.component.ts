@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { Animations } from 'src/app/animations/animations';
 import { ModalController, IonContent, LoadingController } from '@ionic/angular';
 import { Request, RequestProperties, RequestStatus } from 'src/app/models/request-model';
@@ -23,11 +23,12 @@ import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sh
 })
 export class RequestNewComponent {
 
+  @Input() edit = false;
+  @Input() request: Request = new Request();
+
+
   @ViewChild(IonContent) ionContent: IonContent;
   @ViewChild(GalleryComponent) gallery: GalleryComponent;
-
-  request: Request;
-  images: string[] = [];
 
   chooseDayDefaultText = 'Elige una fecha';
 
@@ -37,13 +38,11 @@ export class RequestNewComponent {
     private formBuilder: FormBuilder,
     private loadingController: LoadingController,
     private data: DataService,
-  ) {
-    this.request = new Request();
-  }
+  ) { }
 
   ionViewWillEnter() {
     // this.anim.modalLoaded();
-    this.continue();
+    // this.continue();
   }
 
   async goBack() {
@@ -93,7 +92,7 @@ export class RequestNewComponent {
 
     await Promise.all([
       loading.present(),
-      this.data.saveRequest(this.request, this.images),
+      this.data.saveRequest(this.request),
     ]);
 
     loading.dismiss().then(() => this.modalController.dismiss());
@@ -129,7 +128,7 @@ export class RequestNewComponent {
   }
 
   updateHasImageProperty() {
-    this.request.hasImages = this.images.length > 0;
+    this.request.hasImages = this.request.images.length > 0;
   }
 
   async editService() {
@@ -229,7 +228,7 @@ export class RequestNewComponent {
   }
 
   async addImage() {
-    if (this.images.length > 5) return;
+    if (this.request.images.length > 5) return;
 
     const modal = await this.modalController.create({
       component: CameraSourceActionSheetComponent,
@@ -243,7 +242,7 @@ export class RequestNewComponent {
 
     modal.onWillDismiss().then(({ data }) => {
       if (data?.image) {
-        this.images.push(data.image);
+        this.request.images.push({ name: moment().unix().toString(), url: data.image });
         this.updateHasImageProperty();
         this.gallery.updateImages();
       }

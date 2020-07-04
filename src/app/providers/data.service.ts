@@ -7,7 +7,7 @@ import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import Utils from 'src/app/utils';
 import { Subject, Observable } from 'rxjs';
 import { Request, RequestStatus } from 'src/app/models/request-model';
-import { map, takeUntil, takeWhile } from 'rxjs/operators';
+import { map, takeUntil, takeWhile, filter } from 'rxjs/operators';
 import { Action, DocumentSnapshot } from '@angular/fire/firestore';
 
 @Injectable({
@@ -200,12 +200,19 @@ export class DataService {
     return this.requests;
   }
 
-  async saveRequest(request: Request, images: string[]) {
-    const { id, path, requestSaved } = await this.firestore.saveRequest(request, images);
-    request = requestSaved;
-    this.requests = await this.storage.saveRequest(await this.getRequestList(), request);
-    this.observeRequest(this.firestore.getObservableFromPath(path));
-    await this.updateRequestList(id, path);
+  async saveRequest(request: Request) {
+
+    if (request.id) {
+      await this.firestore.saveRequest(request);
+      // await this.storage.saveRequest(await this.getRequestList(), request);
+
+    } else {
+      const { path, requestSaved } = await this.firestore.saveRequest(request);
+      request = requestSaved;
+      this.requests = await this.storage.saveRequest(await this.getRequestList(), request);
+      this.observeRequest(this.firestore.getObservableFromPath(path));
+      await this.updateRequestList(requestSaved.id, path);
+    }
   }
 
   async updateLocalRequest(request: Request) {
@@ -246,18 +253,21 @@ export class DataService {
       .pipe(
         map(({ payload }) => {
           const id = payload.id;
-          const data = <Request>(payload.data()).d;
-          const isMine = data.owner == userId;
+          const data = <Request>(payload.data())?.d;
+          const isMine = data?.owner == userId;
           return { id, isMine, ...data };
         }),
-        takeWhile(request => request.status != RequestStatus.closed, true),
+        takeWhile(request => request?.status != RequestStatus.closed, true),
+        filter(request => !!request.lastEditAt),
       )
       .subscribe(async requestChanged => {
         const requestList = await this.getRequestList();
-        const request = requestList.find(request => request.id == requestChanged.id);
-        if (requestChanged.lastEditAt.seconds != request.lastEditAt.seconds) {
-          requestChanged.id = request.id;
-          this.updateLocalRequest(requestChanged);
+        const localRequest = requestList.find(request => request.id == requestChanged.id);
+        if (requestChanged.lastEditAt.seconds != localRequest.lastEditAt.seconds) {
+          const requestUpdated = new Request(requestChanged);
+          if (requestUpdated.hasImages) requestUpdated.images = await this.fStorage.getRequestImages(localRequest.id);
+
+          this.updateLocalRequest(requestUpdated);
         }
       });
   }

@@ -228,22 +228,26 @@ export class FirestoreService {
     const docData = (await this.db.doc(path).get().toPromise());
     const { uid } = await this.aFAuth.currentUser;
 
-    const request = <Request>docData.data().d;
+    const request = new Request(<Request>docData.data().d);
     request.id = docData.id;
     request.isMine = request.owner == uid;
 
     if (request.hasImages) request.images = await this.fStorage.getRequestImages(request.id);
-    
+
     return request;
   }
 
-  async saveRequest(request: Request, images: string[]) {
+  async saveRequest(request: Request) {
+    if (!request.id) request.id = firestore().collection(dbKeys.requests).doc().id;
     request.owner = (await this.aFAuth.currentUser).uid;
 
-    const docData = Object.assign({}, request);
+    const { images, ...data } = request;
+    const docData = Object.assign({}, data);
 
     if (request.startDate) docData.startDate = Timestamp.fromDate(request.startDate.toDate());
     if (request.endDate) docData.endDate = Timestamp.fromDate(request.endDate.toDate());
+
+    if (request.hasImages) await this.fStorage.uploadRequestImageList(images, request.id);
 
     let docRef: DocumentReference;
     if (request.coordinates) {
@@ -251,8 +255,6 @@ export class FirestoreService {
     } else {
       docRef = await this.saveRequestWithoutGeopoint(docData);
     }
-    if (request.hasImages) await this.fStorage.uploadRequestImages(images, docRef.id);
-
 
     await this.addRequestToUserList(UserProperties.requests, docRef);
     const requestSaved = await this.getRequestFromPath(docRef.path);
@@ -262,25 +264,16 @@ export class FirestoreService {
   private async saveRequestWithGeopoint(docData): Promise<DocumentReference> {
     docData.coordinates = new GeoPoint(docData.coordinates.lat, docData.coordinates.lng);
     docData.lastEditAt = firestore.FieldValue.serverTimestamp();
-    if (docData.id) {
-      await this.geofirestore.collection(dbKeys.requests).doc(docData.id).set(docData);
-    } else {
-      docData.id = (await this.geofirestore.collection(dbKeys.requests).add(<any>docData)).id;
-    }
+    await this.geofirestore.collection(dbKeys.requests).doc(docData.id).set(docData);
     const docRef = this.db.collection(dbKeys.requests).doc(docData.id).ref;
     return docRef;
   }
 
   private async saveRequestWithoutGeopoint(docData): Promise<DocumentReference> {
     docData.lastEditAt = firestore.FieldValue.serverTimestamp();
-    let docRef;
-    if (docData.id) {
-      docRef = this.db.collection(dbKeys.requests).doc(docData.id).ref;
-      await docRef.set({ d: docData });
-    } else {
-      docRef = await this.db.collection(dbKeys.requests).add({ d: docData });
-    }
-    return docRef
+    const docRef = this.db.collection(dbKeys.requests).doc(docData.id).ref;
+    await docRef.set({ d: docData });
+    return docRef;
   }
 
   private async addRequestToUserList(list: UserProperties.requests | UserProperties.requestsFollowing, request: DocumentReference) {

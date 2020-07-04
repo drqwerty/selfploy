@@ -6,6 +6,7 @@ import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-lette
 import { RequestCardComponent } from './request-card.component';
 import { RequestCardActionSheetModule } from '../../action-sheets/request-card-action-sheet/request-card-action-sheet.module';
 import { DeleteConfirmActionSheetModule } from '../../action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.module';
+import { RequestNewModule } from '../../modals/as-pages/request-new/request-new.module';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { DeleteConfirmActionSheetModule } from '../../action-sheets/delete-confi
     UpperCaseFirstLetterModule,
     RequestCardActionSheetModule,
     DeleteConfirmActionSheetModule,
+    RequestNewModule,
   ],
   declarations: [
     RequestCardComponent,

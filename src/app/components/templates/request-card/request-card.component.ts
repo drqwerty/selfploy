@@ -5,6 +5,7 @@ import { RequestCardActionSheetComponent } from 'src/app/components/action-sheet
 import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
+import { RequestNewComponent } from 'src/app/components/modals/as-pages/request-new/request-new.component';
 
 @Component({
   selector: 'request-card',
@@ -49,8 +50,10 @@ export class RequestCardComponent implements AfterViewInit {
         switch (data) {
           case RequestStatus.closed:
           case RequestStatus.completed:
+            break;
+
           case RequestStatus.edit:
-            console.log(data);
+            this.editRequest();
 
             break;
           case RequestStatus.delete:
@@ -64,6 +67,19 @@ export class RequestCardComponent implements AfterViewInit {
 
       }
     })
+
+    modal.present();
+  }
+
+  async editRequest() {
+    const modal = await this.modalController.create({
+      component: RequestNewComponent,
+      componentProps: {
+        edit: true,
+        request: this.request,
+        images: this.request.images,
+      }
+    });
 
     modal.present();
   }

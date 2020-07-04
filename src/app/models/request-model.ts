@@ -47,7 +47,7 @@ export class Request {
   [RequestProperties.title]: string;
   [RequestProperties.description]: string;
   [RequestProperties.hasImages]: boolean;
-  [RequestProperties.images]: string[];
+  [RequestProperties.images]: { name: string, url: string }[];
   [RequestProperties.budget]: number;
   [RequestProperties.hideLocationAccuracy]: boolean;
   [RequestProperties.addressFull]: string;
@@ -61,11 +61,18 @@ export class Request {
   [RequestProperties.lastEditAt]: firestore.Timestamp;
   [RequestProperties.isMine]: boolean;
 
-  constructor() {
-    this.hideLocationAccuracy = false;
-    this.hasImages = false;
-    this.priority = false;
-    this.notifyAll = false;
-    this.status = RequestStatus.draft;
+  constructor(request?: Request) {
+    if (request) {
+      Object.keys(request).forEach(key => this[key] = request[key]);
+      if (!this.images) this.images = [];
+
+    } else {
+      this.hideLocationAccuracy = false;
+      this.hasImages = false;
+      this.priority = false;
+      this.notifyAll = false;
+      this.status = RequestStatus.draft;
+      this.images = [];
+    }
   }
 }

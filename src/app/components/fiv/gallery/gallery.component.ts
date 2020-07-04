@@ -12,7 +12,7 @@ import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sh
 })
 export class GalleryComponent {
 
-  @Input() images: string[] = [];
+  @Input() images: { name: string, url: string }[] = [];
   @Input() showRemoveButton = false;
 
   @Output() imageDeleted = new EventEmitter

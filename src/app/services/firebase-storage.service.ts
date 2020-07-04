@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { dbKeys } from '../models/db-keys';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -30,23 +31,59 @@ export class FirebaseStorage {
     await firebase.storage().ref(`${dbKeys.profilePics}/${userUID}.jpg`).putString(imageBase64, 'base64', metadata);
   }
 
-  async uploadRequestImages(imageBase64Array: string[], requestId: string) {
+
+  async uploadRequestImageList(imageList: { [key: string]: string }[], requestId: string) {
     const metadata = { contentType: 'image/jpeg' };
+
+    const imageNameList = await this.getNameListFromFireStorage(requestId);
+    const conservedImageNameList = [];
+
     await Promise.all([
-      imageBase64Array.map(async (imageBase64, index) => {
-        imageBase64 = imageBase64.replace(/^data:image\/(png|jpeg);base64,/, '');
-        await firebase.storage()
-          .ref(`${dbKeys.requests}/${requestId}/${requestId}-${index + 1}.jpg`)
-          .putString(imageBase64, 'base64', metadata);
+      imageList.map(async ({ name, url: image }) => {
+
+        if (image.startsWith('data:image')) {
+          image = image.replace(/^data:image\/(png|jpeg);base64,/, '');
+          await firebase.storage()
+            .ref(`${dbKeys.requests}/${requestId}/${requestId}-${name}.jpg`)
+            .putString(image, 'base64', metadata);
+
+        } else { // url
+          conservedImageNameList.push(name);
+        }
       })
-    ])
+    ]);
+
+    const imageNameDeletedList = imageNameList.filter(name => !conservedImageNameList.includes(name));
+    this.removeImages(requestId, imageNameDeletedList);
+  }
+
+  async getNameListFromFireStorage(requestId) {
+    const storageRef = firebase.storage().ref(`${dbKeys.requests}/${requestId}`);
+    const names = (await storageRef.listAll()).items.map(item => item.name);
+    return names;
+  }
+
+  removeImages(requestId: string, imageNameList: string[]) {
+    imageNameList
+      .forEach(name => firebase.storage().ref(`${dbKeys.requests}/${requestId}/${name}`).delete());
   }
 
   async getRequestImages(requestId: string) {
     const storageRef = firebase.storage().ref(`${dbKeys.requests}/${requestId}`);
-    const { items } = (await storageRef.listAll());
-    const urlList = await Promise.all(items.map(async imageRef => await imageRef.getDownloadURL() as string));
-    return urlList;
+    const { items } = await storageRef.listAll();
+    const imageList = await Promise.all(items.map(async imageRef => {
+      const url = await imageRef.getDownloadURL();
+      const name = imageRef.name;
+      return { name, url };
+    }));
+    return imageList;
   }
+
+  private async deleteRequestImages(requestId: string) {
+    const folderRef = firebase.storage().ref(`${dbKeys.requests}/${requestId}`);
+    const deleteImagesPromises = (await folderRef.listAll()).items.map(async item => await item.delete());
+    await Promise.all(deleteImagesPromises);
+  }
+
 
 }

@@ -1,6 +1,6 @@
 <status-bar color="#fff"></status-bar>
 
-<custom-header title="Nuevo encargo">
+<custom-header [title]=" (edit ? 'Editar' : 'Nuevo') + ' encargo'">
   <ion-toolbar></ion-toolbar>
 </custom-header>
 
@@ -40,8 +40,8 @@
         </span>
       </ion-text>
       <div class="when-buttons-wrapper ion-justify-content-evenly">
-        <ion-button (click)="setNow()" class="no-transform border-radius-10" color="danger" size="default" expand="block"
-          [fill]="request.priority ? 'solid' : 'outline'">
+        <ion-button (click)="setNow()" class="no-transform border-radius-10" color="danger" size="default"
+          expand="block" [fill]="request.priority ? 'solid' : 'outline'">
           Ahora
         </ion-button>
         <ion-button (click)="chooseDay()" class="no-transform border-radius-10" size="default" expand="block"
@@ -99,15 +99,15 @@
           Imágenes - <span>Opcional</span>
         </ion-text>
       </ion-label>
-      <ion-text color="medium" slot="end">{{images.length}}/5</ion-text>
+      <ion-text color="medium" slot="end">{{request.images.length}}/5</ion-text>
       <ion-text color="medium" class="info">
         <span>
           Añade imágenes para ayudar a los profesionales a entender qué necesitas
         </span>
       </ion-text>
 
-      <gallery (imageDeleted)="updateHasImageProperty()" [images]="images" showRemoveButton="true">
-        <ion-fab-button size="small" *ngIf="images.length < 5" (click)="addImage()">
+      <gallery (imageDeleted)="updateHasImageProperty()" [images]="request.images" showRemoveButton="true">
+        <ion-fab-button size="small" *ngIf="request.images.length < 5" (click)="addImage()">
           <ion-icon name="add"></ion-icon>
         </ion-fab-button>
       </gallery>
