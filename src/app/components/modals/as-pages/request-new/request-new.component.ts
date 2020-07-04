@@ -51,10 +51,6 @@ export class RequestNewComponent {
   }
 
   async continue() {
-
-    // let status = 'borrador';
-    // if (this.requestIsComplete()) status = 'completado';
-
     const modal = await this.modalController.create({
       cssClass: 'action-sheet border-top-radius',
       component: RequestNewActionSheetComponent,
@@ -72,13 +68,13 @@ export class RequestNewComponent {
           break;
 
         case 'choose':
+          this.saveRequest(RequestStatus.open);
           console.log('c', data);
-
           break;
 
         case 'notifyAll':
+          this.saveRequest(RequestStatus.open);
           console.log('n', data);
-
           break;
       }
     })

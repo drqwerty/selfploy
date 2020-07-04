@@ -201,6 +201,7 @@ export class FirestoreService {
     if (this.prodMode) {
       if (request.isMine) {
         this.db.collection(dbKeys.requests).doc(request.id).delete();
+        this.fStorage.deleteRequestImages(request.id);
       }
 
     } else {
@@ -213,7 +214,7 @@ export class FirestoreService {
   }
 
   async getRequestList(requestListObject) {
-    if (!requestListObject) return null;
+    if (!requestListObject) return [];
     const requestList = [];
     const requests = await Promise.all(Object.values(requestListObject).map((path: string) => this.getRequestFromPath(path)));
     requests.forEach(request => {
@@ -221,7 +222,7 @@ export class FirestoreService {
       else requestList.push(request);
     });
 
-    return requestList.length ? requestList : null;
+    return requestList.length ? requestList : [];
   }
 
   async getRequestFromPath(path: string): Promise<Request> {
@@ -244,8 +245,10 @@ export class FirestoreService {
     const { images, ...data } = request;
     const docData = Object.assign({}, data);
 
-    if (request.startDate) docData.startDate = Timestamp.fromDate(request.startDate.toDate());
-    if (request.endDate) docData.endDate = Timestamp.fromDate(request.endDate.toDate());
+    if (request.startDate?.constructor.name == 'Moment') {
+      if (request.startDate) docData.startDate = Timestamp.fromDate(request.startDate.toDate());
+      if (request.endDate) docData.endDate = Timestamp.fromDate(request.endDate.toDate());
+    }
 
     if (request.hasImages) await this.fStorage.uploadRequestImageList(images, request.id);
 
@@ -262,7 +265,8 @@ export class FirestoreService {
   }
 
   private async saveRequestWithGeopoint(docData): Promise<DocumentReference> {
-    docData.coordinates = new GeoPoint(docData.coordinates.lat, docData.coordinates.lng);
+    if (docData.coordinates.lat)
+      docData.coordinates = new GeoPoint(docData.coordinates.lat, docData.coordinates.lng);
     docData.lastEditAt = firestore.FieldValue.serverTimestamp();
     await this.geofirestore.collection(dbKeys.requests).doc(docData.id).set(docData);
     const docRef = this.db.collection(dbKeys.requests).doc(docData.id).ref;

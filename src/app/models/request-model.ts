@@ -1,6 +1,6 @@
 import { WorkingHours } from './user-model';
 import { LatLng } from 'leaflet';
-import { Moment } from 'moment';
+import * as moment from 'moment';
 import { firestore } from 'firebase';
 
 export enum RequestStatus {
@@ -64,7 +64,19 @@ export class Request {
   constructor(request?: Request) {
     if (request) {
       Object.keys(request).forEach(key => this[key] = request[key]);
+
       if (!this.images) this.images = [];
+
+      if (this.coordinates && !(this.coordinates instanceof LatLng)) {
+        const lat = (<firestore.GeoPoint>this.coordinates).latitude;
+        const lng = (<firestore.GeoPoint>this.coordinates).longitude;
+        this.coordinates = new LatLng(lat, lng);
+      }
+
+      if (this.startDate) this.startDate = moment(this.startDate.toDate());
+      if (this.endDate) this.endDate = moment(this.endDate.toDate());
+      
+
 
     } else {
       this.hideLocationAccuracy = false;

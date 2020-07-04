@@ -79,7 +79,7 @@ export class FirebaseStorage {
     return imageList;
   }
 
-  private async deleteRequestImages(requestId: string) {
+  async deleteRequestImages(requestId: string) {
     const folderRef = firebase.storage().ref(`${dbKeys.requests}/${requestId}`);
     const deleteImagesPromises = (await folderRef.listAll()).items.map(async item => await item.delete());
     await Promise.all(deleteImagesPromises);

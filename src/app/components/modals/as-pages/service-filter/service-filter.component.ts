@@ -36,4 +36,25 @@ export class ServiceFilterComponent {
   rangeChange() {
     // console.log(this.filterValues.distance.value);
   }
+
+  orderByName() {
+
+  }
+
+  filterByClassification() {
+
+  }
+
+  filterByWorkingHours() {
+
+  }
+
+
+  apply() {
+
+  }
+
+  restartFilters() {
+
+  }
 }

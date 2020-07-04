@@ -32,7 +32,7 @@ export class RequestCardComponent implements AfterViewInit {
     this.showSpinner = false;
   }
 
-  async presentOptions(ev: any) {
+  async presentOptions() {
     const modal = await this.modalController.create({
       component: RequestCardActionSheetComponent,
       enterAnimation: ActionSheetEnter,
@@ -44,7 +44,7 @@ export class RequestCardComponent implements AfterViewInit {
       }
     });
 
-    modal.onDidDismiss().then(({ data }) => {
+    modal.onWillDismiss().then(({ data }) => {
       if (data) {
 
         switch (data) {

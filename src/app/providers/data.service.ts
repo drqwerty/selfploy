@@ -208,7 +208,7 @@ export class DataService {
 
     } else {
       const { path, requestSaved } = await this.firestore.saveRequest(request);
-      request = requestSaved;
+      request = new Request(requestSaved);
       this.requests = await this.storage.saveRequest(await this.getRequestList(), request);
       this.observeRequest(this.firestore.getObservableFromPath(path));
       await this.updateRequestList(requestSaved.id, path);

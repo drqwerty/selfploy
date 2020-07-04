@@ -69,6 +69,10 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
+  requestService() {
+    
+  }
+
   async viewProfile(user: User) {
     const modal = await this.modalController.create({
       component: ProfileModalComponent,
