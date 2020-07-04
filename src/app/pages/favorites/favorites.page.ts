@@ -19,11 +19,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   animations: [
     trigger('cardItem', [
       transition(':leave', [
-        style({ height: '*', opacity: '1' }),
-        sequence([
-          animate(".25s ease", style({ height: '*', opacity: '.2', })),
-          animate(".1s ease", style({ height: '0', opacity: 0 }))
-        ])
+        style({ opacity: 1 }),
+        animate(".25s ease", style({ transform: 'translateX(20%)', opacity: 0, })),
       ])
     ])
   ]
@@ -100,7 +97,7 @@ export class FavoritesPage implements AfterViewInit {
   async scrollLastTabToTop({ detail }) {
     const { index } = detail;
 
-    if(this.lastTabIndex != index) {
+    if (this.lastTabIndex != index) {
       this.propagateScrollEvent = false;
       (await this.superTabList[this.lastTabIndex].getRootScrollableEl()).scrollTo(0, 0);
       this.ionContent.scrollToTop(350);
