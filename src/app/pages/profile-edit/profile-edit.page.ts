@@ -20,6 +20,7 @@ import Utils from "src/app/utils";
 
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 
 @Component({
   selector: 'app-profile-edit',
@@ -205,6 +206,8 @@ export class ProfileEditPage {
     this.removePictureToast?.dismiss();
     const modal = await this.modalController.create({
       component: CameraSourceActionSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet',
       componentProps: {
         showRemoveButton: this.tempUser.profilePic != null,
@@ -345,6 +348,8 @@ export class ProfileEditPage {
 
     const modal = await this.modalController.create({
       component: InputBottomSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet border-top-radius',
       componentProps: {
         type,

@@ -14,6 +14,7 @@ import { CalendarComponent } from 'src/app/components/modals/calendar/calendar.c
 import * as moment from 'moment';
 import { RequestNewActionSheetComponent } from 'src/app/components/action-sheets/request-new-action-sheet/request-new-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
+import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 
 @Component({
   selector: 'app-request-new',
@@ -58,6 +59,8 @@ export class RequestNewComponent {
     const modal = await this.modalController.create({
       cssClass: 'action-sheet border-top-radius',
       component: RequestNewActionSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
       componentProps: {
         requestIsComplete: this.requestIsComplete(),
       }
@@ -230,6 +233,8 @@ export class RequestNewComponent {
 
     const modal = await this.modalController.create({
       component: CameraSourceActionSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet',
       componentProps: {
         showRemoveButton: false,
@@ -265,6 +270,8 @@ export class RequestNewComponent {
 
     const modal = await this.modalController.create({
       component: InputBottomSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet border-top-radius',
       componentProps: {
         type,

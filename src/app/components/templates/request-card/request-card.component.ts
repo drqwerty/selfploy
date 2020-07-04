@@ -5,6 +5,7 @@ import { RequestCardActionSheetComponent } from 'src/app/components/action-sheet
 import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 
 @UntilDestroy()
 @Component({
@@ -29,6 +30,8 @@ export class RequestCardComponent implements AfterViewInit {
   async presentOptions(ev: any) {
     const modal = await this.modalController.create({
       component: RequestCardActionSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet border-top-radius',
     });
 

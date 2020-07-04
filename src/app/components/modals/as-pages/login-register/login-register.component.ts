@@ -10,6 +10,7 @@ import { FirebaseError } from 'firebase';
 import { TermsAndConditionsComponent } from 'src/app/components/modals/terms-and-conditions/terms-and-conditions.component';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { CameraSourceActionSheetComponent } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.component';
+import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 
 @Component({
   selector: 'app-login-register',
@@ -232,6 +233,8 @@ export class LoginRegisterComponent {
     this.removePictureToast?.dismiss();
     const modal = await this.modalController.create({
       component: CameraSourceActionSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet',
       componentProps: {
         showRemoveButton: this.user.profilePic != null,

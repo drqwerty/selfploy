@@ -3,6 +3,7 @@ import { FivGallery, FivGalleryImage } from '@fivethree/core';
 import { IonImg, ModalController } from '@ionic/angular';
 import { takeUntil } from 'rxjs/operators';
 import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
+import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 
 @Component({
   selector: 'gallery',
@@ -97,6 +98,8 @@ export class GalleryComponent {
   async remove() {
     const modal = await this.modalController.create({
       component: DeleteConfirmActionSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet border-top-radius',
     })
 
