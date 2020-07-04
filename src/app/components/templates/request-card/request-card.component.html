@@ -3,7 +3,13 @@
   <div class="card-content">
 
     <div class="left-content">
-      <ion-img [src]="image"></ion-img>
+
+      <ng-container *ngIf="request.hasImages">
+        <ion-spinner *ngIf="showSpinner" name="crescent" color="medium"></ion-spinner>
+        <ion-img [class.ion-invisible]="showSpinner" (ionImgDidLoad)="imageLoaded()" [src]="request.images[0]"></ion-img>
+      </ng-container>
+      
+      
     </div>
 
     <div class="main-content">

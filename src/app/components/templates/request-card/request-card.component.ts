@@ -1,13 +1,11 @@
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Component, Input, AfterViewInit } from '@angular/core';
 import { Request, RequestStatus } from 'src/app/models/request-model';
 import { ModalController } from '@ionic/angular';
 import { RequestCardActionSheetComponent } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.component';
 import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 
-@UntilDestroy()
 @Component({
   selector: 'request-card',
   templateUrl: './request-card.component.html',
@@ -18,6 +16,8 @@ export class RequestCardComponent implements AfterViewInit {
   @Input() request: Request;
 
 
+  showSpinner = true;
+
   constructor(
     private modalController: ModalController,
     private data: DataService,
@@ -25,6 +25,10 @@ export class RequestCardComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     console.log(this.request);
+  }
+
+  imageLoaded() {
+    this.showSpinner = false;
   }
 
   async presentOptions(ev: any) {
