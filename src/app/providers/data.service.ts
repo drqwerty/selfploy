@@ -263,8 +263,8 @@ export class DataService {
           const isMine = data?.owner == userId;
           return { id, isMine, ...data };
         }),
-        takeWhile(request => request?.status != RequestStatus.closed, true),
         filter(request => !!request.lastEditAt),
+        takeWhile(request => request?.status != RequestStatus.completed, true),
       )
       .subscribe(async requestChanged => {
         const requestList = await this.getRequestList();
@@ -276,6 +276,16 @@ export class DataService {
           this.updateLocalRequest(requestUpdated);
         }
       });
+  }
+
+  closeRequest(request: Request) {
+    request.status = RequestStatus.closed;
+    this.saveRequest(request);
+  }
+
+  completeRequest(request: Request) {
+    request.status = RequestStatus.completed;
+    this.saveRequest(request);
   }
 
 }

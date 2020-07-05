@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -6,6 +6,8 @@ import { ModalController } from '@ionic/angular';
   templateUrl: './delete-confirm-action-sheet.component.html',
 })
 export class DeleteConfirmActionSheetComponent {
+
+  @Input() text = 'Eliminar';
 
   constructor(
     private modalController: ModalController,

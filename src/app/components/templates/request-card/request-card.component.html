@@ -1,4 +1,6 @@
-<ion-card mode="ios" button (click)="onClick()">
+<ion-card mode="ios" button (click)="onClick()" 
+  [class.completed]="request.status == requestStatus.completed"
+  [class.isMine]="request.isMine">
 
   <div class="card-content">
 
@@ -50,7 +52,7 @@
             </ion-col>
             <ng-template *ngIf="request.isMine then showContacts;else showChatButton"></ng-template>
             <ng-template #showContacts>
-              <ion-col size="6" class="ion-justify-content-end ion-no-padding">
+              <ion-col size="6" class="ion-justify-content-end ion-no-padding" *ngIf="request.status != requestStatus.completed">
                 <ion-text color="tertiary" class="margin-end">Contactos:</ion-text>
                 <ion-badge mode="ios" class="font-weight-500" [class.unread-messages]="request.unreadMesseages">14</ion-badge>
               </ion-col>

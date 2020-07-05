@@ -17,6 +17,7 @@ export class RequestCardComponent implements AfterViewInit {
   @Input() request: Request;
 
 
+  requestStatus = RequestStatus;
   requestStatusText = RequestStatusText;
   showSpinner = true;
 
@@ -40,7 +41,7 @@ export class RequestCardComponent implements AfterViewInit {
       leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet border-top-radius',
       componentProps: {
-        isDraft: this.request.status == RequestStatus.draft,
+        status: this.request.status,
         isMine: this.request.isMine,
       }
     });
@@ -50,16 +51,19 @@ export class RequestCardComponent implements AfterViewInit {
 
         switch (data) {
           case RequestStatus.closed:
+            this.closeRequest();
+            break;
+
           case RequestStatus.completed:
+            this.completeRequest();
             break;
 
           case RequestStatus.edit:
             this.editRequest();
-
             break;
+
           case RequestStatus.delete:
             this.deleteRequest();
-
             break;
 
           default:
@@ -70,6 +74,20 @@ export class RequestCardComponent implements AfterViewInit {
     })
 
     modal.present();
+  }
+
+  async closeRequest() {
+    (await this.showConfirmAction('Continuar'))
+      .onDidDismiss().then(({ data: confirm }) => {
+        if (confirm) this.data.closeRequest(this.request);
+      });
+  }
+
+  async completeRequest() {
+    (await this.showConfirmAction('Continuar'))
+      .onDidDismiss().then(({ data: confirm }) => {
+        if (confirm) this.data.completeRequest(this.request);
+      });
   }
 
   async editRequest() {
@@ -86,16 +104,21 @@ export class RequestCardComponent implements AfterViewInit {
   }
 
   async deleteRequest() {
+    (await this.showConfirmAction())
+      .onDidDismiss().then(({ data: confirm }) => {
+        if (confirm) this.data.removeRequest(this.request);
+      });
+  }
+
+  async showConfirmAction(confirmText?: string) {
+    let componentProps = confirmText ? { text: confirmText } : {};
     const modal = await this.modalController.create({
       component: DeleteConfirmActionSheetComponent,
       cssClass: 'modal',
+      componentProps,
     });
-
-    modal.onDidDismiss().then(({ data: confirm }) => {
-      if (confirm) this.data.removeRequest(this.request);
-    });
-
     modal.present();
+    return modal;
   }
 
   onClick() {
