@@ -50,6 +50,7 @@ export class AuthService {
       await this.data.getMyProfile(userCrendential.user.uid)
       await this.data.getFavoriteList();
       await this.data.getRequestList();
+      await this.data.getUserConfig();
       return userCrendential;
     } catch (reason) {
       throw reason;

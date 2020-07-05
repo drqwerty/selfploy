@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/models/user-model';
+import { User, UserConfig } from 'src/app/models/user-model';
 import { TabBarState } from 'src/app/animations/tab-bar-transition'
 import { StorageService } from 'src/app/services/storage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
@@ -25,6 +25,8 @@ export class DataService {
   public followingRequests: Request[];
   public favoritesChangedSubject = new Subject<void>();
   public requestsChangedSubject = new Subject<void>();
+  public userConfigChangedSubject = new Subject<UserConfig>();
+  public userConfig: UserConfig;
 
   constructor(
     private storage: StorageService,
@@ -286,6 +288,24 @@ export class DataService {
   completeRequest(request: Request) {
     request.status = RequestStatus.completed;
     this.saveRequest(request);
+  }
+
+
+
+
+  /* user config */
+
+  async getUserConfig() {
+    this.userConfig =
+      await this.storage.getUserConfig()
+      ?? await this.storage.createUserConfig();
+    return this.userConfig;
+  }
+
+  async updateUserConfig(newConfig: UserConfig) {
+    await this.storage.updateUserConfig(newConfig);
+    this.userConfig = newConfig;
+    this.userConfigChangedSubject.next(newConfig);
   }
 
 }

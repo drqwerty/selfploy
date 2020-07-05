@@ -12,6 +12,8 @@ import { CustomHeaderModule } from 'src/app/components/utils/custom-header/custo
 import { EmptyContentModule } from 'src/app/components/templates/empty-content/empty-content.module';
 import { RequestCardModule } from 'src/app/components/templates/request-card/request-card.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
+import { RequestListPopoverComponent } from 'src/app/components/popovers/request-list-popover/request-list-popover.component';
+import { RequestListOrderActionSheetComponent } from 'src/app/components/action-sheets/request-list-order-action-sheet/request-list-order-action-sheet.component';
 
 @NgModule({
   imports: [
@@ -27,6 +29,8 @@ import { SuperTabsModule } from '@ionic-super-tabs/angular';
   ],
   declarations: [
     RequestListPage,
+    RequestListPopoverComponent,
+    RequestListOrderActionSheetComponent,
   ]
 })
 export class RequestListPageModule {}

@@ -8,4 +8,6 @@ export enum dbKeys {
   published = 'published ',
 
   profilePics = 'profilePics',
+
+  userConfig = 'config',
 }

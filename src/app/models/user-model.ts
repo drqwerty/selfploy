@@ -1,5 +1,15 @@
 import { LatLng } from 'leaflet';
 import { firestore } from 'firebase';
+import { RequestListConfig } from './request-model';
+
+export interface UserConfig {
+  requestListOptions: {
+    showCompleted: RequestListConfig.show | RequestListConfig.hide,
+    showDraft: RequestListConfig.show | RequestListConfig.hide,
+    orderBy: RequestListConfig.orderByDate | RequestListConfig.orderByState,
+    order: RequestListConfig.ascendingOrder | RequestListConfig.descendingOrder,
+  }
+}
 
 export enum UserRole {
   client,

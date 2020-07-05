@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { dbKeys } from '../models/db-keys';
-import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'

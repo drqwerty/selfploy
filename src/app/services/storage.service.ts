@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/models/user-model';
+import { User, UserConfig } from 'src/app/models/user-model';
 import * as _ from 'lodash';
 import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins;
 import { dbKeys } from 'src/app/models/db-keys'
-import { Request } from 'src/app/models/request-model';
+import { Request, RequestListConfig } from 'src/app/models/request-model';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +45,7 @@ export class StorageService {
   }
 
   removeUserProfile() {
-    return this.removeKeys(dbKeys.user, dbKeys.favorites, dbKeys.requests);
+    return this.removeKeys(dbKeys.user, dbKeys.favorites, dbKeys.requests, dbKeys.userConfig);
   }
 
   async saveFavorite(favoritesI: User[], user: User) {
@@ -85,7 +85,7 @@ export class StorageService {
     const index = requests.findIndex(requestI => request.id == requestI.id);
     if (index > -1) requests[index] = request;
     else requests.push(request);
-    
+
     await this.saveRequests(requests)
     return requests;
   }
@@ -95,6 +95,30 @@ export class StorageService {
     for (const requestSaved of requestsI) if (requestSaved.id !== request.id) requests.push(requestSaved);
     await this.saveRequests(requests);
     return requests;
+  }
+
+
+  /* user config */
+
+  async createUserConfig() {
+    const defaultConfig: UserConfig = {
+      requestListOptions: {
+        showCompleted: RequestListConfig.hide,
+        showDraft: RequestListConfig.show,
+        orderBy: RequestListConfig.orderByDate,
+        order: RequestListConfig.descendingOrder,
+      }
+    }
+    await this.saveData(dbKeys.userConfig, defaultConfig);
+    return defaultConfig;
+  }
+
+  getUserConfig(): Promise<UserConfig> {
+    return this.getData(dbKeys.userConfig);
+  }
+
+  async updateUserConfig(newConfig: UserConfig) {
+    await this.saveData(dbKeys.userConfig, newConfig)
   }
 
 }

@@ -3,6 +3,15 @@ import { LatLng } from 'leaflet';
 import * as moment from 'moment';
 import { firestore } from 'firebase';
 
+export enum RequestListConfig {
+  hide,
+  show,
+  ascendingOrder,
+  descendingOrder,
+  orderByDate,
+  orderByState,
+}
+
 export enum RequestStatus {
   draft,
   open,

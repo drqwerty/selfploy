@@ -1,0 +1,14 @@
+<ion-list lines="none">
+  <ion-item button (click)="presentModal()">
+    <ion-label>Ordenar por...</ion-label>
+    <ion-icon color="medium" slot="start" src="/assets/icon/align-left.svg"></ion-icon>
+  </ion-item>
+  <ion-item>
+    <ion-label>Mostrar borradores</ion-label>
+    <ion-checkbox (ionChange)="updateConfig()" [(ngModel)]="userConfig.requestListOptions.showDraft" slot="start"></ion-checkbox>
+  </ion-item>
+  <ion-item>
+    <ion-label>Mostrar completados</ion-label>
+    <ion-checkbox (ionChange)="updateConfig()" [(ngModel)]="userConfig.requestListOptions.showCompleted" slot="start"></ion-checkbox>
+  </ion-item>
+</ion-list>

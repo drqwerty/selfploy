@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
+import { Component, Input, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Request, RequestStatus, RequestStatusText } from 'src/app/models/request-model';
 import { ModalController } from '@ionic/angular';
 import { RequestCardActionSheetComponent } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.component';
@@ -12,7 +12,7 @@ import { RequestNewComponent } from 'src/app/components/modals/as-pages/request-
   templateUrl: './request-card.component.html',
   styleUrls: ['./request-card.component.scss'],
 })
-export class RequestCardComponent implements AfterViewInit {
+export class RequestCardComponent implements AfterViewInit, OnChanges {
 
   @Input() request: Request;
 
@@ -29,6 +29,12 @@ export class RequestCardComponent implements AfterViewInit {
   ngAfterViewInit() {
     console.log(this.request);
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+
+    console.log(changes.request);
+
+}
 
   imageLoaded() {
     this.showSpinner = false;

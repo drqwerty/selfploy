@@ -13,7 +13,6 @@ import Utils from "src/app/utils";
 const { GeoPoint } = firestore;
 import { dbKeys } from 'src/app/models/db-keys'
 import { Request, RequestStatus, RequestProperties } from 'src/app/models/request-model';
-import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
