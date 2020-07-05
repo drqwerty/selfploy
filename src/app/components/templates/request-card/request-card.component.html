@@ -6,37 +6,61 @@
 
       <ng-container *ngIf="request.hasImages">
         <ion-spinner *ngIf="showSpinner" name="crescent" color="medium"></ion-spinner>
-        <ion-img [class.ion-invisible]="showSpinner" (ionImgDidLoad)="imageLoaded()" [src]="request?.images[0].url"></ion-img>
+        <ion-img [class.ion-invisible]="showSpinner" class="cute" (ionImgDidLoad)="imageLoaded()" [src]="request?.images[0].url"></ion-img>
       </ng-container>
       
     </div>
 
     <div class="main-content">
-      <ion-button (click)="presentOptions()" class="ion-float-right" fill="clear" size="small">
+      <ion-button (click)="presentOptions()" class="ion-float-right options-button" fill="clear" size="small">
         <ion-icon slot="icon-only" name="ellipsis-vertical" color="medium"></ion-icon>
       </ion-button>
 
       <ion-card-header mode="md">
-        <ion-card-title>Awesome Title</ion-card-title>
-        <ion-card-subtitle>{{request.id}}</ion-card-subtitle>
+        <ion-card-title color="tertiary">
+          <ng-container *ngIf="request.category; else emptyService">
+            <span upperCaseFirstLetter>{{request.category}}</span>
+            <span upperCaseFirstLetter>{{request.service}}</span>
+          </ng-container>
+          <ng-template #emptyService><ion-text color="medium">Sin servicio</ion-text></ng-template>
+        </ion-card-title>
+        <ion-card-subtitle>
+          <ng-container *ngIf="request.title; else emptyTitle">{{request.title}}</ng-container>
+          <ng-template #emptyTitle><ion-text color="medium">Sin título</ion-text></ng-template>
+        </ion-card-subtitle>
       </ion-card-header>
 
       <ion-footer class="ion-no-border" mode="md">
         <ion-toolbar class="ion-padding-bottom">
           <ion-row class="ion-padding-horizontal">
-            <ion-col size="12">
-              Fehcita
+            <ion-col size="12" class="font-weight-600">
+              <ng-container *ngIf="request.priority; else showDate">
+                <ion-text color="danger">Urgente</ion-text>
+              </ng-container>
+              <ng-template #showDate>
+                <ng-container *ngIf="request.startDate">{{request.startDate.format('DD MMM')}}</ng-container>
+                <ng-container *ngIf="request.endDate"> - {{request.endDate.format('DD MMM')}}</ng-container>
+              </ng-template>
             </ion-col>
           </ion-row>
           <ion-row class="ion-padding-horizontal">
             <ion-col size="6" class="ion-justify-content-start ion-no-padding">
               <ion-text color="tertiary" class="margin-end">Estado:</ion-text>
-              <ion-text color="medium">Abierto</ion-text>
+              <ion-text upperCaseFirstLetter color="medium">{{requestStatusText[request.status]}}</ion-text>
             </ion-col>
-            <ion-col size="6" class="ion-justify-content-end ion-no-padding">
-              <ion-text color="tertiary" class="margin-end">Contactos:</ion-text>
-              <ion-badge mode="ios" class="font-weight-500" [class.unread-messages]="request.unreadMesseages">14</ion-badge>
-            </ion-col>
+            <ng-template *ngIf="request.isMine then showContacts;else showChatButton"></ng-template>
+            <ng-template #showContacts>
+              <ion-col size="6" class="ion-justify-content-end ion-no-padding">
+                <ion-text color="tertiary" class="margin-end">Contactos:</ion-text>
+                <ion-badge mode="ios" class="font-weight-500" [class.unread-messages]="request.unreadMesseages">14</ion-badge>
+              </ion-col>
+            </ng-template>
+            <ng-template #showChatButton>
+              <div class="badge" [class.unread-messages]="request.unreadMesseages"></div>
+              <ion-button (click)="onClick()" class="chat-button">
+                <ion-icon slot="icon-only" name="chatbubble"></ion-icon>
+              </ion-button>
+            </ng-template>
           </ion-row>
         </ion-toolbar>
       </ion-footer>

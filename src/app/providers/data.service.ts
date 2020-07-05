@@ -7,8 +7,9 @@ import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import Utils from 'src/app/utils';
 import { Subject, Observable } from 'rxjs';
 import { Request, RequestStatus } from 'src/app/models/request-model';
-import { map, takeUntil, takeWhile, filter } from 'rxjs/operators';
+import { map, takeWhile, filter } from 'rxjs/operators';
 import { Action, DocumentSnapshot } from '@angular/fire/firestore';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -189,7 +190,11 @@ export class DataService {
     if (!(await this.getMyProfile()).requests) return [];
 
     if (!this.requests) {
-      this.requests = await this.storage.getRequestList();
+      this.requests = (await this.storage.getRequestList())?.map(request => {
+        if (request.startDate) request.startDate = moment(request.startDate);
+        if (request.endDate) request.endDate = moment(request.endDate);
+        return request;
+      });
 
       if (!this.requests) {
         this.requests = await this.firestore.getRequestList((await this.getMyProfile()).requests);
@@ -204,6 +209,7 @@ export class DataService {
 
     if (request.id) {
       await this.firestore.saveRequest(request);
+      // el observador la guarda en local
       // await this.storage.saveRequest(await this.getRequestList(), request);
 
     } else {
@@ -263,7 +269,7 @@ export class DataService {
       .subscribe(async requestChanged => {
         const requestList = await this.getRequestList();
         const localRequest = requestList.find(request => request.id == requestChanged.id);
-        if (requestChanged.lastEditAt.seconds != localRequest.lastEditAt.seconds) {
+        if (localRequest?.lastEditAt.seconds != requestChanged.lastEditAt.seconds) {
           const requestUpdated = new Request(requestChanged);
           if (requestUpdated.hasImages) requestUpdated.images = await this.fStorage.getRequestImages(localRequest.id);
 

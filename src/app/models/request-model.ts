@@ -12,6 +12,15 @@ export enum RequestStatus {
   delete,
 }
 
+export const RequestStatusText = [
+  'borrador',
+  'publicado',
+  'cerrado',
+  'completado',
+  'editar',
+  'eliminar',
+]
+
 export enum RequestProperties {
   service = 'service',
   category = 'category',
@@ -75,7 +84,6 @@ export class Request {
 
       if (this.startDate) this.startDate = moment(this.startDate.toDate());
       if (this.endDate) this.endDate = moment(this.endDate.toDate());
-      
 
 
     } else {

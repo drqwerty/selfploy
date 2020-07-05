@@ -1,5 +1,5 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
-import { Request, RequestStatus } from 'src/app/models/request-model';
+import { Request, RequestStatus, RequestStatusText } from 'src/app/models/request-model';
 import { ModalController } from '@ionic/angular';
 import { RequestCardActionSheetComponent } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.component';
 import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
@@ -17,6 +17,7 @@ export class RequestCardComponent implements AfterViewInit {
   @Input() request: Request;
 
 
+  requestStatusText = RequestStatusText;
   showSpinner = true;
 
   constructor(
