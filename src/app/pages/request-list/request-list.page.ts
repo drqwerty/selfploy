@@ -25,6 +25,7 @@ export class RequestListPage {
 
   superTabsToolbarStyle: CSSStyleDeclaration;
   statusBarColor = '#fff';
+  statusBarAvailable = false;
 
   superTabList: SuperTab[];
   lastTabIndex = 0;
@@ -43,6 +44,7 @@ export class RequestListPage {
     private data: DataService,
     private popoverController: PopoverController
   ) {
+    this.statusBarAvailable = Capacitor.isPluginAvailable('StatusBar');
     data.requestsChangedSubject
       .pipe(untilDestroyed(this))
       .subscribe(() => this.updateRequestLists());
@@ -52,6 +54,7 @@ export class RequestListPage {
         this.userConfig = newConfig;
         this.applyFilters();
       });
+    // data.resetRequestStates();
   }
 
   ionViewWillEnter() {
@@ -61,7 +64,7 @@ export class RequestListPage {
   ionViewDidEnter() {
     this.superTabsToolbarStyle = this.superTabsToolbar?.nativeElement.style;
     this.updateBackgroundColor(this.lastTabIndex);
-    this.presentPopover(null);
+    // this.presentPopover(null);
   }
 
   async initView() {
@@ -69,7 +72,7 @@ export class RequestListPage {
     await this.getUserConfig();
     this.updateRequestLists();
     this.imAClient = await this.userIsClient();
-    if (Capacitor.isPluginAvailable('StatusBar')) {
+    if (this.statusBarAvailable) {
       const style = this.imAClient ? StatusBarStyle.Light : StatusBarStyle.Dark;
       StatusBar.setStyle({ style });
     }
@@ -100,36 +103,38 @@ export class RequestListPage {
   }
 
   applyFilters() {
-    this.myRequestList.sort((a, b) => {
+    this.myRequestList.sort(this.sortFunction);
+    this.followingRequestList.sort(this.sortFunction);
+  }
 
-      if (a.status === RequestStatus.draft && b.status !== RequestStatus.draft) return -1;
-      if (a.status !== RequestStatus.draft && b.status === RequestStatus.draft) return 1;
-      if (a.status === RequestStatus.completed && b.status !== RequestStatus.completed) return 1;
-      if (a.status !== RequestStatus.completed && b.status === RequestStatus.completed) return -1;
+  private sortFunction = (a: Request, b: Request) => {
+    if (a.status === RequestStatus.draft && b.status !== RequestStatus.draft) return -1;
+    if (a.status !== RequestStatus.draft && b.status === RequestStatus.draft) return 1;
+    if (a.status === RequestStatus.completed && b.status !== RequestStatus.completed) return 1;
+    if (a.status !== RequestStatus.completed && b.status === RequestStatus.completed) return -1;
 
-      let order = 0;
+    let order = 0;
 
-      if (this.userConfig.requestListOptions.orderBy === RequestListConfig.orderByState) {
-        order = (a.status === b.status)
-          ? this.compareDates(a, b)
-          : this.userConfig.requestListOptions.order === RequestListConfig.ascendingOrder
-            ? this.compareStates(a.status, b.status)
-            : this.compareStates(b.status, a.status);
-      }
-
-      if (this.userConfig.requestListOptions.orderBy === RequestListConfig.orderByDate) {
-        order = (!this.compareDates(a, b))
+    if (this.userConfig.requestListOptions.orderBy === RequestListConfig.orderByState) {
+      order = (a.status === b.status)
+        ? this.compareDates(a, b)
+        : this.userConfig.requestListOptions.order === RequestListConfig.ascendingOrder
           ? this.compareStates(a.status, b.status)
-          : this.userConfig.requestListOptions.order === RequestListConfig.ascendingOrder
-            ? this.compareDates(a, b)
-            : this.compareDates(b, a);
-      }
+          : this.compareStates(b.status, a.status);
+    }
 
-      if (!order) order = this.compareServices(a, b);
-      if (!order) order = this.compareTitles(a.title, b.title);
+    if (this.userConfig.requestListOptions.orderBy === RequestListConfig.orderByDate) {
+      order = (!this.compareDates(a, b))
+        ? this.compareStates(a.status, b.status)
+        : this.userConfig.requestListOptions.order === RequestListConfig.ascendingOrder
+          ? this.compareDates(a, b)
+          : this.compareDates(b, a);
+    }
 
-      return order;
-    });
+    if (!order) order = this.compareServices(a, b);
+    if (!order) order = this.compareTitles(a.title, b.title);
+
+    return order;
   }
 
   private compareStates(a: RequestStatus, b: RequestStatus) {
@@ -182,10 +187,11 @@ export class RequestListPage {
     return (await this.data.getMyProfile()).role === UserRole.client;
   }
 
-  async presentPopover(ev: any) {
+  async presentPopover(event: MouseEvent) {
     const popover = await this.popoverController.create({
       component: RequestListPopoverComponent,
-      event: ev,
+      event,
+      componentProps: { userConfig: this.userConfig, }
     });
 
     popover.present();
@@ -212,19 +218,22 @@ export class RequestListPage {
     this.superTabs.selectTab(index);
   }
 
-  updateBackgroundColor(index) {
-    if (this.imAClient) return;
+  async updateBackgroundColor(index) {
+    if (this.imAClient == null) this.imAClient = await this.userIsClient();
 
-    if (!Capacitor.isPluginAvailable('StatusBar')) {
-      this.statusBarColor = 'white';
+    this.statusBarColor = this.statusBarAvailable
+      ? this.imAClient
+        ? '#fff'
+        : index
+          ? 'secondary'
+          : 'primary'
+      : '#fff';
 
-    } else {
+    if (!this.imAClient) {
       if (index) {
         this.superTabsToolbarStyle.setProperty('--st-indicator-color', 'var(--ion-color-secondary)');
-        this.statusBarColor = 'secondary';
       } else {
         this.superTabsToolbarStyle.removeProperty('--st-indicator-color');
-        this.statusBarColor = 'primary';
       }
     }
   }

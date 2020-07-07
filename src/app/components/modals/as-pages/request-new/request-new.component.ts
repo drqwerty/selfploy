@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input } from '@angular/core';
+import { Component, ViewChild, Input, OnInit } from '@angular/core';
 import { Animations } from 'src/app/animations/animations';
 import { ModalController, IonContent, LoadingController } from '@ionic/angular';
 import { Request, RequestProperties, RequestStatus } from 'src/app/models/request-model';
@@ -21,15 +21,16 @@ import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sh
   templateUrl: './request-new.component.html',
   styleUrls: ['./request-new.component.scss'],
 })
-export class RequestNewComponent {
+export class RequestNewComponent implements OnInit {
 
   @Input() edit = false;
-  @Input() request: Request = new Request();
+  @Input() request: Request;
 
 
   @ViewChild(IonContent) ionContent: IonContent;
   @ViewChild(GalleryComponent) gallery: GalleryComponent;
 
+  tempRequest: Request;
   chooseDayDefaultText = 'Elige una fecha';
 
   constructor(
@@ -39,6 +40,10 @@ export class RequestNewComponent {
     private loadingController: LoadingController,
     private data: DataService,
   ) { }
+
+  ngOnInit() {
+    this.tempRequest = new Request(this.request);
+  }
 
   ionViewWillEnter() {
     // this.anim.modalLoaded();
@@ -83,7 +88,8 @@ export class RequestNewComponent {
   }
 
   async saveRequest(status: RequestStatus) {
-    this.request.status = status;
+    this.tempRequest.status = status;
+    Request.copy(this.tempRequest, this.request);
     const loading = await this.loadingController.create();
 
     await Promise.all([
@@ -96,17 +102,17 @@ export class RequestNewComponent {
 
   requestIsComplete() {
     const validations = {
-      service: this.request?.service?.length > 0,
-      category: this.request?.category?.length > 0,
-      now: !!((this.request.priority && this.request.startDate)),
-      date1: !!(!this.request.priority && this.request.startDate && !this.request.endDate),
-      date2: !!(!this.request.priority && this.request.startDate && this.request.endDate),
-      hours: this.request?.workingHours?.length > 0,
-      title: this.request?.title?.length > 0,
-      description: this.request?.description?.length > 0,
-      imgs: this.request.hasImages,
-      budget: this.request?.budget >= 0,
-      location: this.request?.coordinates != null
+      service: this.tempRequest?.service?.length > 0,
+      category: this.tempRequest?.category?.length > 0,
+      now: !!((this.tempRequest.priority && this.tempRequest.startDate)),
+      date1: !!(!this.tempRequest.priority && this.tempRequest.startDate && !this.tempRequest.endDate),
+      date2: !!(!this.tempRequest.priority && this.tempRequest.startDate && this.tempRequest.endDate),
+      hours: this.tempRequest?.workingHours?.length > 0,
+      title: this.tempRequest?.title?.length > 0,
+      description: this.tempRequest?.description?.length > 0,
+      imgs: this.tempRequest.hasImages,
+      budget: this.tempRequest?.budget >= 0,
+      location: this.tempRequest?.coordinates != null
     };
 
     const isComplete =
@@ -124,7 +130,7 @@ export class RequestNewComponent {
   }
 
   updateHasImageProperty() {
-    this.request.hasImages = this.request.images.length > 0;
+    this.tempRequest.hasImages = this.tempRequest.images.length > 0;
   }
 
   async editService() {
@@ -134,19 +140,19 @@ export class RequestNewComponent {
       leaveAnimation: ModalAnimationSlideWithOpacityLeaveFromModal,
       componentProps: {
         title: 'Busco...',
-        userServices: { [this.request.category]: [this.request.service] },
+        userServices: { [this.tempRequest.category]: [this.tempRequest.service] },
         limit: 1,
       }
     });
 
     modal.onWillDismiss().then(({ data }) => {
       if (data) {
-        delete this.request.category;
-        delete this.request.service;
+        delete this.tempRequest.category;
+        delete this.tempRequest.service;
         if (Object.keys(data).length) {
           setTimeout(() => {
-            this.request.category = Object.keys(data)[0];
-            this.request.service = Object.values(data)[0][0];
+            this.tempRequest.category = Object.keys(data)[0];
+            this.tempRequest.service = Object.values(data)[0][0];
           });
         }
       }
@@ -157,18 +163,18 @@ export class RequestNewComponent {
 
   async setNow() {
     // this.chooseWorkingHours(true);
-    delete this.request.endDate;
-    delete this.request.workingHours;
-    this.request.startDate = moment();
-    this.request.priority = true;
+    delete this.tempRequest.endDate;
+    delete this.tempRequest.workingHours;
+    this.tempRequest.startDate = moment();
+    this.tempRequest.priority = true;
   }
 
   async chooseDay() {
-    console.log(this.request);
+    console.log(this.tempRequest);
 
     let componentProps;
-    if (!this.request.priority)
-      componentProps = { dateRange: { from: this.request.startDate, to: this.request.endDate } }
+    if (!this.tempRequest.priority)
+      componentProps = { dateRange: { from: this.tempRequest.startDate, to: this.tempRequest.endDate } }
 
     const modal = await this.modalController.create({
       cssClass: 'calendar-modal',
@@ -182,12 +188,12 @@ export class RequestNewComponent {
         if (!(data.from).isSame(data.to)) dateString += ' - ' + data.to.format('L');
         try {
           const selectedWorkingHours = await this.chooseWorkingHours(false, dateString);
-          this.request.priority = false;
-          delete this.request.startDate;
-          delete this.request.endDate;
+          this.tempRequest.priority = false;
+          delete this.tempRequest.startDate;
+          delete this.tempRequest.endDate;
           if (selectedWorkingHours) {
-            this.request.startDate = data.from;
-            if (!(data.from).isSame(data.to)) this.request.endDate = data.to;
+            this.tempRequest.startDate = data.from;
+            if (!(data.from).isSame(data.to)) this.tempRequest.endDate = data.to;
           }
         } catch { }
       }
@@ -204,15 +210,15 @@ export class RequestNewComponent {
         cssClass: 'modal',
         componentProps: {
           dateString,
-          requestWorkingHours: this.request.workingHours ?? []
+          requestWorkingHours: this.tempRequest.workingHours ?? []
         }
       });
 
       modal.onWillDismiss().then(({ data }) => {
         if (data) {
-          this.request.workingHours = data;
-          if (data.length) this.request.priority = priority;
-          else delete this.request.workingHours;
+          this.tempRequest.workingHours = data;
+          if (data.length) this.tempRequest.priority = priority;
+          else delete this.tempRequest.workingHours;
           resolve(data.length);
         } else {
           reject();
@@ -224,7 +230,7 @@ export class RequestNewComponent {
   }
 
   async addImage() {
-    if (this.request.images.length > 5) return;
+    if (this.tempRequest.images.length > 5) return;
 
     const modal = await this.modalController.create({
       component: CameraSourceActionSheetComponent,
@@ -238,7 +244,7 @@ export class RequestNewComponent {
 
     modal.onWillDismiss().then(({ data }) => {
       if (data?.image) {
-        this.request.images.push({ name: moment().unix().toString(), url: data.image });
+        this.tempRequest.images.push({ name: moment().unix().toString(), url: data.image });
         this.updateHasImageProperty();
         this.gallery.updateImages();
       }
@@ -272,15 +278,15 @@ export class RequestNewComponent {
         type,
         title,
         form: this.formBuilder.group({
-          value: new FormControl(this.request[userProperty], validators),
+          value: new FormControl(this.tempRequest[userProperty], validators),
         }),
         keyboardType,
       },
     });
 
     modal.onWillDismiss().then(({ data }) => {
-      if (data) this.request[userProperty] = data.value;
-      if (this.request[userProperty] === '') delete this.request[userProperty];
+      if (data) this.tempRequest[userProperty] = data.value;
+      if (this.tempRequest[userProperty] === '') delete this.tempRequest[userProperty];
     });
 
     modal.present();
@@ -292,19 +298,19 @@ export class RequestNewComponent {
       enterAnimation: ModalAnimationSlideWithOpacityEnterFromModal,
       leaveAnimation: ModalAnimationSlideWithOpacityLeaveFromModal,
       componentProps: {
-        hideLocationAccuracy: this.request.hideLocationAccuracy,
-        addressFull: this.request.addressFull,
-        addressCity: this.request.addressCity,
-        coordinates: this.request.coordinates,
+        hideLocationAccuracy: this.tempRequest.hideLocationAccuracy,
+        addressFull: this.tempRequest.addressFull,
+        addressCity: this.tempRequest.addressCity,
+        coordinates: this.tempRequest.coordinates,
       }
     });
 
     modal.onWillDismiss().then(({ data }) => {
       if (data) {
-        this.request.hideLocationAccuracy = data.hideLocationAccuracy;
-        this.request.addressFull = data.addressFull;
-        this.request.addressCity = data.addressCity;
-        this.request.coordinates = data.coordinates;
+        this.tempRequest.hideLocationAccuracy = data.hideLocationAccuracy;
+        this.tempRequest.addressFull = data.addressFull;
+        this.tempRequest.addressCity = data.addressCity;
+        this.tempRequest.coordinates = data.coordinates;
         this.ionContent.scrollToBottom();
       }
     });

@@ -58,11 +58,11 @@ export class TabsPage {
     const modal = await this.modalController.create({
       component: RequestNewComponent,
       animated: false,
-      cssClass: 'background-black',
     });
     
     // await this.anim.addElement(this.ionFab).startAnimation();
-    modal.present();
+    modal.onWillDismiss().then(() => modal.classList.remove('background-black'));
+    modal.present().then(() => modal.classList.add('background-black'));
   }
 
 }

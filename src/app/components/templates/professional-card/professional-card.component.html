@@ -32,8 +32,8 @@
       </ion-item>
 
       <ion-card-content mode="md">
-        <span upperCaseFirstLetter class="separate-childs-with-commas"
-          *ngFor="let category of user.services | keyvalue">{{category.key}}</span>
+        <span [upperCaseFirstLetter]="category.key" class="separate-childs-with-commas"
+          *ngFor="let category of user.services | keyvalue"></span>
       </ion-card-content>
 
       <ion-footer class="ion-no-border">

@@ -24,11 +24,11 @@
 
       <super-tabs-toolbar slot="top" scrollable scrollablePadding="false">
         <super-tab-button disabled (click)="goToTab()">
-          <ion-label upperCaseFirstLetter>Todos</ion-label>
+          <ion-label>Todos</ion-label>
         </super-tab-button>
         <ng-container *ngFor="let favoriteReferences of favoriteReferencesByCategory | keyvalue">
           <super-tab-button disabled #superTabButton (click)="goToTab(superTabButton)" *ngIf="favoriteReferences.value.length">
-            <ion-label upperCaseFirstLetter>{{favoriteReferences.key}}</ion-label>
+            <ion-label [upperCaseFirstLetter]="favoriteReferences.key"></ion-label>
           </super-tab-button>
         </ng-container>
       </super-tabs-toolbar>

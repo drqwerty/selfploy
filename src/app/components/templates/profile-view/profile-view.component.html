@@ -31,10 +31,6 @@
 
   <div #profileContent class="content" [class.nav-bar-space]="navBarSpace">
 
-    <!-- <div class="mBack1">
-      <div class="mBack2" [style.backgroundColor]="'var(--ion-color-'+backgroundColor+')'"></div>
-    </div> -->
-
     <div class="ion-padding">
       
       <div #profileImageWrapper class="image-profile">
@@ -73,8 +69,8 @@
         <div *ngIf="user?.role === userRol.professional" class="jobs">
           <ion-text color="primary">
             <h6>
-              <span class="separate-childs-with-commas" upperCaseFirstLetter
-                *ngFor="let category of user?.services | keyvalue ">{{category.key}}</span>
+              <span class="separate-childs-with-commas" [upperCaseFirstLetter]="category.key"
+                *ngFor="let category of user?.services | keyvalue "></span>
             </h6>
           </ion-text>
         </div>
@@ -100,8 +96,8 @@
                 <h2>Especialización</h2>
                 <h3 class="ion-text-wrap">
                   <ng-container *ngFor="let category of user.services | keyvalue ">
-                    <span upperCaseFirstLetter *ngFor="let service of category.value"
-                      class="separate-childs-with-commas">{{service}}</span>
+                    <span [upperCaseFirstLetter]="service" *ngFor="let service of category.value"
+                      class="separate-childs-with-commas"></span>
                   </ng-container>
                 </h3>
               </ion-label>
@@ -111,8 +107,8 @@
               <ion-label>
                 <h2>Horario</h2>
                 <h3>
-                  <span class="separate-childs-with-commas" upperCaseFirstLetter
-                    *ngFor="let workingHour of user.workingHours">{{workingHour}}</span>
+                  <span class="separate-childs-with-commas" [upperCaseFirstLetter]="workingHour"
+                    *ngFor="let workingHour of user.workingHours"></span>
                 </h3>
               </ion-label>
             </ion-item>

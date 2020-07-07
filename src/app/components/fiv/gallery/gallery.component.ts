@@ -96,25 +96,25 @@ export class GalleryComponent {
   }
 
   async remove() {
-    const modal = await this.modalController.create({
-      component: DeleteConfirmActionSheetComponent,
-      enterAnimation: ActionSheetEnter,
-      leaveAnimation: ActionSheetLeave,
-      cssClass: 'action-sheet border-top-radius',
-    })
+    // const modal = await this.modalController.create({
+    //   component: DeleteConfirmActionSheetComponent,
+    //   enterAnimation: ActionSheetEnter,
+    //   leaveAnimation: ActionSheetLeave,
+    //   cssClass: 'action-sheet border-top-radius',
+    // })
 
-    modal.onWillDismiss().then(({ data }) => {
-      if (data) {
+    // modal.onWillDismiss().then(({ data }) => {
+    //   if (data) {
         if (this.images.length > 1) { this.images.splice(this.fivGallery.activeIndex, 1); }
         else { this.fivGallery.close(); this.images.shift() }
+        if (this.images.length == this.fivGallery.activeIndex) this.fivGallery.activeIndex--;
         this.imageDeleted.emit();
-        setTimeout(() => this.fivGallery.updateImagesIndex(), 300);
-      }
-    })
+    //   }
+    // })
 
-    document.body.append(modal);
+    // document.body.append(modal);
 
-    modal.present();
+    // modal.present();
   }
 
   updateInitialImage() {

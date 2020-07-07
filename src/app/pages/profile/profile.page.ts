@@ -50,10 +50,10 @@ export class ProfilePage {
     this.profileView.setCornersStyle();
   }
 
-  async presentPopover(ev: any) {
+  async presentPopover(event: MouseEvent) {
     const popover = await this.popoverController.create({
       component: ProfilePopoverComponent,
-      event: ev,
+      event,
     });
     return await popover.present();
   }

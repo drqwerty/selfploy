@@ -210,6 +210,7 @@ export class ProfileEditPage {
       leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet',
       componentProps: {
+        maintainAspectRatio: true,
         showRemoveButton: this.tempUser.profilePic != null,
         profilePic: this.profilePicWithoutCrop ?? this.tempUser.profilePic,
       }

@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UserConfig } from 'src/app/models/user-model';
 import { DataService } from 'src/app/providers/data.service';
-import { RequestListConfig } from 'src/app/models/request-model';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { RequestListOrderActionSheetComponent } from '../../action-sheets/request-list-order-action-sheet/request-list-order-action-sheet.component';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
@@ -13,21 +12,13 @@ import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sh
 })
 export class RequestListPopoverComponent {
 
-  userConfig: UserConfig;
+  @Input() userConfig: UserConfig;
 
   constructor(
     private data: DataService,
     private modalController: ModalController,
     private popoverController: PopoverController
-  ) {
-    this.init();
-  }
-
-  async init() {
-    this.userConfig = await this.data.getUserConfig();
-    this.presentModal();
-  }
-
+  ) { }
 
   async presentModal() {
     this.popoverController.dismiss();
@@ -41,7 +32,7 @@ export class RequestListPopoverComponent {
     modal.present();
   }
 
-  async updateConfig() {
-    await this.data.updateUserConfig(this.userConfig);
+  updateConfig() {
+    this.data.updateUserConfig(this.userConfig);
   }
 }

@@ -20,7 +20,7 @@
           (click)="updateServicesCheckbox(category, $event)"></ion-checkbox>
         <ion-icon class="category-icon" [style.backgroundColor]="category.color" color="light" slot="start"
           [src]="category.icon"></ion-icon>
-        <ion-label upperCaseFirstLetter color="medium">{{category.name}}</ion-label>
+        <ion-label [upperCaseFirstLetter]="category.name" color="medium"></ion-label>
         <ion-icon slot="end" [name]="category.collapsed ? 'chevron-down-outline' : 'chevron-up-outline'"></ion-icon>
       </ion-item>
     </ion-list>
@@ -29,7 +29,7 @@
       <ion-item *ngFor="let service of category.services">
         <ion-checkbox slot="start" [(ngModel)]="service.checked" (ionChange)="updateCategoryCheckbox(service, category)">
         </ion-checkbox>
-        <ion-label upperCaseFirstLetter color="tertiary">{{service.name}}</ion-label>
+        <ion-label [upperCaseFirstLetter]="service.name" color="tertiary"></ion-label>
       </ion-item>
     </ion-list>
   </div>

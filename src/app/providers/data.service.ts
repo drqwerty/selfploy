@@ -225,6 +225,7 @@ export class DataService {
 
   async updateLocalRequest(request: Request) {
     this.requests = await this.storage.updateRequest(await this.getRequestList(), request);
+    this.requestsChangedSubject.next();
   }
 
   async removeRequest(request: Request) {
@@ -288,6 +289,10 @@ export class DataService {
   completeRequest(request: Request) {
     request.status = RequestStatus.completed;
     this.saveRequest(request);
+  }
+
+  resetRequestStates() {
+    this.firestore.setAllRequestToDraftState();
   }
 
 

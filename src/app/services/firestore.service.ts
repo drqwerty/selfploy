@@ -309,4 +309,13 @@ export class FirestoreService {
     return Object.values(requestListObject)
       .map((path: string) => this.getObservableFromPath(path));
   }
+
+  setAllRequestToDraftState() {
+    this.db.collection(dbKeys.requests)
+      .get()
+      .toPromise()
+      .then(data =>
+        data.docs.forEach(doc =>
+          this.db.doc(doc.ref.path).update({ 'd.status': 0 })));
+  }
 }

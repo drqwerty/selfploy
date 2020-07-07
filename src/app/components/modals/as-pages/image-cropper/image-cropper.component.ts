@@ -9,11 +9,12 @@ import { ImageCroppedEvent, ImageCropperComponent as _ImageCropperComponent } fr
 })
 export class ImageCropperComponent {
 
-  @ViewChild(_ImageCropperComponent) imageCropper: _ImageCropperComponent;
-
   @Input() image: string;
+  @Input() maintainAspectRatio = false;
+  
+  
+  @ViewChild(_ImageCropperComponent) imageCropper: _ImageCropperComponent;
   croppedImage = '';
-
 
   constructor(
     private modalController: ModalController,

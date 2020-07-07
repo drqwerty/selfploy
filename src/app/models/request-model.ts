@@ -88,11 +88,16 @@ export class Request {
       if (this.coordinates && !(this.coordinates instanceof LatLng)) {
         const lat = (<firestore.GeoPoint>this.coordinates).latitude;
         const lng = (<firestore.GeoPoint>this.coordinates).longitude;
-        this.coordinates = new LatLng(lat, lng);
+        if (lat && lng) this.coordinates = new LatLng(lat, lng);
       }
 
-      if (this.startDate) this.startDate = moment(this.startDate.toDate());
-      if (this.endDate) this.endDate = moment(this.endDate.toDate());
+      if (this.startDate) this.startDate = this.startDate?.constructor.name == 't'
+        ? moment(this.startDate.toDate())
+        : moment(this.startDate);
+
+      if (this.endDate) this.endDate = this.endDate?.constructor.name == 't'
+        ? moment(this.endDate.toDate())
+        : moment(this.endDate);
 
 
     } else {
@@ -103,5 +108,10 @@ export class Request {
       this.status = RequestStatus.draft;
       this.images = [];
     }
+  }
+
+  static copy(from: Request, to: Request) {
+    Object.keys(to).forEach(key => to[key] = null);
+    Object.keys(from).forEach(key => to[key] = from[key]);
   }
 }

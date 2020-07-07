@@ -1,23 +1,28 @@
-import { Directive, ElementRef, AfterContentInit } from '@angular/core';
+import { Directive, ElementRef, Input, OnChanges } from '@angular/core';
 
 @Directive({
   selector: '[upperCaseFirstLetter]'
 })
-export class UpperCaseFirstLetterDirective implements AfterContentInit {
+export class UpperCaseFirstLetterDirective implements OnChanges {
+
+  @Input() upperCaseFirstLetter: string;
 
   constructor(private el: ElementRef) { }
 
-  ngAfterContentInit() {
+  ngOnChanges() {
     this.updateContent();
   }
 
   updateContent() {
-    if (this.el.nativeElement?.textContent !== '') {
+    if (this.upperCaseFirstLetter?.length) {
 
-      const firstChar = this.el.nativeElement.textContent.charAt(0);
-      if (firstChar == firstChar.toUpperCase()) return;
+      const firstChar = this.upperCaseFirstLetter.charAt(0);
+      if (firstChar == firstChar.toUpperCase()) {
+        this.el.nativeElement.textContent = this.upperCaseFirstLetter;
+        return;
+      }
 
-      const arr: string[] = this.el.nativeElement.textContent.split('');
+      const arr: string[] = this.upperCaseFirstLetter.split('');
       arr[0] = arr[0].toUpperCase();
       this.el.nativeElement.textContent = arr.join('');
     }

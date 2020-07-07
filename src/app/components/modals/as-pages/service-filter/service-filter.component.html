@@ -44,7 +44,7 @@
     <ion-row>
       <ion-col [size]="24 / filterValues.workingHours.options.length"  *ngFor="let option of filterValues.workingHours.options">
         <ion-button class="no-transform" (click)="filterByWorkingHours()" expand="block" [fill]="option.checked ? 'solid' : 'clear'">
-          <span upperCaseFirstLetter>{{option.name}}</span>
+          <span [upperCaseFirstLetter]="option.name"></span>
         </ion-button>
       </ion-col>
     </ion-row>

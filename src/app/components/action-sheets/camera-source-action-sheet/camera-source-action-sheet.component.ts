@@ -12,15 +12,16 @@ const { Camera } = Plugins;
 })
 export class CameraSourceActionSheetComponent {
 
+  @Input() maintainAspectRatio = false;
   @Input() showRemoveButton: boolean;
   @Input() profilePic: string;
   @Input() imageWithoutCrop: string;
+
 
   modalRoot: HTMLIonModalElement;
   modalCropper: HTMLIonModalElement;
   loading: HTMLIonLoadingElement;
   showEditButton = false;
-
 
   constructor(
     private modalController: ModalController,
@@ -43,7 +44,10 @@ export class CameraSourceActionSheetComponent {
 
   async editImage() {
     this.modalRoot.classList.add('ion-invisible');
-    await this.createCropperModal({ image: this.profilePic, });
+    await this.createCropperModal({
+      image: this.profilePic,
+      maintainAspectRatio: this.maintainAspectRatio,
+    });
     this.modalCropper.present();
   }
 
@@ -64,7 +68,10 @@ export class CameraSourceActionSheetComponent {
         resultType: CameraResultType.Base64,
       });
       this.profilePic = 'data:image/jpeg;base64,' + base64String
-      this.modalCropper.componentProps = { image: this.profilePic, };
+      this.modalCropper.componentProps = {
+        image: this.profilePic,
+        maintainAspectRatio: this.maintainAspectRatio,
+      };
       this.loading.present();
       this.modalCropper.present();
     } catch {

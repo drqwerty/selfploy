@@ -16,7 +16,7 @@
     <ion-card *ngFor="let category of categories" mode="ios" [style.--background]="category.color" class="category-card" button (click)="showServices(category)">
       <div class="title-wrapper">
         <ion-icon class="category-icon small-icon" color="light" [src]="category.icon"></ion-icon>
-        <ion-label upperCaseFirstLetter>{{category.name}}</ion-label>
+        <ion-label [upperCaseFirstLetter]="category.name"></ion-label>
       </div>
       <ion-icon class="category-icon big-icon" [src]="category.icon"></ion-icon>
     </ion-card>

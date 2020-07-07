@@ -106,7 +106,7 @@ export class StorageService {
         showCompleted: RequestListConfig.hide,
         showDraft: RequestListConfig.show,
         orderBy: RequestListConfig.orderByDate,
-        order: RequestListConfig.descendingOrder,
+        order: RequestListConfig.ascendingOrder,
       }
     }
     await this.saveData(dbKeys.userConfig, defaultConfig);

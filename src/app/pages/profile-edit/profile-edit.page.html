@@ -94,7 +94,7 @@
         <ion-icon name="chevron-forward-outline" slot="end" color="tertiary"></ion-icon>
         <div class="user-options-list">
           <ng-container *ngFor="let category of tempUser?.services | keyvalue ">
-            <span upperCaseFirstLetter *ngFor="let service of category.value" class="separate-childs-with-commas">{{service}}</span>
+            <span [upperCaseFirstLetter]="service" *ngFor="let service of category.value" class="separate-childs-with-commas"></span>
           </ng-container>
         </div>
       </ion-item>
@@ -108,7 +108,7 @@
           </ion-text>
         </ion-label>
         <div class="user-options-list">
-          <span upperCaseFirstLetter *ngFor="let workingHour of tempUser?.workingHours" class="separate-childs-with-commas">{{workingHour}}</span>
+          <span [upperCaseFirstLetter]="workingHour" *ngFor="let workingHour of tempUser?.workingHours" class="separate-childs-with-commas"></span>
         </div>
       </ion-item>
   

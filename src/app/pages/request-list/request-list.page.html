@@ -1,6 +1,6 @@
 <status-bar [color]="statusBarColor"></status-bar>
 
-<custom-header [hideBorder]="!imAClient" title="Encargos" [class.pro-header]="!imAClient">
+<custom-header [hideBorder]="!imAClient" title="Encargos" [class.pro-header]="!imAClient" [class.statusbar-available]="statusBarAvailable">
   <div class="top-background" [class]="statusBarColor"></div>
   <ion-toolbar>
     <ion-buttons slot="end">
@@ -43,10 +43,10 @@
 
       <super-tabs-toolbar slot="top">
         <super-tab-button disabled (click)="goToTab(0)">
-          <ion-label upperCaseFirstLetter>Profesional</ion-label>
+          <ion-label>Profesional</ion-label>
         </super-tab-button>
         <super-tab-button disabled (click)="goToTab(1)">
-          <ion-label upperCaseFirstLetter>Cliente</ion-label>
+          <ion-label>Cliente</ion-label>
         </super-tab-button>
       </super-tabs-toolbar>
 

@@ -237,6 +237,7 @@ export class LoginRegisterComponent {
       leaveAnimation: ActionSheetLeave,
       cssClass: 'action-sheet',
       componentProps: {
+        maintainAspectRatio: true,
         showRemoveButton: this.user.profilePic != null,
         profilePic: this.profilePicWithoutCrop ?? this.user.profilePic,
       }

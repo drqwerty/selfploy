@@ -11,4 +11,9 @@
     <ion-label>Mostrar completados</ion-label>
     <ion-checkbox (ionChange)="updateConfig()" [(ngModel)]="userConfig.requestListOptions.showCompleted" slot="start"></ion-checkbox>
   </ion-item>
+  <!-- hacky bug fix: Popover does not calculate width correctly when containing check boxes so... -->
+  <ion-item style="height: 0;">
+    <ion-label>Mostrar completados</ion-label>
+    <ion-icon color="medium" slot="start"></ion-icon>
+  </ion-item>
 </ion-list>

@@ -21,8 +21,8 @@
       <ion-card-header mode="md">
         <ion-card-title color="tertiary">
           <ng-container *ngIf="request.category; else emptyService">
-            <span upperCaseFirstLetter>{{request.category}}</span>
-            <span upperCaseFirstLetter>{{request.service}}</span>
+            <span [upperCaseFirstLetter]="request.category"></span>
+            <span [upperCaseFirstLetter]="request.service"></span>
           </ng-container>
           <ng-template #emptyService><ion-text color="medium">Sin servicio</ion-text></ng-template>
         </ion-card-title>
@@ -48,7 +48,7 @@
           <ion-row class="ion-padding-horizontal">
             <ion-col size="6" class="ion-justify-content-start ion-no-padding">
               <ion-text color="tertiary" class="margin-end">Estado:</ion-text>
-              <ion-text upperCaseFirstLetter color="medium">{{requestStatusText[request.status]}}</ion-text>
+              <ion-text [upperCaseFirstLetter]="requestStatusText[request.status]" color="medium"></ion-text>
             </ion-col>
             <ng-template *ngIf="request.isMine then showContacts;else showChatButton"></ng-template>
             <ng-template #showContacts>

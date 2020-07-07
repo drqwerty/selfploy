@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, AfterViewInit } from '@angular/core';
 import { Request, RequestStatus, RequestStatusText } from 'src/app/models/request-model';
 import { ModalController } from '@ionic/angular';
 import { RequestCardActionSheetComponent } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.component';
@@ -12,7 +12,7 @@ import { RequestNewComponent } from 'src/app/components/modals/as-pages/request-
   templateUrl: './request-card.component.html',
   styleUrls: ['./request-card.component.scss'],
 })
-export class RequestCardComponent implements AfterViewInit, OnChanges {
+export class RequestCardComponent implements AfterViewInit {
 
   @Input() request: Request;
 
@@ -27,14 +27,8 @@ export class RequestCardComponent implements AfterViewInit, OnChanges {
   ) { }
 
   ngAfterViewInit() {
-    console.log(this.request);
+    // console.log(this.request);
   }
-
-  ngOnChanges(changes: SimpleChanges) {
-
-    console.log(changes.request);
-
-}
 
   imageLoaded() {
     this.showSpinner = false;
@@ -106,7 +100,8 @@ export class RequestCardComponent implements AfterViewInit, OnChanges {
       }
     });
 
-    modal.present();
+    modal.onWillDismiss().then(() => modal.classList.remove('background-black'));
+    modal.present().then(() => modal.classList.add('background-black'));
   }
 
   async deleteRequest() {

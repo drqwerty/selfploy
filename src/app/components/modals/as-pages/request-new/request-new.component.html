@@ -21,9 +21,9 @@
         </span>
       </ion-text>
       <div class="user-options-list">
-        <span *ngIf="request.category" upperCaseFirstLetter>{{request.category}}</span>
-        <ng-container *ngIf="request.service"> - </ng-container>
-        <span *ngIf="request.service" upperCaseFirstLetter>{{request.service}}</span>
+        <span *ngIf="tempRequest.category" [upperCaseFirstLetter]="tempRequest.category"></span>
+        <ng-container *ngIf="tempRequest.service"> - </ng-container>
+        <span *ngIf="tempRequest.service" [upperCaseFirstLetter]="tempRequest.service"></span>
       </div>
     </ion-item>
 
@@ -41,21 +41,21 @@
       </ion-text>
       <div class="when-buttons-wrapper ion-justify-content-evenly">
         <ion-button (click)="setNow()" class="no-transform border-radius-10" color="danger" size="default"
-          expand="block" [fill]="request.priority ? 'solid' : 'outline'">
+          expand="block" [fill]="tempRequest.priority ? 'solid' : 'outline'">
           Ahora
         </ion-button>
         <ion-button (click)="chooseDay()" class="no-transform border-radius-10" size="default" expand="block"
-          [fill]="request.startDate && !request.priority ? 'solid' : 'outline'">
-          <ng-container *ngIf="request.startDate && !request.priority; else defaultText">
-            {{request.startDate.format('L')}}<ng-container *ngIf="request.endDate"> -
-              {{request.endDate.format('L')}}</ng-container>
+          [fill]="tempRequest.startDate && !tempRequest.priority ? 'solid' : 'outline'">
+          <ng-container *ngIf="tempRequest.startDate && !tempRequest.priority; else defaultText">
+            {{tempRequest.startDate.format('L')}}<ng-container *ngIf="tempRequest.endDate"> -
+              {{tempRequest.endDate.format('L')}}</ng-container>
           </ng-container>
           <ng-template #defaultText>{{chooseDayDefaultText}}</ng-template>
         </ion-button>
       </div>
       <div class="user-options-list">
-        <span upperCaseFirstLetter *ngFor="let workingHour of request.workingHours"
-          class="separate-childs-with-commas">{{workingHour}}</span>
+        <span [upperCaseFirstLetter]="workingHour" *ngFor="let workingHour of tempRequest.workingHours"
+          class="separate-childs-with-commas"></span>
       </div>
 
 
@@ -74,7 +74,7 @@
           Ponle un nombre a tu solicitud
         </span>
       </ion-text>
-      <ion-textarea color="primary" rows="1" autosize readonly type="text" [value]="request.title"></ion-textarea>
+      <ion-textarea color="primary" rows="1" autosize readonly type="text" [value]="tempRequest.title"></ion-textarea>
     </ion-item>
 
 
@@ -89,7 +89,7 @@
           Describe detalladamente qué necesitas
         </span>
       </ion-text>
-      <ion-textarea color="primary" rows="1" autosize readonly type="text" [value]="request.description"></ion-textarea>
+      <ion-textarea color="primary" rows="1" autosize readonly type="text" [value]="tempRequest.description"></ion-textarea>
     </ion-item>
 
 
@@ -99,15 +99,15 @@
           Imágenes - <span>Opcional</span>
         </ion-text>
       </ion-label>
-      <ion-text color="medium" slot="end">{{request.images.length}}/5</ion-text>
+      <ion-text color="medium" slot="end">{{tempRequest.images.length}}/5</ion-text>
       <ion-text color="medium" class="info">
         <span>
           Añade imágenes para ayudar a los profesionales a entender qué necesitas
         </span>
       </ion-text>
 
-      <gallery (imageDeleted)="updateHasImageProperty()" [images]="request.images" showRemoveButton="true">
-        <ion-fab-button size="small" *ngIf="request.images.length < 5" (click)="addImage()">
+      <gallery (imageDeleted)="updateHasImageProperty()" [images]="tempRequest.images" showRemoveButton="true">
+        <ion-fab-button size="small" *ngIf="tempRequest.images.length < 5" (click)="addImage()">
           <ion-icon name="add"></ion-icon>
         </ion-fab-button>
       </gallery>
@@ -128,7 +128,7 @@
           (en euros)
         </span>
       </ion-text>
-      <ion-input readonly type="text" [value]="request.budget ? request.budget + ' €' : ''"></ion-input>
+      <ion-input readonly type="text" [value]="tempRequest.budget ? tempRequest.budget + ' €' : ''"></ion-input>
     </ion-item>
 
 
@@ -145,7 +145,7 @@
         </span>
       </ion-text>
       <ion-textarea rows="1" autosize readonly type="text"
-        [value]="request?.hideLocationAccuracy ? request?.addressCity: request?.addressFull"></ion-textarea>
+        [value]="tempRequest?.hideLocationAccuracy ? tempRequest?.addressCity: tempRequest?.addressFull"></ion-textarea>
     </ion-item>
 
   </ion-list>

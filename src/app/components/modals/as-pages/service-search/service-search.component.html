@@ -22,10 +22,10 @@
       <!-- <ion-item *ngFor="let service of servicesQuery" button> -->
         <ion-label>
           <ion-text color="primary">
-            <h2 upperCaseFirstLetter>{{service.category}}</h2>
+            <h2 [upperCaseFirstLetter]="service.category"></h2>
           </ion-text>
           <ion-text color="tertiary">
-            <h3 upperCaseFirstLetter class="ion-padding-start">{{service.name}}</h3>
+            <h3 [upperCaseFirstLetter]="service.name" class="ion-padding-start"></h3>
           </ion-text>
         </ion-label>
       </ion-item>
