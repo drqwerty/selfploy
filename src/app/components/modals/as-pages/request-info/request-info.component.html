@@ -24,86 +24,75 @@
     </ion-buttons>
   </ion-toolbar>
 
-
-
-
-
 </custom-header>
+
 
 <ion-content [color]="backgroundColor">
 
-  <div class="content">
+  <div class="content ion-padding">
+    <ion-list lines="none">
 
-    <div class="ion-padding">
+      <ion-item>
+        <ion-label>
+          <h2>Encargo de</h2>
+          <h3 class="ion-text-wrap">{{request.title}}</h3>
+        </ion-label>
+      </ion-item>
 
-      <div class="info">
-        <ion-list lines="none">
+      <ion-item>
+        <ion-label>
+          <h2>Busca</h2>
+          <h3 class="ion-text-wrap">
+            <span [upperCaseFirstLetter]="request.category"></span> - <span [upperCaseFirstLetter]="request.service"></span>
+          </h3>
+        </ion-label>
+      </ion-item>
 
-          <ion-item>
-            <ion-label>
-              <h2>Encargo de</h2>
-              <h3 class="ion-text-wrap">{{request.title}}</h3>
-            </ion-label>
-          </ion-item>
+      <ion-item>
+        <ion-label>
+          <h2>Título</h2>
+          <h3 class="ion-text-wrap">{{request.title}}</h3>
+        </ion-label>
+      </ion-item>
 
-          <ion-item>
-            <ion-label>
-              <h2>Busca</h2>
-              <h3 class="ion-text-wrap">
-                <span [upperCaseFirstLetter]="request.category"></span> - <span [upperCaseFirstLetter]="request.service"></span>
-              </h3>
-            </ion-label>
-          </ion-item>
+      <ion-item>
+        <ion-label position="stacked" class="no-transform margin">
+          <h2>Descripción</h2>
+        </ion-label>
+        <ion-textarea color="primary" rows="1" autosize readonly type="text" [value]="request.description"></ion-textarea>
+      </ion-item>
+      
+      <ion-item *ngIf="request.images.length">
+        <ion-label position="stacked" class="no-transform margin">
+          <h2>Imágenes</h2>
+        </ion-label>
 
-          <ion-item>
-            <ion-label>
-              <h2>Título</h2>
-              <h3 class="ion-text-wrap">{{request.title}}</h3>
-            </ion-label>
-          </ion-item>
+        <gallery [images]="request.images"></gallery>
+      </ion-item>
 
-          <ion-item>
-            <ion-label position="stacked" class="no-transform margin">
-              <h2>Descripción</h2>
-            </ion-label>
-            <ion-textarea color="primary" rows="1" autosize readonly type="text" [value]="request.description"></ion-textarea>
-          </ion-item>
-          
-          <ion-item *ngIf="request.images.length">
-            <ion-label position="stacked" class="no-transform margin">
-              <h2>Imágenes</h2>
-            </ion-label>
+      <ion-item *ngIf="request.budget">
+        <ion-label>
+          <h2>Presupuesto</h2>
+          <h3 class="ion-text-wrap">{{request.budget}} €</h3>
+        </ion-label>
+      </ion-item>
 
-            <gallery [images]="request.images"></gallery>
-          </ion-item>
+      <ion-item>
+        <ion-label>
+          <h2>Ubicación</h2>
+          <h3 class="break-spaces">{{request?.hideLocationAccuracy ? request?.addressCity: request?.addressFull}}</h3>
+        </ion-label>
+      </ion-item>
 
-          <ion-item *ngIf="request.budget">
-            <ion-label>
-              <h2>Presupuesto</h2>
-              <h3 class="ion-text-wrap">{{request.budget}} €</h3>
-            </ion-label>
-          </ion-item>
-
-          <ion-item>
-            <ion-label>
-              <h2>Ubicación</h2>
-              <h3 class="break-spaces">{{request?.hideLocationAccuracy ? request?.addressCity: request?.addressFull}}</h3>
-            </ion-label>
-          </ion-item>
-
-          <map-preview 
-            [radiusKm]="request.hideLocationAccuracy ? 5 : 0"
-            [coordinates]="request.coordinates"
-            [hideMarker]="request.hideLocationAccuracy"
-            id="request-detail"
-          ></map-preview>
-          
-        </ion-list>
-        
-      </div>
-
-    </div>
-
+      <map-preview 
+        [radiusKm]="request.hideLocationAccuracy ? 5 : 0"
+        [coordinates]="request.coordinates"
+        [hideMarker]="request.hideLocationAccuracy"
+        id="request-detail"
+      ></map-preview>
+      
+    </ion-list>
+    
   </div>
 
 </ion-content>
