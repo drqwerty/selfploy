@@ -92,6 +92,7 @@
           </ion-item>
 
           <map-preview 
+            [radiusKm]="request.hideLocationAccuracy ? 5 : 0"
             [coordinates]="request.coordinates"
             [hideMarker]="request.hideLocationAccuracy"
             id="request-detail"

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
 import { ModalController, IonContent } from '@ionic/angular';
 import { Request } from 'src/app/models/request-model';
+import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 
 @Component({
   selector: 'app-request-info',
@@ -12,6 +13,7 @@ export class RequestInfoComponent implements AfterViewInit {
   @Input() request: Request;
 
 
+  @ViewChild(MapPreviewComponent) mapPreview: MapPreviewComponent;
   @ViewChild(IonContent) ionContent: IonContent;
 
   backgroundColor = 'tertiary';
@@ -22,6 +24,10 @@ export class RequestInfoComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.setCornersStyle();
+  }
+
+  ionViewDidEnter() {
+    this.mapPreview.initMap();
   }
 
   setCornersStyle() {

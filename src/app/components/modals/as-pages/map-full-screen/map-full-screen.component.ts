@@ -44,11 +44,11 @@ export class MapFullScreenComponent {
     this.createMyLocationAnimation();
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
-  
+
   ionViewDidEnter() {
     this.initMap();
   }
-  
+
   ionViewDidLeave() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
     this.lc.stop();
@@ -123,6 +123,8 @@ export class MapFullScreenComponent {
       this.marker.setLatLng(this.coordinates);
       this.marker.setOpacity(this.hideMarker ? 0 : 1);
     }
+
+    if (!this.radiusKm) this.map.flyTo(this.coordinates, 14, { duration: 0.4 });
   }
 
   loadMapEvents() {

@@ -86,6 +86,8 @@ export class MapPreviewComponent {
       this.marker.setLatLng(this.coordinates);
       this.marker.setOpacity(this.hideMarker ? 0 : 1);
     }
+
+    if (!this.radiusKm) this.map.flyTo(this.coordinates, 14, { duration: 0.4 });
   }
 
   async openFullScreenMap() {
