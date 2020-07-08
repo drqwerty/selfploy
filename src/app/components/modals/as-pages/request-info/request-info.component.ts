@@ -3,13 +3,14 @@ import { ModalController, IonContent } from '@ionic/angular';
 import { Request } from 'src/app/models/request-model';
 import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { SuperTabs, SuperTab } from '@ionic-super-tabs/angular';
+import { DataService } from 'src/app/providers/data.service';
 
 @Component({
   selector: 'app-request-info',
   templateUrl: './request-info.component.html',
   styleUrls: ['./request-info.component.scss'],
 })
-export class RequestInfoComponent implements AfterViewInit {
+export class RequestInfoComponent implements OnInit, AfterViewInit {
 
   @Input() request: Request;
 
@@ -24,16 +25,24 @@ export class RequestInfoComponent implements AfterViewInit {
 
   backgroundColor = 'tertiary';
 
+  conversations = [];
+  ownerName: string;
+
   constructor(
+    private data: DataService,
     private modalController: ModalController,
   ) { }
+
+  ngOnInit() {
+    this.data.getUserProfile(this.request.owner).then(user => this.ownerName = user.name);
+  }
 
   ngAfterViewInit() {
     this.setCornersStyle();
   }
 
   ionViewDidEnter() {
-    this.mapPreview.initMap();
+    if (this.request.coordinates) this.mapPreview.initMap();
   }
 
   setCornersStyle() {

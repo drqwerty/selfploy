@@ -10,6 +10,7 @@ import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-lette
 import { AutosizeModule } from 'ngx-autosize';
 import { GalleryModule } from 'src/app/components/fiv/gallery/gallery.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
+import { EmptyContentModule } from 'src/app/components/templates/empty-content/empty-content.module';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { SuperTabsModule } from '@ionic-super-tabs/angular';
     AutosizeModule,
     GalleryModule,
     SuperTabsModule,
+    EmptyContentModule,
   ],
   declarations: [
     RequestInfoComponent

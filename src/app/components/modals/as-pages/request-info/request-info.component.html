@@ -1,6 +1,6 @@
 <status-bar [color]="backgroundColor"></status-bar>
 
-<custom-header title="Encargo" [hideBorder]="true" color="light" [background]="backgroundColor">
+<custom-header [title]="request.status ? 'Encargo' : 'Borrador'" [hideBorder]="true" color="light" [background]="backgroundColor">
 
   <ion-toolbar [color]="backgroundColor">
     <ion-buttons slot="start">
@@ -41,11 +41,11 @@
       <ion-item>
         <ion-label>
           <h2>Encargo de</h2>
-          <h3 class="ion-text-wrap">{{request.title}}</h3>
+          <h3 class="ion-text-wrap">{{ownerName}}</h3>
         </ion-label>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="request.category">
         <ion-label>
           <h2>Busca</h2>
           <h3 class="ion-text-wrap">
@@ -54,14 +54,14 @@
         </ion-label>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="request.title">
         <ion-label>
           <h2>Título</h2>
           <h3 class="ion-text-wrap">{{request.title}}</h3>
         </ion-label>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="request.description">
         <ion-label position="stacked" class="no-transform margin">
           <h2>Descripción</h2>
         </ion-label>
@@ -83,14 +83,14 @@
         </ion-label>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="request.coordinates">
         <ion-label>
           <h2>Ubicación</h2>
           <h3 class="break-spaces">{{request?.hideLocationAccuracy ? request?.addressCity: request?.addressFull}}</h3>
         </ion-label>
       </ion-item>
 
-      <map-preview 
+      <map-preview *ngIf="request.coordinates"
         [radiusKm]="request.hideLocationAccuracy ? 5 : 0"
         [coordinates]="request.coordinates"
         [hideMarker]="request.hideLocationAccuracy"
@@ -116,7 +116,12 @@
     <super-tabs-container autoScrollTop>
       <super-tab>
         <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
-          
+          <ng-container *ngIf="conversations.length; else emptyContent">
+            
+          </ng-container>
+          <ng-template #emptyContent>
+            <empty-content class="super-tabs" image="no-conversations" text="Aún sin respuestas"></empty-content>
+          </ng-template>
         </ion-content>
       </super-tab>
       <super-tab>
