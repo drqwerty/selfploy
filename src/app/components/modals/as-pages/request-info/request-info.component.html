@@ -5,20 +5,19 @@
   <ion-toolbar [color]="backgroundColor">
     <ion-buttons slot="start">
       <ion-button (click)="close()">
-        <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ng-container *ngIf="true then deleteButton; else optionsButton"></ng-container>
-
-      <ng-template #deleteButton>
-        <ion-button (click)="onClick()">
-          <ion-icon slot="start" name="trash-outline"></ion-icon>
-        </ion-button>
-      </ng-template>
+      <ng-container *ngIf="request.isMine then optionsButton; else deleteButton"></ng-container>
       <ng-template #optionsButton>
         <ion-button (click)="onClick()">
-          <ion-icon slot="start" name="options"></ion-icon>
+          <ion-icon slot="icon-only" name="options"></ion-icon>
+        </ion-button>
+      </ng-template>
+      <ng-template #deleteButton>
+        <ion-button (click)="onClick()">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
         </ion-button>
       </ng-template>
     </ion-buttons>
@@ -27,8 +26,15 @@
 </custom-header>
 
 
-<ion-content [color]="backgroundColor">
+<ion-content [color]="backgroundColor" [class.wrapper-ion-content]="request.isMine">
 
+  <ng-container *ngIf="request.isMine then userView; else workerView"></ng-container>
+  <ng-template #workerView><ng-container *ngTemplateOutlet="details"></ng-container></ng-template>
+  <ng-template #userView><ng-container *ngTemplateOutlet="tabs"></ng-container></ng-template>
+
+</ion-content>
+
+<ng-template #details>
   <div class="content ion-padding">
     <ion-list lines="none">
 
@@ -94,5 +100,30 @@
     </ion-list>
     
   </div>
+</ng-template>
 
-</ion-content>
+<ng-template #tabs>
+  <super-tabs (tabChange)="scrollLastTabToTop($event)">
+    <super-tabs-toolbar slot="top">
+      <super-tab-button disabled (click)="goToTab(0)">
+        <ion-label>Respuestas</ion-label>
+      </super-tab-button>
+      <super-tab-button disabled (click)="goToTab(1)">
+        <ion-label>Detalles</ion-label>
+      </super-tab-button>
+    </super-tabs-toolbar>
+  
+    <super-tabs-container autoScrollTop>
+      <super-tab>
+        <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+          
+        </ion-content>
+      </super-tab>
+      <super-tab>
+        <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+          <ng-container *ngTemplateOutlet="details"></ng-container>
+        </ion-content>
+      </super-tab>
+    </super-tabs-container>
+  </super-tabs>
+</ng-template>

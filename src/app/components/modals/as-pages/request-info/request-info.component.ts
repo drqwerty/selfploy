@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { ModalController, IonContent } from '@ionic/angular';
 import { Request } from 'src/app/models/request-model';
 import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
+import { SuperTabs, SuperTab } from '@ionic-super-tabs/angular';
 
 @Component({
   selector: 'app-request-info',
@@ -15,6 +16,11 @@ export class RequestInfoComponent implements AfterViewInit {
 
   @ViewChild(MapPreviewComponent) mapPreview: MapPreviewComponent;
   @ViewChild(IonContent) ionContent: IonContent;
+  @ViewChild(SuperTabs) superTabs: SuperTabs;
+  @ViewChildren(SuperTab) superTabListQuery: QueryList<SuperTab>;
+
+  lastTabIndex = 0;
+  propagateScrollEvent = true;
 
   backgroundColor = 'tertiary';
 
@@ -43,6 +49,27 @@ export class RequestInfoComponent implements AfterViewInit {
 
   close() {
     this.modalController.dismiss();
+  }
+
+  propagateScroll(e) {
+    if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, e.detail.scrollTop);
+  }
+
+  async scrollLastTabToTop({ detail }) {
+    const { index } = detail;
+
+    if (this.lastTabIndex != index) {
+      this.propagateScrollEvent = false;
+      (await this.superTabListQuery.toArray()[1 - index].getRootScrollableEl()).scrollTo(0, 0);
+      this.ionContent.scrollToTop(350);
+      this.lastTabIndex = index;
+      this.propagateScrollEvent = true;
+    }
+  }
+
+
+  goToTab(index) {
+    this.superTabs.selectTab(index);
   }
 
 }

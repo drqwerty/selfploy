@@ -9,6 +9,7 @@ import { MapPreviewModule } from 'src/app/components/templates/map-preview/map-p
 import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
 import { AutosizeModule } from 'ngx-autosize';
 import { GalleryModule } from 'src/app/components/fiv/gallery/gallery.module';
+import { SuperTabsModule } from '@ionic-super-tabs/angular';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { GalleryModule } from 'src/app/components/fiv/gallery/gallery.module';
     UpperCaseFirstLetterModule,
     AutosizeModule,
     GalleryModule,
+    SuperTabsModule,
   ],
   declarations: [
     RequestInfoComponent
