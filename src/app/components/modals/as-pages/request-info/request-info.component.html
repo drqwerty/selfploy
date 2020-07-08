@@ -1,0 +1,108 @@
+<status-bar [color]="backgroundColor"></status-bar>
+
+<custom-header title="Encargo" [hideBorder]="true" color="light" [background]="backgroundColor">
+
+  <ion-toolbar [color]="backgroundColor">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ng-container *ngIf="true then deleteButton; else optionsButton"></ng-container>
+
+      <ng-template #deleteButton>
+        <ion-button (click)="onClick()">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ng-template>
+      <ng-template #optionsButton>
+        <ion-button (click)="onClick()">
+          <ion-icon slot="start" name="options"></ion-icon>
+        </ion-button>
+      </ng-template>
+    </ion-buttons>
+  </ion-toolbar>
+
+
+
+
+
+</custom-header>
+
+<ion-content [color]="backgroundColor">
+
+  <div class="content">
+
+    <div class="ion-padding">
+
+      <div class="info">
+        <ion-list lines="none">
+
+          <ion-item>
+            <ion-label>
+              <h2>Encargo de</h2>
+              <h3 class="ion-text-wrap">{{request.title}}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h2>Busca</h2>
+              <h3 class="ion-text-wrap">
+                <span [upperCaseFirstLetter]="request.category"></span> - <span [upperCaseFirstLetter]="request.service"></span>
+              </h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h2>Título</h2>
+              <h3 class="ion-text-wrap">{{request.title}}</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked" class="no-transform margin">
+              <h2>Descripción</h2>
+            </ion-label>
+            <ion-textarea color="primary" rows="1" autosize readonly type="text" [value]="request.description"></ion-textarea>
+          </ion-item>
+          
+          <ion-item *ngIf="request.images.length">
+            <ion-label position="stacked" class="no-transform margin">
+              <h2>Imágenes</h2>
+            </ion-label>
+
+            <gallery [images]="request.images"></gallery>
+          </ion-item>
+
+          <ion-item *ngIf="request.budget">
+            <ion-label>
+              <h2>Presupuesto</h2>
+              <h3 class="ion-text-wrap">{{request.budget}} €</h3>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>
+              <h2>Ubicación</h2>
+              <h3 class="break-spaces">{{request?.hideLocationAccuracy ? request?.addressCity: request?.addressFull}}</h3>
+            </ion-label>
+          </ion-item>
+
+          <map-preview 
+            [coordinates]="request.coordinates"
+            [hideMarker]="request.hideLocationAccuracy"
+            id="request-detail"
+          ></map-preview>
+          
+        </ion-list>
+        
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

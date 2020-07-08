@@ -14,6 +14,7 @@ export class CustomHeaderComponent implements AfterViewInit {
   @Input() hideBorder = false;
   @Input() title: string;
   @Input() color = 'tertiary';
+  @Input() background = '#fff';
 
 
   @ViewChild("text", { static: false }) private text: ElementRef;
@@ -57,9 +58,12 @@ export class CustomHeaderComponent implements AfterViewInit {
     let contentHeight: number;
     if (content) contentHeight = content.getBoundingClientRect().height + 56;
 
+    const toolbar = document.createElement('ion-toolbar');
+    toolbar.style.setProperty('--background', `var(--ion-color-${this.background}, ${this.background})`)
+
     if (contentHeight && contentHeight > height && contentHeight < height + 56)
       scrollEl.append(document.createElement('ion-toolbar'));
-    scrollEl.prepend(document.createElement('ion-toolbar'));
+    scrollEl.prepend(toolbar);
   }
 
   private addListeners(ionContent: IonContent, scrollEl: HTMLElement) {

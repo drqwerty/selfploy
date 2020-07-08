@@ -6,6 +6,7 @@ import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-she
 import { DataService } from 'src/app/providers/data.service';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 import { RequestNewComponent } from 'src/app/components/modals/as-pages/request-new/request-new.component';
+import { RequestInfoComponent } from '../../modals/as-pages/request-info/request-info.component';
 
 @Component({
   selector: 'request-card',
@@ -34,7 +35,8 @@ export class RequestCardComponent implements AfterViewInit {
     this.showSpinner = false;
   }
 
-  async presentOptions() {
+  async presentOptions(event: MouseEvent) {
+    event.stopPropagation();
     const modal = await this.modalController.create({
       component: RequestCardActionSheetComponent,
       enterAnimation: ActionSheetEnter,
@@ -122,7 +124,13 @@ export class RequestCardComponent implements AfterViewInit {
     return modal;
   }
 
-  onClick() {
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: RequestInfoComponent,
+      componentProps: { request: this.request }
+    });
+
+    await modal.present();
   }
 
 }

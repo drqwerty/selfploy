@@ -1,4 +1,4 @@
-<ion-card mode="ios" button (click)="onClick()" 
+<ion-card mode="ios" button (click)="presentModal()" 
   [class.completed]="request.status == requestStatus.completed"
   [class.isMine]="request.isMine">
 
@@ -14,7 +14,7 @@
     </div>
 
     <div class="main-content">
-      <ion-button (click)="presentOptions()" class="ion-float-right options-button" fill="clear" size="small">
+      <ion-button (click)="presentOptions($event)" class="ion-float-right options-button" fill="clear" size="small">
         <ion-icon slot="icon-only" name="ellipsis-vertical" color="medium"></ion-icon>
       </ion-button>
 

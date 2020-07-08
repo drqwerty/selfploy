@@ -7,6 +7,7 @@ import { RequestCardComponent } from './request-card.component';
 import { RequestCardActionSheetModule } from '../../action-sheets/request-card-action-sheet/request-card-action-sheet.module';
 import { DeleteConfirmActionSheetModule } from '../../action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.module';
 import { RequestNewModule } from '../../modals/as-pages/request-new/request-new.module';
+import { RequestInfoModule } from '../../modals/as-pages/request-info/request-info.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { RequestNewModule } from '../../modals/as-pages/request-new/request-new.
     RequestCardActionSheetModule,
     DeleteConfirmActionSheetModule,
     RequestNewModule,
+    RequestInfoModule,
   ],
   declarations: [
     RequestCardComponent,

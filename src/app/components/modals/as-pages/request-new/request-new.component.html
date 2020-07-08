@@ -57,9 +57,6 @@
         <span [upperCaseFirstLetter]="workingHour" *ngFor="let workingHour of tempRequest.workingHours"
           class="separate-childs-with-commas"></span>
       </div>
-
-
-      <!-- <ion-textarea [color]="tempUser?.role === userRol.client ? 'secondary' : 'primary'" rows="1" autosize readonly type="text" [value]="tempUser?.hideLocationAccuracy ? tempUser?.addressCity: tempUser?.addressFull"></ion-textarea> -->
     </ion-item>
 
 
@@ -106,7 +103,7 @@
         </span>
       </ion-text>
 
-      <gallery (imageDeleted)="updateHasImageProperty()" [images]="tempRequest.images" showRemoveButton="true">
+      <gallery (imageDeleted)="updateHasImageProperty()" [images]="tempRequest.images" [showRemoveButton]="true">
         <ion-fab-button size="small" *ngIf="tempRequest.images.length < 5" (click)="addImage()">
           <ion-icon name="add"></ion-icon>
         </ion-fab-button>
