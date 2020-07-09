@@ -53,7 +53,7 @@ export class RequestCardActionSheetComponent implements OnInit {
           },
           {
             title: 'Editar',
-            description: 'Añade más detalles a tu solicitud',
+            description: 'Añade o cambia detalles a tu solicitud',
             show: this.showButtons.edit,
           },
           {

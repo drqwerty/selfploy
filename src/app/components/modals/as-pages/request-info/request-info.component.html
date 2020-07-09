@@ -11,7 +11,7 @@
     <ion-buttons slot="end">
       <ng-container *ngIf="request.isMine then optionsButton; else deleteButton"></ng-container>
       <ng-template #optionsButton>
-        <ion-button (click)="onClick()">
+        <ion-button (click)="presentOptions($event)">
           <ion-icon slot="icon-only" name="options"></ion-icon>
         </ion-button>
       </ng-template>
@@ -27,7 +27,7 @@
 
 
 <ion-content [color]="backgroundColor" class="wrapper-ion-content" [scrollEvents]="true" (ionScroll)="scrollEvent($event.detail)">
-  <ng-container *ngIf="request.isMine then userView; else workerView"></ng-container>
+  <ng-container *ngIf="request.isMine && request.status != requestStatus.draft then userView; else workerView"></ng-container>
   <ng-template #workerView><ng-container *ngTemplateOutlet="singlePage"></ng-container></ng-template>
   <ng-template #userView><ng-container *ngTemplateOutlet="tabs"></ng-container></ng-template>
 </ion-content>
@@ -50,7 +50,7 @@
 
     </div>
   </ion-content>
-  <fab-with-text iconName="chatbubble" text="Chatea" [collapsed]="collapsedFab" (clicked)="openChat()">
+  <fab-with-text *ngIf="!request.isMine" iconName="chatbubble" text="Chatea" [collapsed]="collapsedFab" (clicked)="openChat()">
     <div class="badge" [class.unread-messages]="request.unreadMesseages"></div>
   </fab-with-text>
 </ng-template>

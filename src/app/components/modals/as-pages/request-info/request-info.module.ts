@@ -12,6 +12,9 @@ import { GalleryModule } from 'src/app/components/fiv/gallery/gallery.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
 import { EmptyContentModule } from 'src/app/components/templates/empty-content/empty-content.module';
 import { FabWithTextModule } from 'src/app/components/templates/fab-with-text/fab-with-text.module';
+import { RequestCardActionSheetModule } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.module';
+import { RequestNewModule } from '../request-new/request-new.module';
+import { DeleteConfirmActionSheetModule } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.module';
 
 @NgModule({
   imports: [
@@ -27,6 +30,8 @@ import { FabWithTextModule } from 'src/app/components/templates/fab-with-text/fa
     SuperTabsModule,
     EmptyContentModule,
     FabWithTextModule,
+    RequestCardActionSheetModule,
+    RequestNewModule,DeleteConfirmActionSheetModule
   ],
   declarations: [
     RequestInfoComponent
