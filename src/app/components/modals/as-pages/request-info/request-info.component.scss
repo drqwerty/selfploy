@@ -7,6 +7,11 @@
   --st-base-color-active: var(--ion-color-tertiary);
 }
 
+.ion-content-single-page {
+  overflow: hidden;
+  border-radius: 40px 40px 0 0;
+}
+
 super-tabs-toolbar {
   border-radius: 40px 40px 0 0;
 }
