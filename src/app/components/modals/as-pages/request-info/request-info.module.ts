@@ -11,6 +11,7 @@ import { AutosizeModule } from 'ngx-autosize';
 import { GalleryModule } from 'src/app/components/fiv/gallery/gallery.module';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
 import { EmptyContentModule } from 'src/app/components/templates/empty-content/empty-content.module';
+import { FabWithTextModule } from 'src/app/components/templates/fab-with-text/fab-with-text.module';
 
 @NgModule({
   imports: [
@@ -25,6 +26,7 @@ import { EmptyContentModule } from 'src/app/components/templates/empty-content/e
     GalleryModule,
     SuperTabsModule,
     EmptyContentModule,
+    FabWithTextModule,
   ],
   declarations: [
     RequestInfoComponent

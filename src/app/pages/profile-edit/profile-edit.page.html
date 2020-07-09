@@ -15,7 +15,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content scrollEvents="true" (ionScroll)="updateHeaderShadow($event.detail.scrollTop);">
+<ion-content [scrollEvents]="true" (ionScroll)="updateHeaderShadow($event.detail.scrollTop);">
 
   <ion-text color="tertiary" class="title" *ngIf="forceCompleteProfile">
     <h1>Cuéntanos un <span>poco más de ti</span></h1>

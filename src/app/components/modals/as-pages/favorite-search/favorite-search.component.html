@@ -14,6 +14,6 @@
   <div class="custom-searchbar border-bottom"></div>
 </ion-header>
 
-<ion-content scrollEvents="true" (ionScroll)="updateHeaderShadow($event.detail.scrollTop)">
+<ion-content [scrollEvents]="true" (ionScroll)="updateHeaderShadow($event.detail.scrollTop)">
   <professional-card *ngFor=" let professional of favoritesQuery" [user]="professional"></professional-card>
 </ion-content>

@@ -24,6 +24,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   propagateScrollEvent = true;
 
   backgroundColor = 'tertiary';
+  collapsedFab = false;
 
   conversations = [];
   ownerName: string;
@@ -60,6 +61,14 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     this.modalController.dismiss();
   }
 
+  openChat() {
+    
+  }
+
+  scrollEvent({ deltaY }) {
+    if (deltaY) this.collapsedFab = 0 < deltaY;
+  }
+
   propagateScroll(e) {
     if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, e.detail.scrollTop);
   }
@@ -75,7 +84,6 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
       this.propagateScrollEvent = true;
     }
   }
-
 
   goToTab(index) {
     this.superTabs.selectTab(index);

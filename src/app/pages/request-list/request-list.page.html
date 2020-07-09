@@ -52,7 +52,7 @@
 
       <super-tabs-container autoScrollTop>
         <super-tab>
-          <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+          <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event)">
             <div class="nav-bar-space">
               <ng-container *ngIf="followingRequestList?.length; else proEmptyContentFollowing">
                 <ng-container *ngFor="let request of followingRequestList">
@@ -66,7 +66,7 @@
           </ion-content>
         </super-tab>
         <super-tab>
-          <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+          <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event)">
             <div class="nav-bar-space">
               <ng-container *ngIf="myRequestList?.length; else proEmptyContentOwn">
                 <ng-container *ngFor="let request of myRequestList">

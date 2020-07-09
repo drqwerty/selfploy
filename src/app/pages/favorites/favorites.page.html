@@ -35,7 +35,7 @@
 
       <super-tabs-container autoScrollTop>
         <super-tab>
-          <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+          <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event)">
             <div class="nav-bar-space">
               <ng-container *ngFor="let favorite of favorites">
                 <professional-card @cardItem *ngIf="favorite.isFav" [user]="favorite"></professional-card>
@@ -45,7 +45,7 @@
         </super-tab>
         <ng-container *ngFor="let favoriteReferences of favoriteReferencesByCategory | keyvalue">
           <super-tab *ngIf="favoriteReferences.value.length">
-            <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
+            <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event)">
               <div class="nav-bar-space">
                 <ng-container *ngFor="let reference of favoriteReferences.value">
                   <professional-card @cardItem *ngIf="favorites[reference].isFav" [user]="favorites[reference]"></professional-card>

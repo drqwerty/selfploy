@@ -47,7 +47,7 @@ export class ProfileModalComponent {
   }
 
   scrollEvent({ deltaY }) {
-    this.collapsedFab = 0 < deltaY;
+    if (deltaY) this.collapsedFab = 0 < deltaY;
   }
 
   toggleIcon() {

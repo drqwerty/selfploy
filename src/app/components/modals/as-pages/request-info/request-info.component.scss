@@ -55,3 +55,18 @@ super-tabs-toolbar {
     margin-top: 11px;
   }
 }
+
+.badge {
+  height: 18px;
+  width: 18px;
+  border-radius: 100%;
+  z-index: 20;
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+
+  &.unread-messages {
+    background-color: var(--ion-color-danger);
+  }
+}

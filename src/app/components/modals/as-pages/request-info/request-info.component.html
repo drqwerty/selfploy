@@ -26,13 +26,55 @@
 </custom-header>
 
 
-<ion-content [color]="backgroundColor" [class.wrapper-ion-content]="request.isMine">
+<ion-content [color]="backgroundColor" [class.wrapper-ion-content]="request.isMine" [scrollEvents]="true" (ionScroll)="scrollEvent($event.detail)">
 
   <ng-container *ngIf="request.isMine then userView; else workerView"></ng-container>
-  <ng-template #workerView><ng-container *ngTemplateOutlet="details"></ng-container></ng-template>
+  <ng-template #workerView><ng-container *ngTemplateOutlet="singlePage"></ng-container></ng-template>
   <ng-template #userView><ng-container *ngTemplateOutlet="tabs"></ng-container></ng-template>
 
 </ion-content>
+
+<ng-template #singlePage>
+  <ng-container *ngTemplateOutlet="details"></ng-container>
+  <fab-with-text iconName="chatbubble" text="Chatea" [collapsed]="collapsedFab" (clicked)="openChat()">
+    <div class="badge" [class.unread-messages]="request.unreadMesseages"></div>
+  </fab-with-text>
+</ng-template>
+
+<ng-template #tabs>
+  <super-tabs (tabChange)="scrollLastTabToTop($event)">
+    <super-tabs-toolbar slot="top" no-border>
+      <super-tab-button disabled (click)="goToTab(0)">
+        <ion-label>Respuestas</ion-label>
+      </super-tab-button>
+      <super-tab-button disabled (click)="goToTab(1)">
+        <ion-label>Detalles</ion-label>
+      </super-tab-button>
+    </super-tabs-toolbar>
+  
+    <super-tabs-container autoScrollTop>
+      <super-tab>
+        <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event)">
+          <div class="nav-bar-space">
+            <ng-container *ngIf="conversations.length; else emptyContent">
+              
+            </ng-container>
+            <ng-template #emptyContent>
+              <empty-content class="super-tabs" image="no-conversations" text="Aún sin respuestas"></empty-content>
+            </ng-template>
+          </div>
+        </ion-content>
+      </super-tab>
+      <super-tab>
+        <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event)">
+          <div class="nav-bar-space">
+            <ng-container *ngTemplateOutlet="details"></ng-container>
+          </div>
+        </ion-content>
+      </super-tab>
+    </super-tabs-container>
+  </super-tabs>
+</ng-template>
 
 <ng-template #details>
   <div class="content ion-padding">
@@ -100,35 +142,4 @@
     </ion-list>
     
   </div>
-</ng-template>
-
-<ng-template #tabs>
-  <super-tabs (tabChange)="scrollLastTabToTop($event)">
-    <super-tabs-toolbar slot="top">
-      <super-tab-button disabled (click)="goToTab(0)">
-        <ion-label>Respuestas</ion-label>
-      </super-tab-button>
-      <super-tab-button disabled (click)="goToTab(1)">
-        <ion-label>Detalles</ion-label>
-      </super-tab-button>
-    </super-tabs-toolbar>
-  
-    <super-tabs-container autoScrollTop>
-      <super-tab>
-        <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
-          <ng-container *ngIf="conversations.length; else emptyContent">
-            
-          </ng-container>
-          <ng-template #emptyContent>
-            <empty-content class="super-tabs" image="no-conversations" text="Aún sin respuestas"></empty-content>
-          </ng-template>
-        </ion-content>
-      </super-tab>
-      <super-tab>
-        <ion-content scrollEvents="true" (ionScroll)="propagateScroll($event)">
-          <ng-container *ngTemplateOutlet="details"></ng-container>
-        </ion-content>
-      </super-tab>
-    </super-tabs-container>
-  </super-tabs>
 </ng-template>
