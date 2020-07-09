@@ -26,6 +26,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   backgroundColor = 'tertiary';
   collapsedFab = false;
 
+  hideShadow = true;
   conversations = [];
   ownerName: string;
 
@@ -65,7 +66,8 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     
   }
 
-  scrollEvent({ deltaY }) {
+  scrollEvent({ deltaY, scrollTop }) {
+    this.hideShadow = !scrollTop;
     if (deltaY) this.collapsedFab = 0 < deltaY;
   }
 

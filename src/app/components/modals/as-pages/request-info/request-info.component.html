@@ -43,7 +43,7 @@
 
 <ng-template #tabs>
   <super-tabs (tabChange)="scrollLastTabToTop($event)">
-    <super-tabs-toolbar slot="top" no-border>
+    <super-tabs-toolbar slot="top" [attr.no-border]="hideShadow ? '' : null">
       <super-tab-button disabled (click)="goToTab(0)">
         <ion-label>Respuestas</ion-label>
       </super-tab-button>
