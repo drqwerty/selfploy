@@ -437,9 +437,13 @@ export class DataService {
 
     console.log(professionalList);
 
-    const filteredProfessionalList = professionalList
+    let filteredProfessionalList = professionalList
       .filter(user => user.fcmToken)
       .filter(user => user.distance <= user.radiusKm);
+
+    if (!requestData.requestSaved.priority)
+      filteredProfessionalList = filteredProfessionalList
+        .filter(user => user.workingHours.some(wh => requestData.requestSaved.workingHours.includes(wh)));
 
     const fcmTokenList = filteredProfessionalList
       .map(professional => professional.fcmToken);
@@ -457,8 +461,6 @@ export class DataService {
       fcmTokenList,
       requestData.id,
     );
-
-
   }
 
   async sendNotifications(title, body, fcmTokenList, requestId) {
