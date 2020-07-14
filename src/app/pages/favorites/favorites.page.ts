@@ -90,8 +90,8 @@ export class FavoritesPage implements AfterViewInit {
     modal.present();
   }
 
-  propagateScroll(e) {
-    if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, e.detail.scrollTop);
+  propagateScroll({ scrollTop }) {
+    if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, scrollTop);
   }
 
   async scrollLastTabToTop({ detail }) {

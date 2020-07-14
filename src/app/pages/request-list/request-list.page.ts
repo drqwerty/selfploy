@@ -202,8 +202,8 @@ export class RequestListPage {
     popover.present();
   }
 
-  propagateScroll(e) {
-    if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, e.detail.scrollTop);
+  propagateScroll({ scrollTop }) {
+    if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, scrollTop);
   }
 
   async scrollLastTabToTop({ detail }) {
