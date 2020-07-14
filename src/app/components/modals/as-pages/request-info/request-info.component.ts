@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { ModalController, IonContent } from '@ionic/angular';
-import { Request, RequestStatus } from 'src/app/models/request-model';
+import { Request, RequestStatus, RequestStatusText } from 'src/app/models/request-model';
 import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { SuperTabs, SuperTab } from '@ionic-super-tabs/angular';
 import { DataService } from 'src/app/providers/data.service';
@@ -25,6 +25,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   @ViewChildren(SuperTab) superTabListQuery: QueryList<SuperTab>;
 
   requestStatus = RequestStatus;
+  statusText = RequestStatusText
   lastTabIndex = 0;
   propagateScrollEvent = true;
 

@@ -1,6 +1,6 @@
 <status-bar [color]="backgroundColor"></status-bar>
 
-<custom-header [title]="request.status ? 'Encargo' : 'Borrador'" [hideBorder]="true" color="light" [background]="backgroundColor">
+<custom-header [title]="request.status ? 'Encargo ' + statusText[request.status] : 'Borrador'" [hideBorder]="true" color="light" [background]="backgroundColor">
 
   <ion-toolbar [color]="backgroundColor">
     <ion-buttons slot="start">
@@ -115,6 +115,20 @@
       <h3 class="ion-text-wrap">
         <span [upperCaseFirstLetter]="request.category"></span> - <span [upperCaseFirstLetter]="request.service"></span>
       </h3>
+    </ion-label>
+  </ion-item>
+
+  <ion-item *ngIf="request.startDate">
+    <ion-label>
+      <h2>Para empezar</h2>
+      <h3 class="ion-text-wrap" *ngIf="request.priority; else noPriority">
+        Cuanto antes
+      </h3>
+      <ng-template #noPriority>
+        <h3 class="ion-text-wrap">
+          {{request.startDate.format('L')}} <span *ngIf="request.endDate">- {{request.endDate.format('L')}}</span>
+        </h3>
+      </ng-template>
     </ion-label>
   </ion-item>
 
