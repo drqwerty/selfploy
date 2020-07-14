@@ -125,6 +125,7 @@ export class NotificationService {
       this.openRequestInfoSubject.next(notification.data.request_id);
     })
 
+    toast.shadowRoot.querySelector('button').addEventListener('click', event => event.stopPropagation());
     toast.present();
   }
 

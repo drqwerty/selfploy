@@ -200,7 +200,6 @@ export class RequestListPage {
     });
 
     popover.present();
-    // this.notif.createLocalNotification({id: '1', data: null, title: 'titulazo', body: 'bodidazo'});
   }
 
   propagateScroll(e) {
