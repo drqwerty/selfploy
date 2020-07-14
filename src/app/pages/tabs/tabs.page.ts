@@ -60,7 +60,6 @@ export class TabsPage {
 
         const request = await data.getRequest(requestId);
 
-        console.log(request);
         if (request) {
           const modal = await this.modalController.create({
             component: RequestInfoComponent,
@@ -68,9 +67,7 @@ export class TabsPage {
           });
 
           await modal.present();
-
         }
-
       })
   }
 

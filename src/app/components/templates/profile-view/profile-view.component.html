@@ -134,7 +134,7 @@
               [coordinates]="user?.coordinates"
               [radiusKm]="user?.radiusKm"
               [hideMarker]="user?.hideLocationAccuracy"
-              [id]="mapId"
+              [id]="'profile-location-' + mapId"
             ></map-preview>
 
           </ng-container>

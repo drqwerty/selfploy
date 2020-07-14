@@ -94,6 +94,7 @@ export class MapPreviewComponent {
     (await this.modalController.create({
       component: MapFullScreenComponent,
       componentProps: {
+        id: this.id,
         coordinates: this.coordinates,
         radiusKm: this.radiusKm,
         hideMarker: this.hideMarker,

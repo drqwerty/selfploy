@@ -123,7 +123,6 @@ export class NotificationService {
     toast.addEventListener('click', () => {
       toast.dismiss();
       this.openRequestInfoSubject.next(notification.data.request_id);
-      // this.presentRequestModal(JSON.parse(notification.data));
     })
 
     toast.present();

@@ -329,9 +329,8 @@ export class DataService {
 
   async observeFollowingRequests() {
 
-    console.log('observando');
-
     const { requestsFollowing } = await this.getMyProfile();
+    if (!requestsFollowing) return;
 
     Object.keys(requestsFollowing).forEach(id => this.observeFollowingRequest(id, requestsFollowing[id]));
 
@@ -340,8 +339,6 @@ export class DataService {
       .subscribe((requestsFollowingList) => {
 
         const listDiff = <{ type: "put" | "del", key: string[], value?: string }[]>diff(requestsFollowing, requestsFollowingList);
-
-        console.log(listDiff);
 
         if (listDiff.length) {
           listDiff.forEach(el => {
@@ -356,7 +353,6 @@ export class DataService {
           });
           this.updateUserRequestFollowingList(requestsFollowing);
         }
-        console.log(this.followingRequestsSubscription)
 
       });
   }

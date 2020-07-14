@@ -1,7 +1,7 @@
 <profile-view
   [backgroundColor]="backgroundColor"
   [user]="user"
-  mapId="pro-location"
+  [mapId]="user?.id"
   [scrollEvents]="true"
   (scrollEvent)="scrollEvent($event)"
 >

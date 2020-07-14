@@ -1,7 +1,7 @@
 <profile-view
   [backgroundColor]="backgroundColor"
   [user]="user"
-  mapId="my-location"
+  [mapId]="user?.id"
   navBarSpace="true"
 >
   <ion-button buttonsEnd (click)="presentPopover($event)">

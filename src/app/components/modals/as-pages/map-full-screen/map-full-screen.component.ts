@@ -19,9 +19,10 @@ export class MapFullScreenComponent {
   @Input() private radiusKm: number;
   @Input() private hideMarker: boolean;
 
+  
   @ViewChild('innerLocationCircle') animationElement: ElementRef;
 
-
+  idPrefix = 'map-full-screen-';
   private map: leafletMap;
   private circleRadius: Circle;
   private marker: Marker;
@@ -70,7 +71,7 @@ export class MapFullScreenComponent {
     if (this.map) return;
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
 
-    this.map = new leafletMap('map-full-screen', { zoomControl: false, attributionControl: false }).setView(this.coordinates, 9);
+    this.map = new leafletMap(this.idPrefix + this.id, { zoomControl: false, attributionControl: false }).setView(this.coordinates, 9);
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
 
     this.lc = control
