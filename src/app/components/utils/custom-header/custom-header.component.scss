@@ -48,6 +48,10 @@
         &[color='tertiary'] {
           color: var(--ion-color-tertiary);
         }
+
+        &[color='light'] {
+          color: var(--ion-color-light);
+        }
       }
     }
   }

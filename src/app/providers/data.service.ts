@@ -207,6 +207,17 @@ export class DataService {
 
   /* requests */
 
+  async getRequest(requestId: string) {
+    let request: Request, list: Request[];
+    list = await this.getMyRequestList();
+    request = list.find(request => request.id == requestId);
+    if (!request) {
+      list = await this.getRequestFollowingList();
+      request = list.find(request => request.id == requestId);
+    }
+    return request;
+  }
+
   private async getRequestList(
     list: Request[],
     requestList: UserProperties.requests | UserProperties.requestsFollowing,
@@ -444,17 +455,18 @@ export class DataService {
 
     console.log(fcmTokenList);
 
-    // this.sendNotifications(
-    //   'Nuevo trabajo disponible',
-    //   `${ownersName} necesita un servicio de ${requestData.requestSaved.service}`,
-    //   fcmTokenList
-    // );
+    this.sendNotifications(
+      'Nuevo trabajo disponible',
+      `${ownersName} necesita un servicio de ${requestData.requestSaved.service}`,
+      fcmTokenList,
+      requestData.id,
+    );
 
 
   }
 
-  async sendNotifications(title, body, fcmTokenList) {
-    if (fcmTokenList.length) this.notifications.send(title, body, fcmTokenList);
+  async sendNotifications(title, body, fcmTokenList, requestId) {
+    if (fcmTokenList.length) this.notifications.send(title, body, fcmTokenList, requestId);
   }
 
 

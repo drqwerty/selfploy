@@ -9,6 +9,7 @@ const { StatusBar } = Plugins;
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RequestListPopoverComponent } from 'src/app/components/popovers/request-list-popover/request-list-popover.component';
 import * as moment from 'moment';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @UntilDestroy()
 @Component({
@@ -41,7 +42,8 @@ export class RequestListPage {
 
   constructor(
     private data: DataService,
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    private notif: NotificationService,
   ) {
     this.statusBarAvailable = Capacitor.isPluginAvailable('StatusBar');
     data.myRequestListChangedSubject
@@ -198,6 +200,7 @@ export class RequestListPage {
     });
 
     popover.present();
+    // this.notif.createLocalNotification({id: '1', data: null, title: 'titulazo', body: 'bodidazo'});
   }
 
   propagateScroll(e) {

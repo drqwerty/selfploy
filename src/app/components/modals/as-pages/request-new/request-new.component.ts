@@ -15,6 +15,7 @@ import * as moment from 'moment';
 import { RequestNewActionSheetComponent } from 'src/app/components/action-sheets/request-new-action-sheet/request-new-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
+import { WorkingHours } from 'src/app/models/user-model';
 
 @Component({
   selector: 'app-request-new',
@@ -43,6 +44,10 @@ export class RequestNewComponent implements OnInit {
 
   ngOnInit() {
     this.tempRequest = new Request(this.request);
+    this.tempRequest.title = 'titulazo';
+    this.tempRequest.description = 'descripcionaca';
+    this.tempRequest.category = 'carpintería';
+    this.tempRequest.service = 'aluminio';
   }
 
   ionViewWillEnter() {
