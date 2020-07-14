@@ -24,8 +24,7 @@ export class AppComponent {
     private platform: Platform,
     private router: Router,
     private aFAuth: AngularFireAuth,
-    private zone: NgZone,
-
+    private zone: NgZone, 
   ) {
     registerWebPlugin(FacebookLogin);
     this.initializeApp();

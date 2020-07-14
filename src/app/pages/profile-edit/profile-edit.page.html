@@ -8,7 +8,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="updateUser()" [color]="user?.role === userRol.client ? 'secondary' : 'primary'" class="no-transform">
+      <ion-button (click)="updateUser()" [color]="user?.role === userRol.client && !clientToProfessional ? 'secondary' : 'primary'" class="no-transform">
         Guardar
       </ion-button>
     </ion-buttons>

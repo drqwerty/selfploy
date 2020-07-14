@@ -49,6 +49,7 @@ export enum UserProperties {
   id = 'id',
   distance = 'distance',
   isFav = 'isFav',
+  fcmToken = 'fcmToken',
 }
 
 export class User {
@@ -71,10 +72,11 @@ export class User {
   [UserProperties.radiusKm]: number;
   [UserProperties.professionalProfileActivated]: boolean;
   [UserProperties.hasFavorites]: boolean;
-  [UserProperties.requests]: any;
-  [UserProperties.requestsFollowing]: any;
+  [UserProperties.requests]: { [id: string]: string };
+  [UserProperties.requestsFollowing]: { [id: string]: string };
   [UserProperties.lastEditAt]: firestore.Timestamp;
   [UserProperties.id]: string;
   [UserProperties.distance]: number;
   [UserProperties.isFav]: boolean;
+  [UserProperties.fcmToken]: string;
 }

@@ -102,6 +102,7 @@ export class ProfileEditPage {
       this.tempUser.role = this.userRol.professional;
       this.tempUser.professionalProfileActivated = true;
       this.tempUser.profileCompleted = false;
+      this.tempUser.requestsFollowing = {};
     }
   }
 
@@ -442,6 +443,7 @@ export class ProfileEditPage {
     userClient.radiusKm = null;
     userClient.services = null;
     userClient.workingHours = null;
+    userClient.requestsFollowing = null;
     this.updateUser('Perfil profesional eliminado', userClient);
   }
 

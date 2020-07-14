@@ -34,7 +34,6 @@ export class RequestListPage {
 
   myUserId: string;
   imAClient: boolean;
-  requestList: Request[];
   myRequestList: Request[];
   followingRequestList: Request[];
   userConfig: UserConfig;
@@ -45,9 +44,12 @@ export class RequestListPage {
     private popoverController: PopoverController
   ) {
     this.statusBarAvailable = Capacitor.isPluginAvailable('StatusBar');
-    data.requestsChangedSubject
+    data.myRequestListChangedSubject
       .pipe(untilDestroyed(this))
-      .subscribe(() => this.updateRequestLists());
+      .subscribe(() => this.updateMyRequestList());
+    data.followingRequestListChangedSubject
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.updateFollowingRequestList());
     data.userConfigChangedSubject
       .pipe(untilDestroyed(this))
       .subscribe(newConfig => {
@@ -70,7 +72,8 @@ export class RequestListPage {
   async initView() {
     this.storeUserId();
     await this.getUserConfig();
-    this.updateRequestLists();
+    this.updateMyRequestList();
+    this.updateFollowingRequestList();
     this.imAClient = await this.userIsClient();
     if (this.statusBarAvailable) {
       const style = this.imAClient ? StatusBarStyle.Light : StatusBarStyle.Dark;
@@ -86,25 +89,25 @@ export class RequestListPage {
     return false;
   }
 
-  async updateRequestLists() {
-    const storedRequests = await this.data.getRequestList();
-    if (storedRequests !== this.requestList) {
-      this.requestList = storedRequests;
-      const tempMyRequestList = [];
-      const tempFollowingRequestList = [];
-      this.requestList.forEach(request => {
-        if (request.owner === this.myUserId) tempMyRequestList.push(request);
-        else tempFollowingRequestList.push(request);
-      });
-      this.myRequestList = tempMyRequestList;
-      this.followingRequestList = tempFollowingRequestList;
+  async updateMyRequestList() {
+    const storedRequestList = await this.data.getMyRequestList();
+    if (storedRequestList !== this.myRequestList) {
+      this.myRequestList = storedRequestList;
+      this.applyFilters();
     }
-    this.applyFilters();
+  }
+
+  async updateFollowingRequestList() {
+    const storedRequestList = await this.data.getRequestFollowingList();
+    if (storedRequestList !== this.followingRequestList) {
+      this.followingRequestList = storedRequestList;
+      this.applyFilters();
+    }
   }
 
   applyFilters() {
-    this.myRequestList.sort(this.sortFunction);
-    this.followingRequestList.sort(this.sortFunction);
+    this.myRequestList?.sort(this.sortFunction);
+    this.followingRequestList?.sort(this.sortFunction);
   }
 
   private sortFunction = (a: Request, b: Request) => {

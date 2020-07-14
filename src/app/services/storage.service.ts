@@ -21,7 +21,7 @@ export class StorageService {
     return this.getData(dbKeys.favorites);
   }
 
-  private async getData(key: string) {
+  async getData(key: string) {
     return JSON.parse((await Storage.get({ key })).value);
   }
 
@@ -45,7 +45,7 @@ export class StorageService {
   }
 
   removeUserProfile() {
-    return this.removeKeys(dbKeys.user, dbKeys.favorites, dbKeys.requests, dbKeys.userConfig);
+    return this.removeKeys(dbKeys.user, dbKeys.favorites, dbKeys.requests, dbKeys.requestsFollowing, dbKeys.userConfig);
   }
 
   async saveFavorite(favoritesI: User[], user: User) {
@@ -65,19 +65,23 @@ export class StorageService {
     return favorites;
   }
 
-  getRequestList(): Promise<Request[]> {
+  getMyRequestList(): Promise<Request[]> {
     return this.getData(dbKeys.requests);
   }
 
-  saveRequests(requests: Request[]) {
-    if (!requests) return this.removeKeys(dbKeys.requests);
-    return this.saveData(dbKeys.requests, requests)
+  getRequestFollowingList(): Promise<Request[]> {
+    return this.getData(dbKeys.requestsFollowing);
+  }
+
+  saveRequests(requests: Request[], dbKey: dbKeys.requests | dbKeys.requestsFollowing) {
+    if (!requests) return this.removeKeys(dbKey);
+    return this.saveData(dbKey, requests)
   }
 
   async saveRequest(requestsI: Request[], request: Request) {
     const requests = [...requestsI];
     if (!requests.some(requestSaved => requestSaved.id === request.id)) requests.push(request);
-    await this.saveRequests(requests);
+    await this.saveRequests(requests, request.isMine ? dbKeys.requests : dbKeys.requestsFollowing);
     return requests;
   }
 
@@ -86,14 +90,14 @@ export class StorageService {
     if (index > -1) requests[index] = request;
     else requests.push(request);
 
-    await this.saveRequests(requests)
+    await this.saveRequests(requests, request.isMine ? dbKeys.requests : dbKeys.requestsFollowing)
     return requests;
   }
 
   async removeRequest(requestsI: Request[], request: Request) {
     const requests = [];
     for (const requestSaved of requestsI) if (requestSaved.id !== request.id) requests.push(requestSaved);
-    await this.saveRequests(requests);
+    await this.saveRequests(requests, request.isMine ? dbKeys.requests : dbKeys.requestsFollowing);
     return requests;
   }
 

@@ -68,7 +68,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   }
 
   openChat() {
-    
+
   }
 
   scrollEvent({ deltaY, scrollTop }) {
@@ -170,7 +170,10 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   async deleteRequest() {
     (await this.showConfirmAction())
       .onDidDismiss().then(({ data: confirm }) => {
-        if (confirm) this.data.removeRequest(this.request);
+        if (confirm) {
+          this.data.removeRequest(this.request);
+          this.modalController.dismiss();
+        }
       });
   }
 

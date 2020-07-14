@@ -19,6 +19,7 @@ import { AuthGuardService } from './guards/auth-guard.service';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Animations } from './animations/animations';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,6 +34,7 @@ import { Animations } from './animations/animations';
     AngularFirestoreModule,
     AngularFireStorageModule,
     BrowserAnimationsModule,
+    HttpClientModule,
   ],
   providers: [
     StatusBar,

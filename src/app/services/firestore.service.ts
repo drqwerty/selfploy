@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference, Action, DocumentSnapshot } from '@angular/fire/firestore';
 import { User, UserProperties } from '../models/user-model';
 import { FirebaseStorage } from './firebase-storage.service';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -13,6 +13,8 @@ import Utils from "src/app/utils";
 const { GeoPoint } = firestore;
 import { dbKeys } from 'src/app/models/db-keys'
 import { Request, RequestStatus, RequestProperties } from 'src/app/models/request-model';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -241,7 +243,7 @@ export class FirestoreService {
     if (!request.id) request.id = firestore().collection(dbKeys.requests).doc().id;
     request.owner = (await this.aFAuth.currentUser).uid;
 
-    const { images, ...data } = request;
+    const { images, isMine, ...data } = request;
     const docData = Object.assign({}, data);
 
     if (request.startDate?.constructor.name == 'Moment') {
@@ -258,7 +260,7 @@ export class FirestoreService {
       docRef = await this.saveRequestWithoutGeopoint(docData);
     }
 
-    await this.addRequestToUserList(UserProperties.requests, docRef);
+    await this.addRequestToUserList(docRef);
     const requestSaved = await this.getRequestFromPath(docRef.path);
     return { id: docRef.id, path: docRef.path, requestSaved };
   }
@@ -279,16 +281,32 @@ export class FirestoreService {
     return docRef;
   }
 
-  private async addRequestToUserList(list: UserProperties.requests | UserProperties.requestsFollowing, request: DocumentReference) {
+  private async addRequestToUserList(request: DocumentReference | { id: string, path: string }) {
     const { uid } = await this.aFAuth.currentUser;
     const docRef = this.db.collection(dbKeys.users).doc(uid);
 
     try {
-      await docRef.update({ [`d.${list}.${request.id}`]: request.path });
+      await docRef.update({ [`d.${UserProperties.requests}.${request.id}`]: request.path });
     } catch ({ code }) {
       if (code === 'not-found')
-        await docRef.set({ [`d.${list}`]: { [request.id]: request.path } });
+        await docRef.set({ [`d.${UserProperties.requests}`]: { [request.id]: request.path } });
     }
+  }
+
+  async addRequestToFollowingUsersList(ids: string[], request: DocumentReference | { id: string, path: string }) {
+    Promise.all([
+      ids.map(async id => {
+        const docRef = this.db.collection(dbKeys.users).doc(id);
+
+        try {
+          await docRef.update({ [`d.${UserProperties.requestsFollowing}.${request.id}`]: request.path });
+        } catch ({ code }) {
+          if (code === 'not-found')
+            await docRef.set({ [`d.${UserProperties.requestsFollowing}`]: { [request.id]: request.path } });
+        }
+      })
+    ])
+
   }
 
   private async removeRequestFromUserList(request: Request) {
@@ -302,12 +320,21 @@ export class FirestoreService {
   }
 
   getObservableFromPath(path: string) {
-    return this.db.doc(path).snapshotChanges();
+    return <Observable<Action<DocumentSnapshot<any>>>>this.db.doc(path).snapshotChanges();
   }
 
   getMyRequestsAsObservableList(requestListObject: {}) {
     return Object.values(requestListObject)
       .map((path: string) => this.getObservableFromPath(path));
+  }
+
+  async getFollowingRequestListObservable() {
+    const { uid } = await this.aFAuth.currentUser;
+    return this.db
+      .collection(dbKeys.users)
+      .doc(`${uid}`)
+      .valueChanges()
+      .pipe(map(({ d }: { d: User }) => d.requestsFollowing));
   }
 
   setAllRequestToDraftState() {
@@ -317,5 +344,18 @@ export class FirestoreService {
       .then(data =>
         data.docs.forEach(doc =>
           this.db.doc(doc.ref.path).update({ 'd.status': 0 })));
+  }
+
+  /* notifications */
+  async saveFCMToken(fcmToken: string) {
+    const { uid } = await this.aFAuth.currentUser;
+    const docRef = this.db.collection(dbKeys.users).doc(uid);
+
+    try {
+      await docRef.update({ [`d.${UserProperties.fcmToken}`]: fcmToken });
+    } catch ({ code }) {
+      if (code === 'not-found')
+        await docRef.set({ [`d.${UserProperties.fcmToken}`]: fcmToken });
+    }
   }
 }

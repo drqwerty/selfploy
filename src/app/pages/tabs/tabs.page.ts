@@ -48,18 +48,20 @@ export class TabsPage {
       if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light })
       // this.requestNewService();
     }, 500);
+    this.data.saveFCMToken();
   }
 
   ionViewWillEnter() {
     this.data.observeMyRequests();
+    this.data.observeFollowingRequests();
   }
-  
+
   async requestNewService() {
     const modal = await this.modalController.create({
       component: RequestNewComponent,
       animated: false,
     });
-    
+
     // await this.anim.addElement(this.ionFab).startAnimation();
     modal.onWillDismiss().then(() => modal.classList.remove('background-black'));
     modal.present().then(() => modal.classList.add('background-black'));

@@ -24,7 +24,7 @@ import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sh
 export class RequestNewComponent implements OnInit {
 
   @Input() edit = false;
-  @Input() request: Request;
+  @Input() request = new Request();
 
 
   @ViewChild(IonContent) ionContent: IonContent;
@@ -69,7 +69,7 @@ export class RequestNewComponent implements OnInit {
     modal.onDidDismiss().then(({ data }) => {
       switch (data) {
         case 'save':
-          this.saveRequest(RequestStatus.draft);
+          this.saveRequest(RequestStatus.draft, true);
           break;
 
         case 'choose':
@@ -78,7 +78,7 @@ export class RequestNewComponent implements OnInit {
           break;
 
         case 'notifyAll':
-          this.saveRequest(RequestStatus.open);
+          this.notifyAll();
           console.log('n', data);
           break;
       }
@@ -87,17 +87,28 @@ export class RequestNewComponent implements OnInit {
     modal.present();
   }
 
-  async saveRequest(status: RequestStatus) {
+  async saveRequest(status: RequestStatus, onlySave = false) {
     this.tempRequest.status = status;
     Request.copy(this.tempRequest, this.request);
     const loading = await this.loadingController.create();
 
-    await Promise.all([
-      loading.present(),
+    const promises = await Promise.all([
       this.data.saveRequest(this.request),
+      loading.present(),
     ]);
+    const requestData = promises[0];
+    this.request = requestData.requestSaved;
 
-    loading.dismiss().then(() => this.modalController.dismiss());
+    if (onlySave)
+      this.loadingController.dismiss().then(() => this.modalController.dismiss());
+
+    return requestData;
+  }
+
+  async notifyAll() {
+    const requestData = await this.saveRequest(RequestStatus.open);
+    await this.data.sendRequestNotifications(requestData);
+    this.loadingController.dismiss().then(() => this.modalController.dismiss());
   }
 
   requestIsComplete() {

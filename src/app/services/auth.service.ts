@@ -49,7 +49,8 @@ export class AuthService {
       const userCrendential = await signInPromise;
       await this.data.getMyProfile(userCrendential.user.uid)
       await this.data.getFavoriteList();
-      await this.data.getRequestList();
+      await this.data.getMyRequestList();
+      await this.data.getRequestFollowingList();
       await this.data.getUserConfig();
       return userCrendential;
     } catch (reason) {
@@ -105,6 +106,7 @@ export class AuthService {
   }
 
   logout() {
+    this.data.userLogout.next();
     this.aFAuth.currentUser.then(({ providerData }) => {
       this.aFAuth.signOut();
       this.data.removeUserProfile();
@@ -133,7 +135,10 @@ export class AuthService {
   }
 
   createAndSaveUserProfile(user: User, signUpPromise: Promise<firebase.auth.UserCredential>) {
-    if (user.role === UserRole.professional) user.professionalProfileActivated = true;
+    if (user.role === UserRole.professional) {
+      user.requestsFollowing = {};
+      user.professionalProfileActivated = true;
+    };
     user.name_splited = Utils.normalizeAndSplit(user.name);
 
     return new Promise((resolve, reject) => {
