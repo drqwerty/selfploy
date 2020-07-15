@@ -105,7 +105,12 @@
   <ion-item>
     <ion-label>
       <h2>Encargo de</h2>
-      <h3 class="ion-text-wrap">{{ownerName}}</h3>
+      <ng-container *ngIf="ownerName; else skeleton">
+        <h3 class="ion-text-wrap">{{ownerName}}</h3>
+      </ng-container>
+      <ng-template #skeleton>
+        <ion-skeleton-text animated style="width: 40%; margin: 20px 0 0 10px;"></ion-skeleton-text>
+      </ng-template>
     </ion-label>
   </ion-item>
 
