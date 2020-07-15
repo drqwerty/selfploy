@@ -29,13 +29,16 @@ export class RequestCardComponent implements AfterViewInit {
     private data: DataService,
   ) { }
 
+
   ngAfterViewInit() {
     // console.log(this.request);
   }
 
+
   imageLoaded() {
     this.showSpinner = false;
   }
+
 
   async openConversation(event: MouseEvent) {
     event.stopPropagation();
@@ -48,6 +51,7 @@ export class RequestCardComponent implements AfterViewInit {
   
     await modal.present();
   }
+
 
   async presentOptions(event: MouseEvent) {
     event.stopPropagation();
@@ -92,6 +96,7 @@ export class RequestCardComponent implements AfterViewInit {
     modal.present();
   }
 
+
   async closeRequest() {
     (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
@@ -99,12 +104,14 @@ export class RequestCardComponent implements AfterViewInit {
       });
   }
 
+
   async completeRequest() {
     (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
         if (confirm) this.data.completeRequest(this.request);
       });
   }
+
 
   async editRequest() {
     const modal = await this.modalController.create({
@@ -120,12 +127,14 @@ export class RequestCardComponent implements AfterViewInit {
     modal.present().then(() => modal.classList.add('background-black'));
   }
 
+
   async deleteRequest() {
     (await this.showConfirmAction())
       .onDidDismiss().then(({ data: confirm }) => {
         if (confirm) this.data.removeRequest(this.request);
       });
   }
+
 
   async showConfirmAction(confirmText?: string) {
     let componentProps = confirmText ? { text: confirmText } : {};

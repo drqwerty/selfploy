@@ -35,6 +35,7 @@ export class RequestCardActionSheetComponent implements OnInit {
     this.showButtons.remove = true;
   }
 
+
   async presentInfo() {
     const modal = await this.modalController.create({
       component: InfoComponent,
@@ -70,6 +71,7 @@ export class RequestCardActionSheetComponent implements OnInit {
 
     modal.present();
   }
+
 
   dismiss(optionSelected: RequestStatus) {
     this.modalController.dismiss(optionSelected);

@@ -42,7 +42,6 @@ export class MapLocationComponent {
   skipEvents = false;
   myLocationColor: 'tertiary' | 'primary' = 'tertiary';
 
-
   constructor(
     private modalController: ModalController,
     private platform: Platform,
@@ -50,10 +49,12 @@ export class MapLocationComponent {
     private renderer: Renderer2,
   ) { }
 
+
   ionViewWillEnter() {
     this.createMyLocationAnimation();
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
+
 
   ionViewDidEnter() {
     this.loadMap();
@@ -62,13 +63,16 @@ export class MapLocationComponent {
     this.showTooltipIfNeeded();
   }
 
+
   ionViewDidLeave() {
     this.lc.stop();
   }
 
+
   goBack() {
     this.modalController.dismiss();
   }
+
 
   accept() {
     this.modalController.dismiss({
@@ -78,6 +82,7 @@ export class MapLocationComponent {
       coordinates: this.coordinates,
     });
   }
+
 
   loadMap() {
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
@@ -100,6 +105,7 @@ export class MapLocationComponent {
     this.lc.getContainer().classList.add('ion-hide');
     this.geocodeService = (Geocoding as any).geocodeService();
   }
+
 
   loadMapEvents() {
     this.map.on('locationfound', () => {
@@ -130,6 +136,7 @@ export class MapLocationComponent {
     });
   }
 
+
   async search() {
     const modal = await this.modalController.create({
       component: MapSearchComponent,
@@ -147,6 +154,7 @@ export class MapLocationComponent {
     await this.animations.addElement(this.fab.el, '#fff').startAnimation();
     modal.present();
   }
+
   
   // in android the view maintains the height of the keyboard when it leaves
   forceRefreshHeight() {
@@ -154,6 +162,7 @@ export class MapLocationComponent {
     this.renderer.setStyle(el, 'height', '100%');
     setTimeout(() => this.renderer.removeStyle(el, 'height'), 150);
   }
+
 
   async locate(requestPersmission = true) {
     if (requestPersmission) this.goToLocationOnFound = true;
@@ -175,6 +184,7 @@ export class MapLocationComponent {
     }
   }
 
+
   async startGeolocationAndUpdateButton() {
     const { state } = await Permissions.query({ name: PermissionType.Geolocation });
     if (state !== 'granted') return;
@@ -188,15 +198,18 @@ export class MapLocationComponent {
     this.lc.start();
   }
 
+
   setColorMyLocationButton(color: 'primary' | 'tertiary') {
     if (color == 'primary' && this.goToLocationOnFound) this.myLocationColor = 'primary';
     else if (!this.skipEvents) this.myLocationColor = 'tertiary';
   }
 
+
   skipMapEvents() {
     this.skipEvents = true;
     setTimeout(() => this.skipEvents = false, 250);
   }
+
 
   showTooltipIfNeeded() {
     if (this.addressFull == null || this.addressFull == '') {
@@ -204,6 +217,7 @@ export class MapLocationComponent {
       this.tooltipToggleVisibily(true);
     }
   }
+
 
   async tooltipToggleVisibily(show: boolean) {
     if (show) {
@@ -214,6 +228,7 @@ export class MapLocationComponent {
     }
   }
 
+
   createMyLocationAnimation() {
     this.locationButtonAnimation = createAnimation()
       .addElement(this.animationElement.nativeElement)
@@ -223,6 +238,7 @@ export class MapLocationComponent {
       .direction('alternate')
       .fromTo('transform', 'scale(1)', 'scale(.7)');
   }
+
 
   createTooltipAnimation() {
     this.tooltipAnimation = createAnimation()

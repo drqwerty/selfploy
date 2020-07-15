@@ -59,9 +59,11 @@ export class ConversationComponent implements AfterViewChecked {
     })
   }
 
+
   ionViewWillEnter() {
     this.setCornersStyle();
   }
+
 
   ngAfterViewChecked() {
     if (!this.touching && this.nearToBottom) {
@@ -69,18 +71,22 @@ export class ConversationComponent implements AfterViewChecked {
     }
   }
 
+
   touchStart() {
     this.touching = true;
   }
+
 
   touchEnd() {
     this.hideTimestamp();
     this.touching = false;
   }
 
+
   goBack() {
     this.modalController.dismiss();
   }
+
 
   setCornersStyle() {
     setTimeout(() => {
@@ -93,6 +99,7 @@ export class ConversationComponent implements AfterViewChecked {
     });
   }
 
+
   logScrolling({ scrollTop }) {
     const { clientHeight } = this.ionContent.nativeElement;
     const { scrollHeight } = this.ionGrid.nativeElement;
@@ -100,9 +107,11 @@ export class ConversationComponent implements AfterViewChecked {
     this.nearToBottom = scrollBottom > scrollHeight - 5;
   }
 
+
   hideTimestamp() {
     this.ionGrid.nativeElement.scrollTo({ left: 0, behavior: 'smooth' });
   }
+
 
   onSameDay(index1: number, index2: number) {
     const date1 = <moment.Moment>this.messages[index1]?.timestamp;
@@ -145,14 +154,17 @@ export class ConversationComponent implements AfterViewChecked {
     this.bottomToolbar.nativeElement.addEventListener('scroll', () => scrollLeft = this.bottomToolbar.nativeElement.scrollLeft);
   }
 
+
   setBackGroundColor(color = '#000000') {
     this.fivGallery.backdropColor = color;
     this.fivGallery.updateBackdrop = () => null;
   }
 
+
   footerImgScroll(smooth = false) {
     this.ionImg.toArray()[this.fivGallery.activeIndex].el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
   }
+
 
   willClose() {
     this.updateInitialImage();
@@ -160,6 +172,7 @@ export class ConversationComponent implements AfterViewChecked {
     this.toggleImageVisibility(false);
     this.bottomIntersectionObserver.disconnect();
   }
+
 
   toggleImageVisibility(visible: boolean, delay = 0) {
     if (delay)
@@ -175,6 +188,7 @@ export class ConversationComponent implements AfterViewChecked {
   goTo(index) {
     this.fivGallery.slides.slideTo(index);
   }
+
 
   updateInitialImage() {
     if (this.fivGallery.activeIndex == this.fivGalleryImage.toArray().length)

@@ -72,10 +72,12 @@ export class ProfileEditPage {
     });
   }
 
+
   ionViewWillLeave() {
     this.pageAlreadyLeave = true;
     tabBarAnimateIn();
   }
+
 
   ionViewWillEnter() {
     this.getUser();
@@ -83,15 +85,18 @@ export class ProfileEditPage {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
+
   ionViewDidEnter() {
     if (this.activeProfessionalProfile)
       this.content.scrollToBottom(1000)
         .then(() => this.showEnableProfessionalAccountAlert());
   }
 
+
   updateHeaderShadow(scrollTop: number) {
     this.hideHeaderBorder = scrollTop === 0;
   }
+
 
   async getUser() {
     this.user = await this.data.getMyProfile();
@@ -106,6 +111,7 @@ export class ProfileEditPage {
     }
   }
 
+
   goBack() {
     if (this.clientToProfessional) {
       this.notificateNotUpgradeProfile()
@@ -113,6 +119,7 @@ export class ProfileEditPage {
       this.navController.navigateBack('tabs/profile');
     }
   }
+
 
   async notificateNotUpgradeProfile() {
     const alert = await this.alertController.create({
@@ -133,6 +140,7 @@ export class ProfileEditPage {
 
     alert.present();
   }
+
 
   async updateUser(successMessage?: string, updatedUser?: User) {
 
@@ -161,6 +169,7 @@ export class ProfileEditPage {
     this.leavePageIfPossible(toast);
   }
 
+
   async saveUser(updatedUser: User) {
     updatedUser.name_splited = Utils.normalizeAndSplit(updatedUser.name);
     updatedUser.profileCompleted = this.profileIsComplete(updatedUser);
@@ -168,6 +177,7 @@ export class ProfileEditPage {
     await this.data.updatedMyProfile(updatedUser);
     return updatedUser;
   }
+
 
   profileIsComplete(updateUser: User) {
     if (updateUser.role === UserRole.client) {
@@ -179,6 +189,7 @@ export class ProfileEditPage {
     }
     return true;
   }
+
 
   private async presentToast(message: string) {
     let toast: HTMLIonToastElement;
@@ -197,11 +208,13 @@ export class ProfileEditPage {
     return toast;
   }
 
+
   private leavePageIfPossible(toast: HTMLIonToastElement) {
     if (this.forceCompleteProfile && this.tempUser.profileCompleted) toast.onWillDismiss().then(() => {
       if (!this.pageAlreadyLeave) this.goBack();
     });
   }
+
 
   async showCameraSourcePrompt() {
     this.removePictureToast?.dismiss();
@@ -225,12 +238,14 @@ export class ProfileEditPage {
     modal.present();
   }
 
+
   updateImageVariables(data: { image: string, profilePicWithoutCrop: string }) {
     this.profilePicWithoutCrop = data.profilePicWithoutCrop;
     this.tempUser.profilePic = data.image;
     this.tempUser.hasProfilePic = true;
     this.updateImageProfile = true;
   }
+
 
   async removeProfileImage() {
     const profileImageTemp = this.tempUser.profilePic;
@@ -254,17 +269,21 @@ export class ProfileEditPage {
     this.removePictureToast.present();
   }
 
+
   editName() {
     this.presentInputBottomSheet(this.headerName, UserProperties.name);
   }
+
 
   editCompany() {
     this.presentInputBottomSheet(this.headerCompany, UserProperties.companyName, true);
   }
 
+
   editAbout() {
     this.presentInputBottomSheet(this.headerAbout, UserProperties.about, true, 'text-area');
   }
+
 
   async editServices() {
     const modal = await this.modalController.create({
@@ -284,6 +303,7 @@ export class ProfileEditPage {
     modal.present();
   }
 
+
   async editWorkingHours() {
     const modal = await this.modalController.create({
       component: WorkingHoursPickerComponent,
@@ -300,6 +320,7 @@ export class ProfileEditPage {
 
     modal.present();
   }
+
 
   async editLocation() {
     const modal = await this.modalController.create({
@@ -326,6 +347,7 @@ export class ProfileEditPage {
     modal.present();
   }
 
+
   async editRange() {
     const modal = await this.modalController.create({
       component: MapRangeComponent,
@@ -343,6 +365,7 @@ export class ProfileEditPage {
 
     modal.present();
   }
+
 
   async presentInputBottomSheet(title, userProperty, optional = false, type: 'input' | 'text-area' = 'input') {
 
@@ -369,6 +392,7 @@ export class ProfileEditPage {
     modal.present();
   }
 
+
   async showDeleteProfessionalProfileAlert() {
     const cssClass = 'custom-alert danger';
     const header = '¿Eliminar perfil profesional?';
@@ -381,6 +405,7 @@ export class ProfileEditPage {
 
     this.showAlert(cssClass, header, message, confirmText, this.deleteProfessionalProfile);
   }
+
 
   async showDisableProfessionalAccountAlert() {
     const cssClass = 'custom-alert secondary';
@@ -397,6 +422,7 @@ export class ProfileEditPage {
     this.showAlert(cssClass, header, message, confirmText, this.disableProfessionalProfile);
   }
 
+
   async showEnableProfessionalAccountAlert() {
     const cssClass = 'custom-alert primary';
     const header = '¿Activar perfil profesional?';
@@ -411,6 +437,7 @@ export class ProfileEditPage {
 
     this.showAlert(cssClass, header, message, confirmText, this.enableProfessionalProfile);
   }
+
 
   async showAlert(cssClass, header, message, confirmText, confirmHandler) {
     const alert = await this.alertController.create({
@@ -433,6 +460,7 @@ export class ProfileEditPage {
     alert.present();
   }
 
+
   deleteProfessionalProfile() {
     const userClient = new User();
     Object.assign(userClient, this.tempUser);
@@ -447,10 +475,12 @@ export class ProfileEditPage {
     this.updateUser('Perfil profesional eliminado', userClient);
   }
 
+
   enableProfessionalProfile() {
     this.tempUser.professionalProfileActivated = true;
     this.updateUser('Perfil profesional activado');
   }
+
 
   disableProfessionalProfile() {
     this.tempUser.professionalProfileActivated = false;

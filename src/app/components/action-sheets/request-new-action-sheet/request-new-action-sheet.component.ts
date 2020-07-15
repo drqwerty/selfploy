@@ -10,9 +10,11 @@ export class RequestNewActionSheetComponent {
 
   @Input() requestIsComplete = false;
 
+
   constructor(
     private modalController: ModalController,
   ) { }
+
 
   dismiss(option) {
     this.modalController.dismiss(option);

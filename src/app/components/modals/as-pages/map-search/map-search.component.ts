@@ -28,20 +28,24 @@ export class MapSearchComponent {
     this.geocodeService = (Geocoding as any).geocodeService();
   }
 
+
   ionViewDidEnter() {
     this.animations.modalLoaded();
     setTimeout(() => this.searchbar.setFocus(), 250);
   }
+
 
   async goBack() {
     await this.animations.startReverseAnimation();
     this.modalController.dismiss();
   }
 
+
   async goToLocation(bounds) {
     await this.animations.startReverseAnimation();
     this.modalController.dismiss(bounds);
   }
+
 
   searchQuery({ detail }) {
     this.geocodeService.suggest().text(detail.value).nearby(this.mapCenter).run((error, results) =>
@@ -49,9 +53,11 @@ export class MapSearchComponent {
     )
   }
 
+
   clearResultData() {
     this.suggestions = [];
   }
+
 
   async getGeopoint(result) {
     

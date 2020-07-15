@@ -18,7 +18,6 @@ export class InputBottomSheetComponent {
   @ViewChild(IonInput) input: IonInput;
   @ViewChild(IonTextarea) textArea: IonTextarea;
 
-
   constructor(
     private modalController: ModalController,
   ) { }
@@ -34,9 +33,11 @@ export class InputBottomSheetComponent {
     });
   }
 
+
   cancel() {
     this.modalController.dismiss();
   }
+
 
   accept() {
     if (this.form.invalid) return;

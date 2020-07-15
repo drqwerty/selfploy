@@ -35,24 +35,29 @@ export class WorkingHoursPickerComponent {
     private modalController: ModalController,
   ) { }
 
+
   ionViewWillEnter() {
     this.setWorkingHoursSelected();
   }
+
 
   accept() {
     this.getWorkingHoursSelected();
     this.modalController.dismiss(this.userWorkingHours);
   }
 
+
   cancel() {
     this.modalController.dismiss();
   }
+
 
   setWorkingHoursSelected() {
     this.workingHours.forEach(workingHour =>
       workingHour.checked = this.userWorkingHours?.includes(workingHour.name)
     );
   }
+
 
   getWorkingHoursSelected() {
     this.userWorkingHours = [];

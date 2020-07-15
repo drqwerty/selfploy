@@ -2,6 +2,7 @@ import { createAnimation } from '@ionic/core';
 
 const ActionSheetEasing = 'cubic-bezier(.36,.66,.04,1)';
 
+
 export const ActionSheetEnter = baseEl => {
   const baseAnimation = createAnimation();
   const backdropAnimation = createAnimation();
@@ -26,6 +27,7 @@ export const ActionSheetEnter = baseEl => {
     .duration(400)
     .addAnimation([backdropAnimation, wrapperAnimation]);
 };
+
 
 export const ActionSheetLeave = baseEl => {
   const baseAnimation = createAnimation();

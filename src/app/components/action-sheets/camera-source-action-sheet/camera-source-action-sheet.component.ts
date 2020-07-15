@@ -30,17 +30,21 @@ export class CameraSourceActionSheetComponent {
     modalController.getTop().then(modal => this.modalRoot = modal);
   }
 
+
   ionViewWillEnter() {
     this.showEditButton = this.profilePic?.startsWith('data');
   }
+
 
   addImage() {
     this.cameraPlugin(CameraSource.Photos);
   }
 
+
   takePicture() {
     this.cameraPlugin(CameraSource.Camera);
   }
+
 
   async editImage() {
     this.modalRoot.classList.add('ion-invisible');
@@ -51,9 +55,11 @@ export class CameraSourceActionSheetComponent {
     this.modalCropper.present();
   }
 
+
   removeImage() {
     this.modalRoot.dismiss({ remove: true });
   }
+
 
   async cameraPlugin(source: CameraSource) {
     this.loadingController.create().then(loading => this.loading = loading);
@@ -79,12 +85,14 @@ export class CameraSourceActionSheetComponent {
     }
   }
 
+
   removeElements() {
     this.modalRoot.dismiss();
     this.loading.remove();
     this.modalCropper.remove();
     console.log('catch');
   }
+
 
   async createCropperModal(componentProps?) {
     this.modalCropper = await this.modalController.create({

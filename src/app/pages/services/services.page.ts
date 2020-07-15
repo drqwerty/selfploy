@@ -38,13 +38,16 @@ export class ServicesPage {
     });
   }
 
+
   ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
+
   goBack() {
     this.navController.navigateBack('/tabs/categories');
   }
+
 
   async search() {
     const modal = await this.modalController.create({
@@ -58,6 +61,7 @@ export class ServicesPage {
     await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
     modal.present();
   }
+
 
   showProfessionals(categoryName, serviceName) {
     this.navController.navigateForward('/tabs/categories/services/professional-list', { state: { categoryName, serviceName } })

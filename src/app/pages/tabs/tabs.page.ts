@@ -71,10 +71,12 @@ export class TabsPage {
       })
   }
 
+
   ionViewWillEnter() {
     this.data.observeMyRequests();
     this.data.observeFollowingRequests();
   }
+
 
   async requestNewService() {
     const modal = await this.modalController.create({

@@ -42,6 +42,7 @@ export class RequestNewComponent implements OnInit {
     private data: DataService,
   ) { }
 
+
   ngOnInit() {
     this.tempRequest = new Request(this.request);
     this.tempRequest.title = 'titulazo';
@@ -50,15 +51,18 @@ export class RequestNewComponent implements OnInit {
     this.tempRequest.service = 'aluminio';
   }
 
+
   ionViewWillEnter() {
     // this.anim.modalLoaded();
     // this.continue();
   }
 
+
   async goBack() {
     // await this.anim.startReverseAnimation();
     this.modalController.dismiss();
   }
+
 
   async continue() {
     const modal = await this.modalController.create({
@@ -92,6 +96,7 @@ export class RequestNewComponent implements OnInit {
     modal.present();
   }
 
+
   async saveRequest(status: RequestStatus, onlySave = false) {
     this.tempRequest.status = status;
     Request.copy(this.tempRequest, this.request);
@@ -110,11 +115,13 @@ export class RequestNewComponent implements OnInit {
     return requestData;
   }
 
+
   async notifyAll() {
     const requestData = await this.saveRequest(RequestStatus.open);
     await this.data.sendRequestNotifications(requestData);
     this.loadingController.dismiss().then(() => this.modalController.dismiss());
   }
+
 
   requestIsComplete() {
     const validations = {
@@ -145,9 +152,11 @@ export class RequestNewComponent implements OnInit {
     return isComplete;
   }
 
+
   updateHasImageProperty() {
     this.tempRequest.hasImages = this.tempRequest.images.length > 0;
   }
+
 
   async editService() {
     const modal = await this.modalController.create({
@@ -177,6 +186,7 @@ export class RequestNewComponent implements OnInit {
     modal.present();
   }
 
+
   async setNow() {
     // this.chooseWorkingHours(true);
     delete this.tempRequest.endDate;
@@ -184,6 +194,7 @@ export class RequestNewComponent implements OnInit {
     this.tempRequest.startDate = moment();
     this.tempRequest.priority = true;
   }
+
 
   async chooseDay() {
     console.log(this.tempRequest);
@@ -218,6 +229,7 @@ export class RequestNewComponent implements OnInit {
     modal.present();
   }
 
+
   chooseWorkingHours(priority: boolean, dateString = moment().format('L')): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
 
@@ -245,6 +257,7 @@ export class RequestNewComponent implements OnInit {
     });
   }
 
+
   async addImage() {
     if (this.tempRequest.images.length > 5) return;
 
@@ -269,17 +282,21 @@ export class RequestNewComponent implements OnInit {
     modal.present();
   }
 
+
   editTitle() {
     this.presentInputBottomSheet('Título', RequestProperties.title);
   }
+
 
   editDescription() {
     this.presentInputBottomSheet('Descripción', RequestProperties.description, false, 'text-area');
   }
 
+
   editBudget() {
     this.presentInputBottomSheet('Presupuesto', RequestProperties.budget, true, 'input', 'number');
   }
+
 
   async presentInputBottomSheet(title, userProperty, optional = false, type: 'input' | 'text-area' = 'input', keyboardType: 'text' | 'number' = 'text') {
 
@@ -307,6 +324,7 @@ export class RequestNewComponent implements OnInit {
 
     modal.present();
   }
+
 
   async editLocation() {
     const modal = await this.modalController.create({

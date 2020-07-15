@@ -66,7 +66,6 @@ export class LoginRegisterComponent {
 
   removePictureToast: HTMLIonToastElement;
 
-
   constructor(
     private modalController: ModalController,
     private navController: NavController,
@@ -112,6 +111,7 @@ export class LoginRegisterComponent {
     this.user.token = this.token;
   }
 
+
   ionViewWillLeave() {
     this.slides.isBeginning().then(beginning => {
       if (beginning && this.socialAccount == 'none') {
@@ -122,6 +122,7 @@ export class LoginRegisterComponent {
       }
     })
   }
+
 
   goBack() {
     this.slides.getActiveIndex().then(activeIndex => {
@@ -137,6 +138,7 @@ export class LoginRegisterComponent {
       }
     })
   }
+
 
   goNext() {
     if (this.goNextDisabled) return;
@@ -156,6 +158,7 @@ export class LoginRegisterComponent {
       }
     });
   }
+
 
   async createTermsAndConditionsModal() {
     const modal = await this.modalController.create({
@@ -183,6 +186,7 @@ export class LoginRegisterComponent {
     return modal;
   }
 
+
   nameFormValid(difference = 0) {
     // si se inicia con las rr.ss, se actualiza el next button de la primera slide
     this.slides.getActiveIndex().then(index => {
@@ -193,9 +197,11 @@ export class LoginRegisterComponent {
     })
   }
 
+
   passwordFormValid() {
     this.goNextDisabled = this.passwordForm.invalid;
   }
+
 
   updateNextButtonState(activeIndex: number, direction: 'forward' | 'backward') {
     const difference = direction == 'forward' ? 1 : -1;
@@ -219,6 +225,7 @@ export class LoginRegisterComponent {
     }
   }
 
+
   setUserRole(role: UserRole, buttonSelected, buttonNotSelected) {
     this.user.role = role;
     this.goNextDisabled = false;
@@ -228,6 +235,7 @@ export class LoginRegisterComponent {
     buttonNotSelected.button = 'light';
     buttonNotSelected.text = 'primary';
   }
+
 
   async showCameraSourcePrompt() {
     this.removePictureToast?.dismiss();
@@ -251,10 +259,12 @@ export class LoginRegisterComponent {
     modal.present();
   }
 
+
   updateImageVariables(data: { image: string, profilePicWithoutCrop: string }) {
     this.profilePicWithoutCrop = data.profilePicWithoutCrop;
     this.user.profilePic = data.image;
   }
+
 
   async removeProfileImage() {
     const profileImageTemp = this.user.profilePic;
@@ -276,17 +286,21 @@ export class LoginRegisterComponent {
     this.removePictureToast.present();
   }
 
+
   signUpWithEmailAndPassword() {
     this.signUp(this.authService.signUpWithEmailAndPassword(this.user, this.passwordForm.value.password));
   }
+
 
   signUpWithGoogle() {
     this.signUp(this.authService.signUpWithGoogle(this.user, this.token));
   }
 
+
   signUpWithFacebook() {
     this.signUp(this.authService.signUpWithFacebook(this.user, this.token));
   }
+
 
   signUp(signUpMethod: Promise<any>) {
     this.presentLoading();
@@ -299,16 +313,19 @@ export class LoginRegisterComponent {
       .finally(() => this.loading.dismiss());
   }
 
+
   goToMainPage() {
     this.rootModal.leaveAnimation = ModalAnimationFadeLeave;
     this.navController.navigateRoot('tabs', { animated: false });
     setTimeout(() => this.rootModal.dismiss());
   }
 
+
   async presentLoading() {
     this.loading = await this.loadingController.create();
     await this.loading.present();
   }
+
 
   async presentErrorInToast(error: FirebaseError) {
     console.log(error);
@@ -333,6 +350,7 @@ export class LoginRegisterComponent {
     toast.present();
   }
 
+
   togglePasswordMode() {
     if (this.passwordInputType == 'text') {
       this.passwordInputType = 'password';
@@ -349,6 +367,7 @@ export class LoginRegisterComponent {
         setTimeout(() => inputElement.setSelectionRange(selectionStart, selectionStart));
       });
   }
+
 
   createToolbarAnimation() {
     return createAnimation()

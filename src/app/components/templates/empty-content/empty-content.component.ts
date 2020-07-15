@@ -18,6 +18,7 @@ export class EmptyContentComponent {
 
   constructor() { }
 
+
   notifyImageLoaded() {
     this.imageLoaded = true;
   }

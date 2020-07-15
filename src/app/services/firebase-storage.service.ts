@@ -13,6 +13,7 @@ export class FirebaseStorage {
     private aFAuth: AngularFireAuth
   ) { }
 
+
   async getUserProfilePic(userUID: string) {
     let url: string;
 
@@ -22,6 +23,7 @@ export class FirebaseStorage {
 
     return url;
   }
+
 
   async uploadUserProfilePic(imageBase64: string, userUID?: string) {
     if (!userUID) userUID = (await this.aFAuth.currentUser).uid;
@@ -56,16 +58,19 @@ export class FirebaseStorage {
     this.removeImages(requestId, imageNameDeletedList);
   }
 
+
   async getNameListFromFireStorage(requestId) {
     const storageRef = firebase.storage().ref(`${dbKeys.requests}/${requestId}`);
     const names = (await storageRef.listAll()).items.map(item => item.name);
     return names;
   }
 
+
   removeImages(requestId: string, imageNameList: string[]) {
     imageNameList
       .forEach(name => firebase.storage().ref(`${dbKeys.requests}/${requestId}/${name}`).delete());
   }
+
 
   async getRequestImages(requestId: string) {
     const storageRef = firebase.storage().ref(`${dbKeys.requests}/${requestId}`);
@@ -77,6 +82,7 @@ export class FirebaseStorage {
     }));
     return imageList;
   }
+
 
   async deleteRequestImages(requestId: string) {
     const folderRef = firebase.storage().ref(`${dbKeys.requests}/${requestId}`);

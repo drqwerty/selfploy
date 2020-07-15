@@ -9,9 +9,11 @@ export class UpperCaseFirstLetterDirective implements OnChanges {
 
   constructor(private el: ElementRef) { }
 
+
   ngOnChanges() {
     this.updateContent();
   }
+
 
   updateContent() {
     if (this.upperCaseFirstLetter?.length) {

@@ -32,9 +32,11 @@ export class MapRangeComponent {
     private modalController: ModalController,
   ) { }
 
+
   ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
+
 
   ionViewDidEnter() {
     this.loadMap();
@@ -43,13 +45,16 @@ export class MapRangeComponent {
     this.customRange.setPinText();
   }
 
+
   goBack() {
     this.modalController.dismiss();
   }
 
+
   accept() {
     this.modalController.dismiss(this.radiusKm);
   }
+
 
   loadMap() {
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
@@ -57,6 +62,7 @@ export class MapRangeComponent {
     this.map = new leafletMap('map-range', { zoomControl: false, attributionControl: false }).setView(this.coordinates, 15);
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
   }
+
 
   createMarker() {
     marker(this.coordinates, {
@@ -67,6 +73,7 @@ export class MapRangeComponent {
       })
     }).addTo(this.map);
   }
+
 
   createCircle() {
     const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
@@ -81,6 +88,7 @@ export class MapRangeComponent {
     this.circleRadius.addTo(this.map);
     if (this.radiusKm != 0) this.map.fitBounds(this.circleRadius.getBounds());
   }
+
 
   updateCircleRadius() {
     if (this.circleRadius == null) return;

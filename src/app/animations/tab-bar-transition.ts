@@ -1,10 +1,12 @@
 import { createAnimation } from '@ionic/core';
 import { DataService } from 'src/app/providers/data.service';
 
+
 export enum TabBarState {
   visible,
   hidden,
 }
+
 
 function createSlideAnimation() {
   const elements = document.querySelectorAll('fiv-app-bar > div');
@@ -20,11 +22,13 @@ function createSlideAnimation() {
     .addAnimation(animationsElements)
 }
 
+
 export function tabBarAnimateOut() {
   if (DataService.tabBarState === TabBarState.hidden) return;
   DataService.tabBarState = TabBarState.hidden;
   return createSlideAnimation().easing('ease-out').direction('normal').play()
 }
+
 
 export function tabBarAnimateIn() {
   if (DataService.tabBarState === TabBarState.visible) return;

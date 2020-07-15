@@ -61,15 +61,18 @@ export class RequestListPage {
     // data.resetRequestStates();
   }
 
+
   ionViewWillEnter() {
     this.initView();
   }
+
 
   ionViewDidEnter() {
     this.superTabsToolbarStyle = this.superTabsToolbar?.nativeElement.style;
     this.updateBackgroundColor(this.lastTabIndex);
     // this.presentPopover(null);
   }
+
 
   async initView() {
     this.storeUserId();
@@ -83,13 +86,15 @@ export class RequestListPage {
     }
   }
 
+
   showCard(state: RequestStatus) {
-    if (state != this.requestStatus.draft && state != this.requestStatus.completed) return true;
-    if (state == this.requestStatus.draft && this.userConfig.requestListOptions.showDraft) return true;
+    if (state != this.requestStatus.draft     && state != this.requestStatus.completed)            return true;
+    if (state == this.requestStatus.draft     && this.userConfig.requestListOptions.showDraft)     return true;
     if (state == this.requestStatus.completed && this.userConfig.requestListOptions.showCompleted) return true;
 
     return false;
   }
+
 
   async updateMyRequestList() {
     const storedRequestList = await this.data.getMyRequestList();
@@ -99,6 +104,7 @@ export class RequestListPage {
     }
   }
 
+
   async updateFollowingRequestList() {
     const storedRequestList = await this.data.getRequestFollowingList();
     if (storedRequestList !== this.followingRequestList) {
@@ -107,14 +113,16 @@ export class RequestListPage {
     }
   }
 
+
   applyFilters() {
     this.myRequestList?.sort(this.sortFunction);
     this.followingRequestList?.sort(this.sortFunction);
   }
 
+
   private sortFunction = (a: Request, b: Request) => {
-    if (a.status === RequestStatus.draft && b.status !== RequestStatus.draft) return -1;
-    if (a.status !== RequestStatus.draft && b.status === RequestStatus.draft) return 1;
+    if (a.status === RequestStatus.draft     && b.status !== RequestStatus.draft)     return -1;
+    if (a.status !== RequestStatus.draft     && b.status === RequestStatus.draft)     return 1;
     if (a.status === RequestStatus.completed && b.status !== RequestStatus.completed) return 1;
     if (a.status !== RequestStatus.completed && b.status === RequestStatus.completed) return -1;
 
@@ -142,9 +150,11 @@ export class RequestListPage {
     return order;
   }
 
+
   private compareStates(a: RequestStatus, b: RequestStatus) {
     return b - a;
   }
+
 
   private compareDates(a: Request, b: Request) {
     if (a.priority && !b.priority) return -1;
@@ -155,9 +165,10 @@ export class RequestListPage {
     if (!b.startDate) return -1;
 
     if (a.startDate.isBefore(b.startDate)) return -1;
-    if (a.startDate.isAfter(b.startDate)) return 1;
-    if (a.startDate.isSame(b.startDate)) return 0;
+    if (a.startDate.isAfter(b.startDate))  return 1;
+    if (a.startDate.isSame(b.startDate))   return 0;
   }
+
 
   private compareServices(a, b) {
     let order = 0;
@@ -173,6 +184,7 @@ export class RequestListPage {
     return order;
   }
 
+
   private compareTitles(a, b) {
     if (a && !b) return -1;
     if (!a && b) return 1;
@@ -180,17 +192,21 @@ export class RequestListPage {
     return 0;
   }
 
+
   async storeUserId() {
     this.myUserId = (await this.data.getMyProfile()).id;
   }
+
 
   async getUserConfig() {
     this.userConfig = await this.data.getUserConfig();
   }
 
+
   async userIsClient() {
     return (await this.data.getMyProfile()).role === UserRole.client;
   }
+
 
   async presentPopover(event: MouseEvent) {
     const popover = await this.popoverController.create({
@@ -202,9 +218,11 @@ export class RequestListPage {
     popover.present();
   }
 
+
   propagateScroll({ scrollTop }) {
     if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, scrollTop);
   }
+
 
   async scrollLastTabToTop({ detail }) {
     const { index } = detail;
@@ -219,9 +237,11 @@ export class RequestListPage {
     }
   }
 
+
   goToTab(index) {
     this.superTabs.selectTab(index);
   }
+
 
   async updateBackgroundColor(index) {
     if (this.imAClient == null) this.imAClient = await this.userIsClient();

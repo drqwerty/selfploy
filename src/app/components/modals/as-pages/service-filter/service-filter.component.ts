@@ -20,30 +20,38 @@ export class ServiceFilterComponent {
     private modalController: ModalController,
   ) { }
 
+
   ionViewWillEnter() {
+
   }
+
 
   ionViewDidEnter() {
     this.animations.modalLoaded();
     this.customRange.setPinText();
   }
 
+
   async goBack() {
     await this.animations.startReverseAnimation();
     this.modalController.dismiss();
   }
 
+
   rangeChange() {
     // console.log(this.filterValues.distance.value);
   }
+
 
   orderByName() {
 
   }
 
+
   filterByClassification() {
 
   }
+
 
   filterByWorkingHours() {
 
@@ -53,6 +61,7 @@ export class ServiceFilterComponent {
   apply() {
 
   }
+
 
   restartFilters() {
 

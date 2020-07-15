@@ -13,17 +13,21 @@ export class StorageService {
 
   constructor() { }
 
+
   async getUserProfile(): Promise<User> {
     return this.getData(dbKeys.user);
   }
+
 
   async getFavorites(): Promise<User[]> {
     return this.getData(dbKeys.favorites);
   }
 
+
   async getData(key: string) {
     return JSON.parse((await Storage.get({ key })).value);
   }
+
 
   saveUserProfile(user: User) {
     const { token, ...essentialUserData } = user;
@@ -31,22 +35,27 @@ export class StorageService {
     return this.saveData(dbKeys.user, Object.assign({}, essentialUserData))
   }
 
+
   saveFavorites(favorites: User[]) {
     if (!favorites.length) return this.removeKeys(dbKeys.favorites);
     return this.saveData(dbKeys.favorites, favorites)
   }
 
+
   private saveData(key: string, data: any) {
     return Storage.set({ key, value: JSON.stringify(data) });
   }
+
 
   private removeKeys(...keys) {
     return keys.forEach(key => Storage.remove({ key }));
   }
 
+
   removeUserProfile() {
     return this.removeKeys(dbKeys.user, dbKeys.favorites, dbKeys.requests, dbKeys.requestsFollowing, dbKeys.userConfig);
   }
+
 
   async saveFavorite(favoritesI: User[], user: User) {
     user.isFav = true;
@@ -57,6 +66,7 @@ export class StorageService {
     return favorites;
   }
 
+
   async removeFavorite(favoritesI: User[], user: User) {
     user.isFav = false;
     const favorites = [];
@@ -65,18 +75,22 @@ export class StorageService {
     return favorites;
   }
 
+
   getMyRequestList(): Promise<Request[]> {
     return this.getData(dbKeys.requests);
   }
+
 
   getRequestFollowingList(): Promise<Request[]> {
     return this.getData(dbKeys.requestsFollowing);
   }
 
+
   saveRequests(requests: Request[], dbKey: dbKeys.requests | dbKeys.requestsFollowing) {
     if (!requests) return this.removeKeys(dbKey);
     return this.saveData(dbKey, requests)
   }
+
 
   async saveRequest(requestsI: Request[], request: Request) {
     const requests = [...requestsI];
@@ -84,6 +98,7 @@ export class StorageService {
     await this.saveRequests(requests, request.isMine ? dbKeys.requests : dbKeys.requestsFollowing);
     return requests;
   }
+
 
   async updateRequest(requests: Request[], request: Request) {
     const index = requests.findIndex(requestI => request.id == requestI.id);
@@ -93,6 +108,7 @@ export class StorageService {
     await this.saveRequests(requests, request.isMine ? dbKeys.requests : dbKeys.requestsFollowing)
     return requests;
   }
+
 
   async removeRequest(requestsI: Request[], request: Request) {
     const requests = [];
@@ -117,9 +133,11 @@ export class StorageService {
     return defaultConfig;
   }
 
+
   getUserConfig(): Promise<UserConfig> {
     return this.getData(dbKeys.userConfig);
   }
+
 
   async updateUserConfig(newConfig: UserConfig) {
     await this.saveData(dbKeys.userConfig, newConfig)

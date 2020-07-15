@@ -41,23 +41,28 @@ export class MapFullScreenComponent {
     private platform: Platform,
   ) { }
 
+
   ionViewWillEnter() {
     this.createMyLocationAnimation();
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
+
   ionViewDidEnter() {
     this.initMap();
   }
+
 
   ionViewDidLeave() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
     this.lc.stop();
   }
 
+
   goBack() {
     this.modalController.dismiss();
   }
+
 
   initMap() {
     this.loadMap();
@@ -66,6 +71,7 @@ export class MapFullScreenComponent {
     this.createCircleRadius();
     this.createMarker();
   }
+
 
   private loadMap() {
     if (this.map) return;
@@ -89,6 +95,7 @@ export class MapFullScreenComponent {
     this.geocodeService = (Geocoding as any).geocodeService();
   }
 
+
   private createCircleRadius() {
     if (!this.radiusKm) return;
 
@@ -109,6 +116,7 @@ export class MapFullScreenComponent {
     if (this.radiusKm != 0) this.map.fitBounds(this.circleRadius.getBounds());
   }
 
+
   private createMarker() {
     if (!this.marker) {
       this.marker = marker(this.coordinates, {
@@ -128,6 +136,7 @@ export class MapFullScreenComponent {
     if (!this.radiusKm) this.map.flyTo(this.coordinates, 14, { duration: 0.4 });
   }
 
+
   loadMapEvents() {
     this.map.on('locationfound', () => {
       this.locationStatus = 'found';
@@ -140,6 +149,7 @@ export class MapFullScreenComponent {
     this.map.on('zoomstart', () => this.setColorMyLocationButton('tertiary'));
     this.map.on('dragstart', () => this.setColorMyLocationButton('tertiary'));
   }
+
 
   async locate(requestPersmission = true) {
     if (requestPersmission) this.goToLocationOnFound = true;
@@ -161,6 +171,7 @@ export class MapFullScreenComponent {
     }
   }
 
+
   async startGeolocationAndUpdateButton() {
     const { state } = await Permissions.query({ name: PermissionType.Geolocation });
     if (state !== 'granted') return;
@@ -174,15 +185,18 @@ export class MapFullScreenComponent {
     this.lc.start();
   }
 
+
   setColorMyLocationButton(color: 'primary' | 'tertiary') {
     if (color == 'primary' && this.goToLocationOnFound) this.myLocationColor = 'primary';
     else if (!this.skipEvents) this.myLocationColor = 'tertiary';
   }
 
+
   skipMapEvents() {
     this.skipEvents = true;
     setTimeout(() => this.skipEvents = false, 250);
   }
+
 
   createMyLocationAnimation() {
     this.locationButtonAnimation = createAnimation()

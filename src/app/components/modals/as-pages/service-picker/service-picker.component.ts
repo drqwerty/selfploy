@@ -27,13 +27,16 @@ export class ServicePickerComponent {
     private modalController: ModalController,
   ) { }
 
+
   ionViewWillEnter() {
     this.setServicesSelected();
   }
 
+
   goBack() {
     this.modalController.dismiss();
   }
+
 
   accept() {
     if (this.limit) this.getServicesSelectedWithLimit();
@@ -42,9 +45,11 @@ export class ServicePickerComponent {
     this.modalController.dismiss(this.userServices);
   }
 
+
   cancel() {
     this.modalController.dismiss();
   }
+
 
   private setServicesSelected() {
     this.canUpdate = false;
@@ -67,6 +72,7 @@ export class ServicePickerComponent {
     setTimeout(() => this.canUpdate = true);
   }
 
+
   private getServicesSelected() {
     this.userServices = {};
     this.categories.forEach(category => {
@@ -82,6 +88,7 @@ export class ServicePickerComponent {
     });
   }
 
+
   private getServicesSelectedWithLimit() {
     this.userServices = {};
     this.serviceSelectedWithLimit.forEach(el => {
@@ -92,14 +99,17 @@ export class ServicePickerComponent {
     this.serviceSelectedWithLimit;
   }
 
+
   updateCollapseState(category: Category) {
     category.collapsed = !category.collapsed;
   }
+
 
   updateServicesCheckbox(category: Category, event: Event) {
     event.stopPropagation();
     setTimeout(() => category.services.forEach(service => service.checked = category.checked));
   }
+
 
   updateCategoryCheckbox(service: any, category: Category) {
     if (this.limit) {

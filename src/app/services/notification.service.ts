@@ -25,6 +25,7 @@ export class NotificationService {
     private toastController: ToastController,
   ) { }
 
+
   register(resolve: (value: string) => void, reject: () => void) {
     if (!Capacitor.isPluginAvailable('PushNotifications')) {
       reject();
@@ -74,6 +75,7 @@ export class NotificationService {
     );
   }
 
+
   send(title: string, body: string, fcmtokens: string[], requestId: string) {
     const postData = {
       registration_ids: fcmtokens,
@@ -98,6 +100,7 @@ export class NotificationService {
       .then(nice => console.log(nice))
       .catch(meh => console.error(meh));
   }
+
 
   async createLocalNotification(notification: PushNotification) {
 

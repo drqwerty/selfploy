@@ -34,18 +34,22 @@ export class ProfileViewComponent implements AfterViewInit {
 
   constructor() { }
 
+
   ngAfterViewInit() {
     this.startScrollSubscription();
     this.setCornersStyle();
   }
 
+
   initMap() {
     if (this.user.role === this.userRol.professional) this.mapPreview.initMap();
   }
 
+
   imageLoaded() {
     this.showSpinner = false;
   }
+
 
   startScrollSubscription() {
     if (this.scrollEvents)
@@ -56,6 +60,7 @@ export class ProfileViewComponent implements AfterViewInit {
         )
         .subscribe(({ detail }) => this.scrollEvent.emit(detail));
   }
+
 
   setCornersStyle() {
     setTimeout(() => {
@@ -68,12 +73,14 @@ export class ProfileViewComponent implements AfterViewInit {
     });
   }
 
+
   startProfileImageIntersectionObserver() {
     this.profileImageIntersectionObserver = new IntersectionObserver(entries =>
       this.bigProfileImageIsVisible = entries[0].isIntersecting,
       { threshold: 0 });
     this.profileImageIntersectionObserver.observe(this.profileImageWrapper.nativeElement);
   }
+
 
   stopProfileImageIntersectionObserver() {
     this.profileImageIntersectionObserver.disconnect();

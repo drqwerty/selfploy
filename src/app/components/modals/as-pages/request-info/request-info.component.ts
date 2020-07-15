@@ -43,17 +43,21 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     private modalController: ModalController,
   ) { }
 
+
   ngOnInit() {
     this.data.getUserProfile(this.request.owner).then(user => this.ownerName = user.name);
   }
+
 
   ngAfterViewInit() {
     this.setCornersStyle();
   }
 
+
   ionViewDidEnter() {
     if (this.request.coordinates) this.mapPreview.initMap();
   }
+
 
   setCornersStyle() {
     setTimeout(() => {
@@ -66,9 +70,11 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   close() {
     this.modalController.dismiss();
   }
+
 
   async openConversation() {
     const modal = await this.modalController.create({
@@ -80,14 +86,17 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     await modal.present();
   }
 
+
   scrollEvent({ deltaY, scrollTop }) {
     this.hideShadow = !scrollTop;
     if (deltaY) this.collapsedFab = 0 < deltaY;
   }
 
+
   propagateScroll(e) {
     if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, e.detail.scrollTop);
   }
+
 
   async scrollLastTabToTop({ detail }) {
     const { index } = detail;
@@ -101,9 +110,11 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
+
   goToTab(index) {
     this.superTabs.selectTab(index);
   }
+
 
   async presentOptions(event: MouseEvent) {
     event.stopPropagation();
@@ -148,6 +159,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     modal.present();
   }
 
+
   async closeRequest() {
     (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
@@ -155,12 +167,14 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
       });
   }
 
+
   async completeRequest() {
     (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
         if (confirm) this.data.completeRequest(this.request);
       });
   }
+
 
   async editRequest() {
     const modal = await this.modalController.create({
@@ -176,6 +190,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     modal.present().then(() => modal.classList.add('background-black'));
   }
 
+
   async deleteRequest() {
     (await this.showConfirmAction())
       .onDidDismiss().then(({ data: confirm }) => {
@@ -185,6 +200,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
 
   async showConfirmAction(confirmText?: string) {
     let componentProps = confirmText ? { text: confirmText } : {};

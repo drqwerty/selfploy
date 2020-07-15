@@ -11,6 +11,7 @@ export class AuthGuardService implements CanActivate {
     private router: Router,
     private aFAuth: AngularFireAuth) { }
 
+    
   canActivate(route: ActivatedRouteSnapshot) {
     return true;
     // return this.aFAuth.currentUser.then(authenticated => {

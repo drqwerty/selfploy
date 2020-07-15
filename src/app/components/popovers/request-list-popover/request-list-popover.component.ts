@@ -14,11 +14,13 @@ export class RequestListPopoverComponent {
 
   @Input() userConfig: UserConfig;
 
+
   constructor(
     private data: DataService,
     private modalController: ModalController,
     private popoverController: PopoverController
   ) { }
+
 
   async presentModal() {
     this.popoverController.dismiss();
@@ -31,6 +33,7 @@ export class RequestListPopoverComponent {
 
     modal.present();
   }
+
 
   updateConfig() {
     this.data.updateUserConfig(this.userConfig);

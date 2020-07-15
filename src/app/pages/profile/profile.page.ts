@@ -30,6 +30,7 @@ export class ProfilePage {
     this.data.getMyProfile().then(user => this.user = user);
   }
 
+
   async ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
     this.user = await this.data.getMyProfile();
@@ -37,18 +38,22 @@ export class ProfilePage {
     this.profileView.startProfileImageIntersectionObserver();
   }
 
+
   ionViewDidEnter() {
     this.profileView.initMap();
   }
+
 
   ionViewWillLeave() {
     this.profileView.stopProfileImageIntersectionObserver();
   }
 
+
   updateBackgroundColor() {
     this.backgroundColor = this.user.role === this.userRol.client ? 'secondary' : 'primary';
     this.profileView.setCornersStyle();
   }
+
 
   async presentPopover(event: MouseEvent) {
     const popover = await this.popoverController.create({
@@ -57,6 +62,7 @@ export class ProfilePage {
     });
     return await popover.present();
   }
+
 
   createProfessionalProfile() {
     tabBarAnimateOut();
@@ -67,6 +73,7 @@ export class ProfilePage {
       }
     });
   }
+
 
   activateProfessionalProfile() {
     this.navController.navigateForward('tabs/profile/edit', {

@@ -24,18 +24,22 @@ export class CalendarComponent {
 
   constructor(private modalController: ModalController) { }
 
+
   cancel() {
     this.modalController.dismiss();
   }
+
 
   done() {
     if (!this.dateRange.to) this.dateRange.to = this.dateRange.from;
     this.modalController.dismiss(this.dateRange);
   }
 
+
   startSelected(event) {
     this.dateRange.to = this.dateRange.from = moment(event.time);
   }
+
 
   endSelected(event) {
     this.dateRange.to = event;

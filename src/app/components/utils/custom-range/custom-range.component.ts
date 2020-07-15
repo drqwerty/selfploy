@@ -20,9 +20,11 @@ export class CustomRangeComponent {
 
   constructor() { }
 
+
   emitValue() {
     this.valueChange.emit(this.value);
   }
+
 
   setPinText() {
     const rangeSlider = this.ionRange.el.shadowRoot.querySelector('.range-slider') as HTMLElement;

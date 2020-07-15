@@ -27,7 +27,6 @@ export class LoginPasswordComponent {
 
   passwordForm: FormGroup;
 
-
   constructor(
     private modalController: ModalController,
     private formBuilder: FormBuilder,
@@ -44,12 +43,14 @@ export class LoginPasswordComponent {
     });
   }
 
+
   ionViewWillEnter() {
     this.toolbarAnimation = this.createToolbarAnimation();
     this.toolbarAnimation
       .delay(ModalAnimationSlideDuration)
       .play();
   }
+
 
   ionViewWillLeave() {
     this.toolbarAnimation
@@ -58,9 +59,11 @@ export class LoginPasswordComponent {
       .play();
   }
 
+
   goBack() {
     this.modalController.dismiss({ animate: true });
   }
+
 
   async goNext() {
     if (this.passwordForm.invalid) return;
@@ -76,6 +79,7 @@ export class LoginPasswordComponent {
       .then(() => this.loading.dismiss());
   }
 
+
   goToMainPage() {
     this.navController.navigateRoot('tabs', { animated: false })
       .then(() => this.modalController.getTop().then(modal => {
@@ -84,10 +88,12 @@ export class LoginPasswordComponent {
       }));
   }
 
+
   async presentLoading() {
     this.loading = await this.loadingController.create();
     await this.loading.present();
   }
+
 
   async presentErrorInToast(error: FirebaseError) {
     console.log(error);
@@ -118,6 +124,7 @@ export class LoginPasswordComponent {
     toast.present();
   }
 
+
   togglePasswordMode() {
     if (this.passwordInputType == 'text') {
       this.passwordInputType = 'password';
@@ -134,6 +141,7 @@ export class LoginPasswordComponent {
         setTimeout(() => inputElement.setSelectionRange(selectionStart, selectionStart));
       });
   }
+
 
   createToolbarAnimation() {
     return createAnimation()

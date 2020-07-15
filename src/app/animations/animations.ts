@@ -18,12 +18,12 @@ export class Animations {
   private animationPromise: Promise<any>;
   private modalLoadedPromise: Promise<any>;
 
-  /**
+ /**
    * Indica a la animación que el modal está cargado para poder terminar la animación
    */
   modalLoaded: any;
 
-    /**
+ /**
    * Establece un elemento inicial a la animación
    * @param element Elemento inicial de la animación
    * @param name Nombre de la animación
@@ -36,10 +36,10 @@ export class Animations {
   }
 
 
-    /**
+ /**
    * Inicia las animaciones de los elementos
    * @duration Duración de la animación en ms
-  * @param returns Promesa que indica cuando se puede cambiar la pagina sobre la que se esta haciendo la animacion
+   * @param returns Promesa que indica cuando se puede cambiar la pagina sobre la que se esta haciendo la animacion
    */
   startAnimation(duration = this.DEFAULT_DURATION) {
     this.duration = duration;
@@ -50,9 +50,9 @@ export class Animations {
   }
 
 
-    /**
+ /**
    * Inicia la animación invertida del elemento
-  * @param returns Promesa que indica cuando se puede cambiar la pagina sobre la que se esta haciendo la animacion
+   * @param returns Promesa que indica cuando se puede cambiar la pagina sobre la que se esta haciendo la animacion
    * @duration Duración de la animación en ms
    */
   startReverseAnimation(duration = this.duration) {

@@ -33,9 +33,11 @@ export class AuthService {
     private data: DataService,
   ) { }
 
+
   loginWithEmailAndPassword(email: string, password: string) {
     return this.loadAndSaveUserProfile(this.aFAuth.signInWithEmailAndPassword(email, password));
   }
+
 
   loginWithSocialAccount(token: string, socialAccount: 'google.com' | 'facebook.com') {
     const credential = socialAccount === 'google.com' ?
@@ -43,6 +45,7 @@ export class AuthService {
       firebase.auth.FacebookAuthProvider.credential(token);
     return this.loadAndSaveUserProfile(this.aFAuth.signInWithCredential(credential));
   }
+
 
   async loadAndSaveUserProfile(signInPromise: Promise<firebase.auth.UserCredential>) {
     try {
@@ -57,6 +60,7 @@ export class AuthService {
       throw reason;
     }
   }
+
 
   getGoogleUser() {
     return GoogleAuth.signIn()
@@ -73,6 +77,7 @@ export class AuthService {
         };
       });
   }
+
 
   getFacebookUser(): Promise<{ id?: string, email?: string, name?: string, token: string }> {
     return new Promise((resolve, reject) => {
@@ -105,6 +110,7 @@ export class AuthService {
     });
   }
 
+
   logout() {
     this.data.userLogout.next();
     this.aFAuth.currentUser.then(({ providerData }) => {
@@ -116,23 +122,28 @@ export class AuthService {
     })
   }
 
+
   checkEmail(email: string) {
     return this.aFAuth.fetchSignInMethodsForEmail(email);
   }
 
+
   signUpWithEmailAndPassword(user: User, password: string) {
     return this.createAndSaveUserProfile(user, this.aFAuth.createUserWithEmailAndPassword(user.email, password));
   }
+
 
   signUpWithGoogle(user: User, token: string) {
     const credential = firebase.auth.GoogleAuthProvider.credential(token);
     return this.createAndSaveUserProfile(user, this.aFAuth.signInWithCredential(credential));
   }
 
+
   signUpWithFacebook(user: User, token: string) {
     const credential = firebase.auth.FacebookAuthProvider.credential(token);
     return this.createAndSaveUserProfile(user, this.aFAuth.signInWithCredential(credential));
   }
+
 
   createAndSaveUserProfile(user: User, signUpPromise: Promise<firebase.auth.UserCredential>) {
     if (user.role === UserRole.professional) {

@@ -17,22 +17,27 @@ export class SettingsPage {
     private data: DataService,
   ) { }
 
+
   ionViewWillEnter() {
     this.getUser();
   }
+
 
   ionViewWillLeave() {
     this.updateUser();
     tabBarAnimateIn();
   }
 
+
   goBack() {
     this.navController.pop();
   }
 
+
   async getUser() {
     this.hideLocationAccuracy = (await this.data.getMyProfile()).hideLocationAccuracy;
   }
+
 
   updateUser() {
     if (this.hideLocationAccuracy != this.data.user.hideLocationAccuracy)

@@ -14,6 +14,7 @@ export class InfoComponent {
     private modalController: ModalController,
   ) { }
 
+
   dismiss() {
     this.modalController.dismiss();
   }

@@ -21,20 +21,25 @@ export class ImageCropperComponent {
     private loadingController: LoadingController,
   ) { }
 
+
   ionViewDidEnter() {
   }
+
 
   cropperReady() {
     this.loadingController.dismiss();
   }
 
+
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
   }
 
+
   cancel() {
     this.modalController.dismiss();
   }
+
 
   accept() {
     this.imageCropper.crop()

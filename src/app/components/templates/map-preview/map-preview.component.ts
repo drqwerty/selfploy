@@ -51,6 +51,7 @@ export class MapPreviewComponent {
     this.map.keyboard.disable();
   }
 
+
   private createCircleRadius() {
     if (!this.radiusKm) return;
 
@@ -71,6 +72,7 @@ export class MapPreviewComponent {
     if (this.radiusKm != 0) this.map.fitBounds(this.circleRadius.getBounds());
   }
 
+
   private createMarker() {
     if (!this.marker) {
       this.marker = marker(this.coordinates, {
@@ -89,6 +91,7 @@ export class MapPreviewComponent {
 
     if (!this.radiusKm) this.map.flyTo(this.coordinates, 14, { duration: 0.4 });
   }
+
 
   async openFullScreenMap() {
     (await this.modalController.create({

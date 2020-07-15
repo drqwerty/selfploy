@@ -11,6 +11,7 @@ export class StatusBarComponent implements OnChanges {
 
   constructor() { }
 
+
   ngOnChanges(): void {
     if (!this.color?.startsWith('#'))
       this.color = getComputedStyle(document.documentElement).getPropertyValue(`--ion-color-${this.color}`);

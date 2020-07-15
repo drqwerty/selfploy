@@ -1,5 +1,6 @@
 import { createAnimation } from '@ionic/core';
 
+
 function createSlideAnimation(platformHeight: number, login: boolean) {
   const a = document.querySelector('.background-animation-wrapper > .background');
   const b = document.querySelector('.background-animation-wrapper > .backgroundImage');
@@ -20,9 +21,11 @@ function createSlideAnimation(platformHeight: number, login: boolean) {
     .addAnimation(animationsElements)
 }
 
+
 export function playLoginAnimation(platformHeight: number) {
   return createSlideAnimation(platformHeight, true)?.easing('ease-out').direction('normal').play()
 }
+
 
 export function playLogoutAnimation(platformHeight: number) {
   return createSlideAnimation(platformHeight, false)?.easing('ease-in').direction('reverse').play()

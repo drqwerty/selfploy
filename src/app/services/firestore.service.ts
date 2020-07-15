@@ -34,6 +34,7 @@ export class FirestoreService {
     this.geofirestore = new GeoFirestore(db.firestore);
   }
 
+  
   /* user profile */
 
   async createUserProfile(uid: string, user: User) {
@@ -48,6 +49,7 @@ export class FirestoreService {
     return this.getUserProfile(uid);
   }
 
+
   async getUserProfile(uid: string) {
     const user: User = (await this.db.collection(dbKeys.users).doc(uid).get().toPromise()).data()?.d;
     if (!user) throw { code: "Perfil eliminado", error: new Error() };
@@ -57,6 +59,7 @@ export class FirestoreService {
     if (coordinates) user.coordinates = new LatLng(coordinates.latitude, coordinates.longitude);
     return user;
   }
+
 
   async updateUserProfile(user: User) {
     const { uid } = await this.aFAuth.currentUser;
@@ -80,6 +83,7 @@ export class FirestoreService {
     return this.getUserProfile(uid);
   }
 
+
   async updateUserLocationAccuracySetting(disable: boolean) {
     const { uid } = await this.aFAuth.currentUser;
     await this.db.collection(dbKeys.users).doc(uid).update({
@@ -88,6 +92,7 @@ export class FirestoreService {
     });
     return this.getUserProfile(uid);
   }
+
 
   async updateUserHasFavoritesProperty(hasFavorites: boolean) {
     const { uid } = await this.aFAuth.currentUser;
@@ -98,6 +103,7 @@ export class FirestoreService {
     return this.getUserProfile(uid);
   }
 
+  
   /* find users */
 
   async findProfessionalOf(categoryName, serviceName, coordinates) {
@@ -113,6 +119,7 @@ export class FirestoreService {
 
     return this.omitMyProfile(query, uid);
   }
+
 
   async findUserByName(userName, categoryFilter) {
     const { uid } = await this.aFAuth.currentUser;
@@ -130,6 +137,7 @@ export class FirestoreService {
     return this.omitMyProfile(query, uid);
   }
 
+
   private translateCoordinatesAndSortByDistance(value: GeoQuerySnapshot) {
     return value.docs
       .sort(({ distance: a }, { distance: b }) => a - b)
@@ -141,11 +149,13 @@ export class FirestoreService {
       });
   }
 
+
   private omitMyProfile(profiles: User[], id: string) {
     const myUserIndex = profiles.findIndex(user => user.id === id);
     if (myUserIndex != -1) profiles.splice(myUserIndex, 1);
     return profiles;
   }
+
 
   async getAllUsers() {
     const query = await this.geofirestore
@@ -155,6 +165,7 @@ export class FirestoreService {
     return this.translateCoordinatesAndSortByDistance(query);
   }
 
+  
   /* favorites */
 
   async saveFavorite(userId: string) {
@@ -170,6 +181,7 @@ export class FirestoreService {
     }
   }
 
+
   async getFavorites() {
     const favoriteList = await this.getFavoriteList();
     return Promise.all(favoriteList.map(async id => {
@@ -179,12 +191,14 @@ export class FirestoreService {
     }));
   }
 
+
   private async getFavoriteList() {
     const { uid } = await this.aFAuth.currentUser;
     const docRef = this.db.collection(dbKeys.favorites).doc(uid);
     const list = (await docRef.get().toPromise()).data()?.list ?? {};
     return Object.keys(list);
   }
+
 
   async removeFavorite(userId: string) {
     const { uid } = await this.aFAuth.currentUser;
@@ -194,6 +208,7 @@ export class FirestoreService {
     await docRef.update(value);
   }
 
+  
   /* requests */
 
   async removeRequest(request: Request) {
@@ -214,6 +229,7 @@ export class FirestoreService {
     }
   }
 
+
   async getRequestList(requestListObject) {
     if (!requestListObject) return [];
     const requestList = [];
@@ -225,6 +241,7 @@ export class FirestoreService {
 
     return requestList.length ? requestList : [];
   }
+
 
   async getRequestFromPath(path: string): Promise<Request> {
     const docData = (await this.db.doc(path).get().toPromise());
@@ -238,6 +255,7 @@ export class FirestoreService {
 
     return request;
   }
+
 
   async saveRequest(request: Request) {
     if (!request.id) request.id = firestore().collection(dbKeys.requests).doc().id;
@@ -265,6 +283,7 @@ export class FirestoreService {
     return { id: docRef.id, path: docRef.path, requestSaved };
   }
 
+
   private async saveRequestWithGeopoint(docData): Promise<DocumentReference> {
     if (docData.coordinates.lat)
       docData.coordinates = new GeoPoint(docData.coordinates.lat, docData.coordinates.lng);
@@ -274,12 +293,14 @@ export class FirestoreService {
     return docRef;
   }
 
+
   private async saveRequestWithoutGeopoint(docData): Promise<DocumentReference> {
     docData.lastEditAt = firestore.FieldValue.serverTimestamp();
     const docRef = this.db.collection(dbKeys.requests).doc(docData.id).ref;
     await docRef.set({ d: docData });
     return docRef;
   }
+
 
   private async addRequestToUserList(request: DocumentReference | { id: string, path: string }) {
     const { uid } = await this.aFAuth.currentUser;
@@ -292,6 +313,7 @@ export class FirestoreService {
         await docRef.set({ [`d.${UserProperties.requests}`]: { [request.id]: request.path } });
     }
   }
+
 
   async addRequestToFollowingUsersList(ids: string[], request: DocumentReference | { id: string, path: string }) {
     Promise.all([
@@ -309,6 +331,7 @@ export class FirestoreService {
 
   }
 
+
   private async removeRequestFromUserList(request: Request) {
     const { uid } = await this.aFAuth.currentUser;
     const docRef = this.db.collection(dbKeys.users).doc(uid);
@@ -319,14 +342,17 @@ export class FirestoreService {
     } catch  { }
   }
 
+
   getObservableFromPath(path: string) {
     return <Observable<Action<DocumentSnapshot<any>>>>this.db.doc(path).snapshotChanges();
   }
+
 
   getMyRequestsAsObservableList(requestListObject: {}) {
     return Object.values(requestListObject)
       .map((path: string) => this.getObservableFromPath(path));
   }
+
 
   async getFollowingRequestListObservable() {
     const { uid } = await this.aFAuth.currentUser;
@@ -337,6 +363,7 @@ export class FirestoreService {
       .pipe(map(({ d }: { d: User }) => d.requestsFollowing));
   }
 
+
   setAllRequestToDraftState() {
     this.db.collection(dbKeys.requests)
       .get()
@@ -346,7 +373,9 @@ export class FirestoreService {
           this.db.doc(doc.ref.path).update({ 'd.status': 0 })));
   }
 
+  
   /* notifications */
+
   async saveFCMToken(fcmToken: string) {
     const { uid } = await this.aFAuth.currentUser;
     const docRef = this.db.collection(dbKeys.users).doc(uid);

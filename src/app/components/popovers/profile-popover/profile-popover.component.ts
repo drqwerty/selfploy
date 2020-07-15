@@ -26,6 +26,7 @@ export class ProfilePopoverComponent {
     popoverController.getTop().then(el => this.currentPopover = el)
   }
 
+
   async editProfile() {
     this.currentPopover.animated = false;
     await this.popoverController.dismiss();
@@ -33,12 +34,14 @@ export class ProfilePopoverComponent {
     this.navController.navigateForward('tabs/profile/edit', { state: { forceCompleteProfile: false } });
   }
 
+
   async editSettings() {
     this.currentPopover.animated = false;
     await this.popoverController.dismiss();
     tabBarAnimateOut();
     this.navController.navigateForward('tabs/profile/settings');
   }
+
 
   async logout() {
     const alert = await this.alertController.create({

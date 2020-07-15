@@ -27,9 +27,11 @@ export class FabWithTextComponent implements AfterViewInit {
     private renderer: Renderer2,
   ) { }
 
+
   ngAfterViewInit() {
     this.setStyles();
   }
+
 
   setStyles() {
     document.documentElement.style.setProperty('--custom-fab-background-color', `var(--ion-color-${this.color})`);
@@ -51,6 +53,7 @@ export class FabWithTextComponent implements AfterViewInit {
       setTimeout(() => this.loaded = true, 100);
     });
   }
+
 
   onClick() {
     this.clicked.emit();

@@ -24,6 +24,7 @@ export class RequestListOrderActionSheetComponent {
     this.init();
   }
 
+
   async init() {
     this.userConfig = await this.data.getUserConfig();
 
@@ -31,6 +32,7 @@ export class RequestListOrderActionSheetComponent {
     this.options.state = this.userConfig.requestListOptions.orderBy == RequestListConfig.orderByState;
     this.options.ascending = this.userConfig.requestListOptions.order == RequestListConfig.ascendingOrder;
   }
+
 
   changeOrder(order: 'date' | 'state') {
 
@@ -57,6 +59,7 @@ export class RequestListOrderActionSheetComponent {
     this.updateUserConfig();
 
   }
+
 
   updateUserConfig() {
     this.userConfig.requestListOptions.orderBy = this.options.date

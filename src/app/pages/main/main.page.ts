@@ -30,10 +30,12 @@ export class MainPage {
     private toastController: ToastController,
   ) { }
 
+
   ionViewDidEnter() {
     if (!this.backgroundAnimation) this.createAnimations();
     this.playBackgroundAnimation(true);
   }
+
 
   continueWithEmail() {
     this.playBackgroundAnimation().then(() => {
@@ -41,13 +43,16 @@ export class MainPage {
     });
   }
 
+
   continueWithGoogle() {
     this.continueWithSocialAccount(this.authService.getGoogleUser, 'google.com');
   }
 
+
   continueWithFacebook() {
     this.continueWithSocialAccount(this.authService.getFacebookUser, 'facebook.com');
   }
+
 
   continueWithSocialAccount(getUserPromise: () => Promise<any>, socialAccount: 'google.com' | 'facebook.com') {
     getUserPromise().then(user => {
@@ -60,10 +65,12 @@ export class MainPage {
     })
   }
 
+
   async goToRegisterPage(componentProps) {
     const modal = await this.createModal(componentProps);
     this.playBackgroundAnimation().then(() => modal.present());
   }
+
 
   async tryToLogin(token: string, socialAccount: 'google.com' | 'facebook.com') {
     const loading = await this.loadingController.create({
@@ -79,9 +86,11 @@ export class MainPage {
       .catch(reason => this.dismissLoadingAndShowError(loading, reason));
   }
 
+
   dismissLoadingAndLogin(loading: HTMLIonLoadingElement) {
     return loading.dismiss().then(() => this.navController.navigateForward('tabs', { animated: false }));
   }
+
 
   dismissLoadingAndShowError(loading: HTMLIonLoadingElement, reason: any) {
     this.isLoadingObservable
@@ -96,6 +105,7 @@ export class MainPage {
       });
   }
 
+
   async createModal(componentProps) {
     const modal = await this.modalController.create({
       component: LoginRegisterComponent,
@@ -106,6 +116,7 @@ export class MainPage {
     modal.onDidDismiss().then(() => this.playBackgroundAnimation(true));
     return modal;
   }
+
 
   async showError(errorReason = null) {
     let message;
@@ -127,6 +138,7 @@ export class MainPage {
     toast.present();
   }
 
+
   playBackgroundAnimation(reverse = false): Promise<void> {
     const direction = reverse ? 'reverse' : 'normal';
     const easing = reverse ? 'ease-in' : 'ease-out';
@@ -135,6 +147,7 @@ export class MainPage {
       .easing(easing)
       .play();
   }
+
 
   createAnimations() {
     this.backgroundAnimation = createAnimation()

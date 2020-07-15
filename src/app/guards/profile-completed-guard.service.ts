@@ -12,6 +12,7 @@ export class ProfileCompletedGuardService implements CanActivate {
     private data: DataService,
   ) { }
 
+  
   async canActivate(route: ActivatedRouteSnapshot) {
     try {
       const user = await this.data.getMyProfile();

@@ -41,22 +41,27 @@ export class ProfessionalListPage {
     });
   }
 
+
   async getProfessionals() {
     this.professionals = await this.data.findProfessionalOf(this.categoryName, this.serviceName);
     console.table(this.professionals);
   }
 
+
   ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
+
 
   ionViewDidEnter() {
     this.pageLoaded = true;
   }
 
+
   goBack() {
     this.navController.navigateBack('/tabs/categories/services', { state: { categoryName: this.categoryName } });
   }
+
 
   async filter() {
     const modal = await this.modalController.create({

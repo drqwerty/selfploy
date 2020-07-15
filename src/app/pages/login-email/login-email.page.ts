@@ -44,10 +44,12 @@ export class LoginEmailPage {
     });
   }
 
+
   ionViewWillEnter() {
     this.createFadeAnimation();
     this.animation.direction('normal').play();
   }
+
 
   goBack() {
     this.animation.direction('reverse').play()
@@ -55,6 +57,7 @@ export class LoginEmailPage {
         this.navController.navigateBack('main', { animated: false })
       );
   }
+
 
   async goNext() {
     if (this.emailForm.invalid) return;
@@ -80,6 +83,7 @@ export class LoginEmailPage {
       .catch(() => this.loading.dismiss());
   }
 
+
   private async createModal(component: typeof LoginPasswordComponent | typeof LoginRegisterComponent, animation: Animation) {
     const modal = await this.modalController.create({
       component,
@@ -99,15 +103,18 @@ export class LoginEmailPage {
     return modal;
   }
 
+
   updateNextButtonStatus(disabled = this.emailForm.invalid) {
     this.goNextDisabled = disabled;
     this.changeRef.detectChanges();  // because value not updated on view
   }
 
+
   async presentLoading() {
     this.loading = await this.loadingController.create();
     await this.loading.present();
   }
+
 
   createSlideAnimation(): Animation {
     return createAnimation()
@@ -116,6 +123,7 @@ export class LoginEmailPage {
       .duration(ModalAnimationSlideDuration)
       .easing(ModalAnimationSlideEasing)
   }
+
 
   createFadeAnimation(): Animation {
     if (this.animation != null) return;

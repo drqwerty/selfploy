@@ -30,6 +30,7 @@ export class GalleryComponent {
     private modalController: ModalController,
   ) { }
 
+
   didOpen() {
     this.setBackGroundColor();
 
@@ -61,14 +62,17 @@ export class GalleryComponent {
     this.bottomToolbar.nativeElement.addEventListener('scroll', () => scrollLeft = this.bottomToolbar.nativeElement.scrollLeft);
   }
 
+
   setBackGroundColor(color = '#000000') {
     this.fivGallery.backdropColor = color;
     this.fivGallery.updateBackdrop = () => null;
   }
 
+
   footerImgScroll(smooth = false) {
     this.ionImg.toArray()[this.fivGallery.activeIndex].el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
   }
+
 
   willClose() {
     this.updateInitialImage();
@@ -76,6 +80,7 @@ export class GalleryComponent {
     this.toggleImageVisibility(false);
     this.bottomIntersectionObserver.disconnect();
   }
+
 
   toggleImageVisibility(visible: boolean, delay = 0) {
     if (delay)
@@ -87,13 +92,16 @@ export class GalleryComponent {
       this.image.style.visibility = visible ? 'visible' : 'hidden';
   }
 
+
   updateImages() {
     setTimeout(() => this.fivGallery.ngAfterContentInit());
   }
 
+
   goTo(index) {
     this.fivGallery.slides.slideTo(index);
   }
+
 
   async remove() {
     // const modal = await this.modalController.create({
@@ -116,6 +124,7 @@ export class GalleryComponent {
 
     // modal.present();
   }
+
 
   updateInitialImage() {
     if (this.fivGallery.activeIndex == this.fivGalleryImage.toArray().length)

@@ -33,35 +33,42 @@ export class ServiceSearchComponent {
     private navController: NavController,
   ) { }
 
+
   ionViewDidEnter() {
     this.animations.modalLoaded();
     setTimeout(() => this.searchbar.setFocus(), 250);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
+
   async goBack() {
     await this.animations.startReverseAnimation();
     this.modalController.dismiss();
   }
 
+
   updateHeaderShadow(scrollTop: number) {
     this.hideHeaderBorder = scrollTop === 0;
   }
+
 
   searchQuery({ detail }) {
     this.findServices(detail.value);
     this.findUsers(detail.value);
   }
 
+
   clearResultData() {
     this.servicesQuery = [];
     this.professionalsQuery = [];
   }
 
+
   async showProfessionals(categoryName, serviceName) {
     this.navController.navigateForward('/tabs/categories/services/professional-list', { state: { categoryName, serviceName } });
     setTimeout(() => this.goBack(), 300);
   }
+
 
   async findServices(text) {
     this.servicesQuery = [];
@@ -88,6 +95,7 @@ export class ServiceSearchComponent {
         });
     }
   }
+
 
   async findUsers(text) {
     this.professionalsQuery = null;

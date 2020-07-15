@@ -50,14 +50,17 @@ export class FavoritesPage implements AfterViewInit {
       .subscribe(() => this.getFavorites());
   }
 
+
   ngAfterViewInit() {
     this.superTabListQuery.changes.subscribe((change: QueryList<SuperTab>) => this.superTabList = change.toArray())
   }
+
 
   ionViewWillEnter() {
     this.getFavorites();
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
+
 
   async getFavorites() {
     const favs = await this.data.getFavoriteList();
@@ -66,6 +69,7 @@ export class FavoritesPage implements AfterViewInit {
       this.classifyFavorites();
     }
   }
+
 
   classifyFavorites() {
     Categories            // create keys
@@ -77,6 +81,7 @@ export class FavoritesPage implements AfterViewInit {
           .forEach(k => this.favoriteReferencesByCategory[k].push(index));
       });
   }
+
 
   async search() {
     const modal = await this.modalController.create({
@@ -90,9 +95,11 @@ export class FavoritesPage implements AfterViewInit {
     modal.present();
   }
 
+
   propagateScroll({ scrollTop }) {
     if (this.propagateScrollEvent) this.ionContent.scrollToPoint(0, scrollTop);
   }
+
 
   async scrollLastTabToTop({ detail }) {
     const { index } = detail;
@@ -105,6 +112,7 @@ export class FavoritesPage implements AfterViewInit {
       this.propagateScrollEvent = true;
     }
   }
+
 
   goToTab(event = null) {
     const index = event ? parseInt((event.el as HTMLElement).getAttribute('index')) : 0;

@@ -44,14 +44,17 @@ export class DataService {
 
   /* user */
 
+
   async createMyProfile(uid: string, user: User) {
     user = await this.firestore.createUserProfile(uid, user);
     await this.storage.saveUserProfile(user);
   }
 
+
   getUserProfile(uid: string): Promise<User> {
     return this.firestore.getUserProfile(uid);
   }
+
 
   async getMyProfile(uid?: string): Promise<User> {
     if (!this.user) {
@@ -67,6 +70,7 @@ export class DataService {
     return this.user;
   }
 
+
   private syncProfile() {
     this.firestore.getUserProfile(this.user.id).then(userF => {
 
@@ -80,9 +84,11 @@ export class DataService {
     });
   }
 
+
   saveUserProfile(user: User) {
     return this.storage.saveUserProfile(user);
   }
+
 
   removeUserProfile() {
     this.user = null;
@@ -94,16 +100,19 @@ export class DataService {
     this.storage.removeUserProfile();
   }
 
+
   async updatedMyProfile(user: User) {
     user = await this.firestore.updateUserProfile(user);
     this.storage.saveUserProfile(user);
   }
+
 
   async updateUserLocationAccuracySetting(hideLocationAccuracy: boolean) {
     (await this.getMyProfile()).hideLocationAccuracy = hideLocationAccuracy;
     this.user = await this.firestore.updateUserLocationAccuracySetting(hideLocationAccuracy);
     this.storage.saveUserProfile(this.user);
   }
+
 
   private async updateUserHasFavoritesProperty(hasFavorites: boolean) {
     if ((await this.getMyProfile()).hasFavorites !== hasFavorites) {
@@ -113,10 +122,12 @@ export class DataService {
     }
   }
 
+
   private async updateUserRequestFollowingList(list: {}) {
     (await this.getMyProfile()).requestsFollowing = list;
     this.storage.saveUserProfile(this.user);
   }
+
 
   getUserProfilePic(uid: string) {
     return this.fStorage.getUserProfilePic(uid);
@@ -125,9 +136,11 @@ export class DataService {
 
   /* professionals */
 
+
   async findProfessionalOf(categoryName: string, serviceName: string) {
     return this.firestore.findProfessionalOf(categoryName, serviceName, (await this.getMyProfile()).coordinates);
   }
+
 
   async findUserByName(userName: string, categoryFilter: string) {
     return this.firestore.findUserByName(userName, categoryFilter);
@@ -135,6 +148,7 @@ export class DataService {
 
 
   /* favorites */
+
 
   async saveFavorite(user: User) {
     this.favorites = (await Promise.all([
@@ -145,6 +159,7 @@ export class DataService {
     this.favoritesChangedSubject.next();
   }
 
+
   async removeFavorite(user: User) {
     this.favorites = (await Promise.all([
       this.storage.removeFavorite(await this.getFavoriteList(), user),
@@ -153,6 +168,7 @@ export class DataService {
     this.updateUserHasFavoritesProperty(!!this.favorites.length)
     this.favoritesChangedSubject.next();
   }
+
 
   async getFavoriteList(): Promise<User[]> {
     if (!(await this.getMyProfile()).hasFavorites) return [];
@@ -175,6 +191,7 @@ export class DataService {
 
     return this.favorites;
   }
+
 
   private async syncFavorites() {
     let sync = false;
@@ -207,6 +224,7 @@ export class DataService {
 
   /* requests */
 
+
   async getRequest(requestId: string) {
     let request: Request, list: Request[];
     list = await this.getMyRequestList();
@@ -217,6 +235,7 @@ export class DataService {
     }
     return request;
   }
+
 
   private async getRequestList(
     list: Request[],
@@ -238,6 +257,7 @@ export class DataService {
     return list;
   }
 
+
   async getMyRequestList(): Promise<Request[]> {
     if (!(await this.getMyProfile()).requests) return [];
 
@@ -247,6 +267,7 @@ export class DataService {
     return this.myRequestList;
   }
 
+
   async getRequestFollowingList(): Promise<Request[]> {
     if (!(await this.getMyProfile()).requestsFollowing) return [];
 
@@ -255,6 +276,7 @@ export class DataService {
 
     return this.followingRequestList;
   }
+
 
   async saveRequest(request: Request) {
     let requestData: {
@@ -279,6 +301,7 @@ export class DataService {
     return requestData;
   }
 
+
   async updateLocalRequest(request: Request) {
     if (request.isMine) {
       this.myRequestList = await this.storage.updateRequest(await this.getMyRequestList(), request);
@@ -290,6 +313,7 @@ export class DataService {
     }
   }
 
+
   async removeRequest(request: Request) {
     if (request.isMine) {
       this.myRequestList = await this.storage.removeRequest(await this.getMyRequestList(), request);
@@ -299,6 +323,7 @@ export class DataService {
     this.firestore.removeRequest(request);
     this.updateRequestList(request.id, null, true, request.isMine);
   }
+
 
   private async updateRequestList(id, path, remove, isMine) {
     const user = await this.getMyProfile();
@@ -319,6 +344,7 @@ export class DataService {
     else this.followingRequestListChangedSubject.next();
   }
 
+
   async observeMyRequests() {
     const { requests } = await this.getMyProfile();
     if (!requests) return;
@@ -326,6 +352,7 @@ export class DataService {
 
     obsevableList.forEach(observable => this.observeMyRequest(observable));
   }
+
 
   async observeFollowingRequests() {
 
@@ -357,14 +384,17 @@ export class DataService {
       });
   }
 
+
   private observeMyRequest(observable: Observable<Action<DocumentSnapshot<any>>>) {
     this.observeRequest(observable, true);
   }
+
 
   private observeFollowingRequest(id: string, path: string) {
     this.followingRequestsSubscription[id] = this.observeRequest(this.firestore.getObservableFromPath(path), false)
     console.log('mete', id);
   }
+
 
   private observeRequest(observable: Observable<Action<DocumentSnapshot<any>>>, isMine: boolean) {
     return observable
@@ -389,21 +419,25 @@ export class DataService {
       });
   }
 
+
   private unobserveFollowingRequest(id: string) {
     this.followingRequestsSubscription[id].unsubscribe();
     delete this.followingRequestsSubscription[id];
     console.log('sale', id);
   }
 
+
   closeRequest(request: Request) {
     request.status = RequestStatus.closed;
     this.saveRequest(request);
   }
 
+
   completeRequest(request: Request) {
     request.status = RequestStatus.completed;
     this.saveRequest(request);
   }
+
 
   resetRequestStates() {
     this.firestore.setAllRequestToDraftState();
@@ -411,6 +445,7 @@ export class DataService {
 
 
   /* notifications */
+
 
   async saveFCMToken() {
     let resolve: (value: string) => void;
@@ -429,6 +464,7 @@ export class DataService {
 
     this.notifications.register(resolve, reject);
   }
+
 
   async sendRequestNotifications(requestData: { id: string; path: string; requestSaved: Request; }) {
     const { category, service, coordinates } = requestData.requestSaved;
@@ -463,6 +499,7 @@ export class DataService {
     );
   }
 
+
   async sendNotifications(title, body, fcmTokenList, requestId) {
     if (fcmTokenList.length) this.notifications.send(title, body, fcmTokenList, requestId);
   }
@@ -470,12 +507,14 @@ export class DataService {
 
   /* user config */
 
+
   async getUserConfig() {
     this.userConfig =
       await this.storage.getUserConfig()
       ?? await this.storage.createUserConfig();
     return this.userConfig;
   }
+
 
   async updateUserConfig(newConfig: UserConfig) {
     await this.storage.updateUserConfig(newConfig);
@@ -485,6 +524,7 @@ export class DataService {
 
 
   /* utils */
+
 
   private async translateCoors() {
     const { coordinates: c1 } = await this.getMyProfile();

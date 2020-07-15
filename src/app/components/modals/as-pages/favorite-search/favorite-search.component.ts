@@ -32,11 +32,13 @@ export class FavoriteSearchComponent {
     private data: DataService,
   ) { }
 
+
   ionViewDidEnter() {
     this.animations.modalLoaded();
     setTimeout(() => this.searchbar.setFocus(), 250);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
+
 
   ionViewWillEnter() {
     this.data.favoritesChangedSubject
@@ -47,14 +49,17 @@ export class FavoriteSearchComponent {
       })
   }
 
+
   async goBack() {
     await this.animations.startReverseAnimation();
     this.modalController.dismiss();
   }
 
+
   updateHeaderShadow(scrollTop: number) {
     this.hideHeaderBorder = scrollTop === 0;
   }
+
 
   findUsers(text = this.queryText) {
     this.queryText = text;
@@ -64,6 +69,7 @@ export class FavoriteSearchComponent {
       Utils.normalize(favorite.name).includes(Utils.normalize(text))
     );
   }
+
 
   clearResultData() {
     this.favoritesQuery = null;

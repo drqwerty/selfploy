@@ -24,9 +24,11 @@ export class CategoriesPage {
     private animations: Animations,
   ) { }
 
+
   ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
+
 
   async search() {
     const modal = await this.modalController.create({
@@ -37,6 +39,7 @@ export class CategoriesPage {
     await this.animations.addElement(this.searchButton.el, '#fff').startAnimation();
     modal.present();
   }
+
 
   showServices(category) {
     this.navController.navigateForward('tabs/categories/services', { state: { category } });

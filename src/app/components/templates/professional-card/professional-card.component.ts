@@ -32,35 +32,43 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
     private modalController: ModalController
   ) { }
 
+
   ngOnInit() {
     this.getImage();
   }
+
 
   async ngAfterViewInit() {
     await this.checkFavState();
     if (this.user) this.startCardIntersectionObserver();
   }
 
+
   ngOnDestroy() {
     if (this.user) this.cardIntersectionObserver.disconnect();
   }
+
 
   async checkFavState() {
     if (!this.user) return;
     this.isFav = !!(await this.data.getFavoriteList()).find(user => user.id === this.user.id);
   }
 
+
   async getImage() {
     if (this.user?.hasProfilePic) this.user.profilePic = await this.data.getUserProfilePic(this.user.id);
   }
+
 
   imageLoaded() {
     this.showSpinner = false;
   }
 
+
   toggleIcon() {
     this.isFav = !this.isFav;
   }
+
 
   toggleFav() {
     if (this.user && this.user.isFav !== this.isFav) {
@@ -72,6 +80,7 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
   requestService() {
     
   }
+
 
   async viewProfile(user: User) {
     const modal = await this.modalController.create({
@@ -87,6 +96,7 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
     this.toggleFav();
     modal.present();
   }
+
 
   startCardIntersectionObserver() {
     this.cardIntersectionObserver = new IntersectionObserver(async entries => {

@@ -31,9 +31,11 @@ export class CustomHeaderComponent implements AfterViewInit {
 
   constructor(private _view: ViewContainerRef) { }
 
+
   ngAfterViewInit() {
     this.init(this._view.element.nativeElement.nextElementSibling);
   }
+
 
   private async init(ionContent: IonContent) {
     this.initVariables();
@@ -45,11 +47,13 @@ export class CustomHeaderComponent implements AfterViewInit {
     this.addListeners(ionContent, scrollEl);
   }
 
+
   private initVariables() {
     this.textStyle = this.text.nativeElement.style;
     this.yAxisSyle = this.yAxis.nativeElement.style;
     this.xAxisSyle = this.xAxis.nativeElement.style;
   }
+
 
   private addSpace(ionContent: IonContent, scrollEl: HTMLElement) {
     const { height } = scrollEl.getBoundingClientRect();
@@ -66,6 +70,7 @@ export class CustomHeaderComponent implements AfterViewInit {
     scrollEl.prepend(toolbar);
   }
 
+
   private addListeners(ionContent: IonContent, scrollEl: HTMLElement) {
     ionContent.scrollEvents = true;
     scrollEl.addEventListener('scroll', () => {
@@ -79,10 +84,12 @@ export class CustomHeaderComponent implements AfterViewInit {
     scrollEl.addEventListener('touchstart', () => this.touchingContent = true, { passive: true });
   }
 
+
   private onScrollStop(callBack) {
     clearTimeout(this.isScrollingTimeout);
     this.isScrollingTimeout = setTimeout(() => callBack(), 250);
   }
+
 
   moveContent(ionContent: IonContent) {
     if (this.touchingContent) return;
@@ -91,6 +98,7 @@ export class CustomHeaderComponent implements AfterViewInit {
       else ionContent.scrollToPoint(0, 56, 250);
     }
   }
+
 
   moveTitle(scroll: number) {
     this.scroll = scroll;

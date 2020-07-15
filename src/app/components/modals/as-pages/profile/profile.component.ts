@@ -27,32 +27,39 @@ export class ProfileModalComponent {
     private data: DataService,
   ) { }
 
+
   ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
     this.profileView.startProfileImageIntersectionObserver();
     this.isFav = this.user.isFav ?? false;
   }
 
+
   ionViewDidEnter() {
     this.profileView.initMap();
   }
+
 
   ionViewWillLeave() {
     this.profileView.stopProfileImageIntersectionObserver();
     this.toggleFav();
   }
 
+
   goBack() {
     this.modalController.dismiss();
   }
+
 
   scrollEvent({ deltaY }) {
     if (deltaY) this.collapsedFab = 0 < deltaY;
   }
 
+
   toggleIcon() {
     this.isFav = !this.isFav;
   }
+
 
   toggleFav() {
     if (this.user.isFav !== this.isFav) {
@@ -60,6 +67,7 @@ export class ProfileModalComponent {
       else this.data.removeFavorite(this.user);
     }
   }
+
 
   requestService() {
 
