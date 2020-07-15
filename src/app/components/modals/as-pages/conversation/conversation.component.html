@@ -15,33 +15,61 @@
 
 <ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event.detail)" color="primary">
   <ion-grid class="grid-messages" #grid (touchstart)="touchStart()" (touchend)="touchEnd()">
-    <ng-container *ngFor="let message of messages; let i = index">
+    <fiv-gallery #gallery [ambient]="false" (willOpen)="toggleImageVisibility(false, 300)" (didOpen)="didOpen()"
+  (willClose)="willClose()" (didClose)="toggleImageVisibility(true)">
 
-      <ion-row *ngIf="!onSameDay(i-1, i)">
-        <ion-col class="col-date" size="8">
-          <div class="date">
-            {{ message.timestamp.format('LL') }}
+      <fiv-gallery-toolbar position="top">
+        <ion-toolbar color="transparent">
+          <ion-buttons slot="start">
+            <ion-button (click)="gallery.close()">
+              <ion-icon color="light" slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </fiv-gallery-toolbar>
+
+      <ng-container *ngFor="let message of messages; let i = index">
+
+        <ion-row *ngIf="!onSameDay(i-1, i)">
+          <ion-col class="col-date" size="8">
+            <div class="date">
+              {{ message.timestamp.format('LL') }}
+            </div>
+          </ion-col>
+        </ion-row>
+
+
+        <ion-row class="row-messages">
+
+          <ion-col class="col-message" size="9" [attr.offset]="message.fromMe ? '3': '0'">
+            <div *ngIf="!message.isImage; else image" class="div-message" [class.fromMe]="message.fromMe">{{ message.text }}</div>
+            <ng-template #image>
+              <fiv-gallery-image [src]="message.url" [style.margin-left]="message.fromMe ? 'auto' : null"></fiv-gallery-image>
+            </ng-template>
+          </ion-col>
+
+          <ion-col size="2" [attr.offset]="message.fromMe ? '0': '3'">
+            <div class="time">
+              {{ message.timestamp.format('HH:mm') }}
+            </div>
+          </ion-col>
+
+        </ion-row>
+
+
+      </ng-container>
+
+      <fiv-gallery-toolbar position="bottom">
+        <ion-toolbar color="transparent">
+          <div #bottomToolbar class="content">
+            <div class="box">
+              <ion-img *ngFor="let image of (messages | imageMessages); let i = index" [src]="image.url" class="img" (click)="goTo(i)"></ion-img>
+            </div>
           </div>
-        </ion-col>
-      </ion-row>
+        </ion-toolbar>
+      </fiv-gallery-toolbar>
 
-
-      <ion-row class="row-messages">
-
-        <ion-col class="col-message" size="9" [attr.offset]="message.fromMe ? '3': '0'">
-          <div class="div-message" [class.fromMe]="message.fromMe">{{ message.text }}</div>
-        </ion-col>
-
-        <ion-col size="2" [attr.offset]="message.fromMe ? '0': '3'">
-          <div class="time">
-            {{ message.timestamp.format('HH:mm') }}
-          </div>
-        </ion-col>
-
-      </ion-row>
-
-
-    </ng-container>
+    </fiv-gallery>
   </ion-grid>
 </ion-content>
 

@@ -115,3 +115,29 @@ ion-grid::-webkit-scrollbar {
     }
   }
 }
+
+.content {
+  display: flex;
+  overflow-x: auto;
+
+  .box {
+    display: flex;
+    min-height: min-content;
+    margin-bottom: 10px;
+
+    .img {
+      height: 50px;
+      width: 50px;
+      object-fit: cover;
+      margin: 5px;
+    }
+  }
+}
+
+fiv-gallery-image {
+  --border-radius: 8px;
+  --height: 140px;
+  --width: 140px;
+  height: 140px;
+  width: 140px;
+}
