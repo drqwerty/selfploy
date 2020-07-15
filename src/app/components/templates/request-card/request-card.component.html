@@ -59,7 +59,7 @@
             </ng-template>
             <ng-template #showChatButton>
               <div class="badge" [class.unread-messages]="request.unreadMesseages"></div>
-              <ion-button (click)="onClick()" class="chat-button">
+              <ion-button (click)="openConversation($event)" class="chat-button">
                 <ion-icon slot="icon-only" name="chatbubble"></ion-icon>
               </ion-button>
             </ng-template>

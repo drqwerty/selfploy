@@ -15,6 +15,7 @@ import { FabWithTextModule } from 'src/app/components/templates/fab-with-text/fa
 import { RequestCardActionSheetModule } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.module';
 import { RequestNewModule } from '../request-new/request-new.module';
 import { DeleteConfirmActionSheetModule } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.module';
+import { ConversationModule } from '../conversation/conversation.module';
 
 @NgModule({
   imports: [
@@ -31,7 +32,9 @@ import { DeleteConfirmActionSheetModule } from 'src/app/components/action-sheets
     EmptyContentModule,
     FabWithTextModule,
     RequestCardActionSheetModule,
-    RequestNewModule,DeleteConfirmActionSheetModule
+    RequestNewModule,
+    DeleteConfirmActionSheetModule,
+    ConversationModule,
   ],
   declarations: [
     RequestInfoComponent

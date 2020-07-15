@@ -1,0 +1,54 @@
+<status-bar [color]="backgroundColor"></status-bar>
+
+
+<ion-header class="ion-no-border">
+  <ion-toolbar [color]="backgroundColor">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon color="light" slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Header</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event.detail)" color="primary">
+  <ion-grid class="grid-messages" #grid (touchstart)="touchStart()" (touchend)="touchEnd()">
+    <ng-container *ngFor="let message of messages; let i = index">
+
+      <ion-row *ngIf="!onSameDay(i-1, i)">
+        <ion-col class="col-date" size="8">
+          <div class="date">
+            {{ message.timestamp.format('LL') }}
+          </div>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row class="row-messages">
+
+        <ion-col class="col-message" size="9" [attr.offset]="message.fromMe ? '3': '0'">
+          <div class="div-message" [class.fromMe]="message.fromMe">{{ message.text }}</div>
+        </ion-col>
+
+        <ion-col size="2" [attr.offset]="message.fromMe ? '0': '3'">
+          <div class="time">
+            {{ message.timestamp.format('HH:mm') }}
+          </div>
+        </ion-col>
+
+      </ion-row>
+
+
+    </ng-container>
+  </ion-grid>
+</ion-content>
+
+
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-title>Footer</ion-title>
+  </ion-toolbar>
+</ion-footer>

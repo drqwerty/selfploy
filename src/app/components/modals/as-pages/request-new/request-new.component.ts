@@ -3,7 +3,7 @@ import { Animations } from 'src/app/animations/animations';
 import { ModalController, IonContent, LoadingController } from '@ionic/angular';
 import { Request, RequestProperties, RequestStatus } from 'src/app/models/request-model';
 import { MapLocationComponent } from 'src/app/components/modals/as-pages/map-location/map-location.component';
-import { ModalAnimationSlideWithOpacityEnterFromModal, ModalAnimationSlideWithOpacityLeaveFromModal } from 'src/app/animations/page-transitions';
+import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
 import { Validators, FormControl, FormBuilder } from '@angular/forms';
 import { InputBottomSheetComponent } from 'src/app/components/bottom-sheets/input-bottom-sheet/input-bottom-sheet.component';
 import { ServicePickerComponent } from 'src/app/components/modals/as-pages/service-picker/service-picker.component';
@@ -152,8 +152,8 @@ export class RequestNewComponent implements OnInit {
   async editService() {
     const modal = await this.modalController.create({
       component: ServicePickerComponent,
-      enterAnimation: ModalAnimationSlideWithOpacityEnterFromModal,
-      leaveAnimation: ModalAnimationSlideWithOpacityLeaveFromModal,
+      enterAnimation: ModalAnimationSlideWithOpacityFromModalEnter,
+      leaveAnimation: ModalAnimationSlideWithOpacityFromModalLeave,
       componentProps: {
         title: 'Busco...',
         userServices: { [this.tempRequest.category]: [this.tempRequest.service] },
@@ -311,8 +311,8 @@ export class RequestNewComponent implements OnInit {
   async editLocation() {
     const modal = await this.modalController.create({
       component: MapLocationComponent,
-      enterAnimation: ModalAnimationSlideWithOpacityEnterFromModal,
-      leaveAnimation: ModalAnimationSlideWithOpacityLeaveFromModal,
+      enterAnimation: ModalAnimationSlideWithOpacityFromModalEnter,
+      leaveAnimation: ModalAnimationSlideWithOpacityFromModalLeave,
       componentProps: {
         hideLocationAccuracy: this.tempRequest.hideLocationAccuracy,
         addressFull: this.tempRequest.addressFull,

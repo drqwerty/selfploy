@@ -106,11 +106,11 @@ export const ModalAnimationSlideWithOpacityLeave = (baseEl: any) => {
   return ModalAnimationSlideWithOpacityEnter(baseEl).direction('reverse');
 };
 
-export const ModalAnimationSlideWithOpacityEnterFromModal = (baseEl: any) => {
+export const ModalAnimationSlideWithOpacityFromModalEnter = (baseEl: any) => {
   return ModalAnimationSlideWithOpacityEnter(baseEl, true);
 };
 
-export const ModalAnimationSlideWithOpacityLeaveFromModal = (baseEl: any) => {
+export const ModalAnimationSlideWithOpacityFromModalLeave = (baseEl: any) => {
   return ModalAnimationSlideWithOpacityEnter(baseEl, true).direction('reverse');
 };
 

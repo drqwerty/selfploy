@@ -8,6 +8,8 @@ import { RequestCardActionSheetComponent } from 'src/app/components/action-sheet
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
 import { RequestNewComponent } from '../request-new/request-new.component';
+import { ConversationComponent } from '../conversation/conversation.component';
+import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
 
 @Component({
   selector: 'app-request-info',
@@ -68,8 +70,14 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     this.modalController.dismiss();
   }
 
-  openChat() {
-
+  async openConversation() {
+    const modal = await this.modalController.create({
+    component: ConversationComponent,
+    enterAnimation: ModalAnimationSlideWithOpacityFromModalEnter,
+    leaveAnimation: ModalAnimationSlideWithOpacityFromModalLeave,
+    });
+  
+    await modal.present();
   }
 
   scrollEvent({ deltaY, scrollTop }) {

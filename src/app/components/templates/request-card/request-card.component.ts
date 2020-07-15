@@ -7,6 +7,8 @@ import { DataService } from 'src/app/providers/data.service';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
 import { RequestNewComponent } from 'src/app/components/modals/as-pages/request-new/request-new.component';
 import { RequestInfoComponent } from '../../modals/as-pages/request-info/request-info.component';
+import { ConversationComponent } from '../../modals/as-pages/conversation/conversation.component';
+import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
 
 @Component({
   selector: 'request-card',
@@ -33,6 +35,18 @@ export class RequestCardComponent implements AfterViewInit {
 
   imageLoaded() {
     this.showSpinner = false;
+  }
+
+  async openConversation(event: MouseEvent) {
+    event.stopPropagation();
+
+    const modal = await this.modalController.create({
+    component: ConversationComponent,
+    enterAnimation: ModalAnimationSlideWithOpacityEnter,
+    leaveAnimation: ModalAnimationSlideWithOpacityLeave,
+    });
+  
+    await modal.present();
   }
 
   async presentOptions(event: MouseEvent) {
@@ -130,7 +144,8 @@ export class RequestCardComponent implements AfterViewInit {
       componentProps: { request: this.request }
     });
 
-    await modal.present();
+    modal.onWillDismiss().then(() => modal.classList.remove('background-black'));
+    modal.present().then(() => modal.classList.add('background-black'));
   }
 
 }

@@ -50,7 +50,7 @@
 
     </div>
   </ion-content>
-  <fab-with-text *ngIf="!request.isMine" iconName="chatbubble" text="Chatea" [collapsed]="collapsedFab" (clicked)="openChat()">
+  <fab-with-text *ngIf="!request.isMine" iconName="chatbubble" text="Chatea" [collapsed]="collapsedFab" (clicked)="openConversation()">
     <div class="badge" [class.unread-messages]="request.unreadMesseages"></div>
   </fab-with-text>
 </ng-template>
