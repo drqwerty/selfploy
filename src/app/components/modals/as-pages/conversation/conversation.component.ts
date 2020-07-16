@@ -3,11 +3,24 @@ import { ModalController, IonContent, IonGrid, IonImg } from '@ionic/angular';
 import * as moment from 'moment';
 import { FivGallery, FivGalleryImage } from '@fivethree/core';
 import { takeUntil } from 'rxjs/operators';
+import { trigger, transition, style, animate, keyframes } from '@angular/animations';
 
 @Component({
   selector: 'app-conversation',
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.scss'],
+  animations: [
+    trigger('cameraButton', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0)' }),
+        animate(".25s ease", style({ transform: 'scale(1)', opacity: 1, })),
+      ]),
+      transition(':leave', [
+        style({ opacity: 1, transform: 'scale(1)' }),
+        animate(".25s ease", style({ transform: 'scale(0)', opacity: 0, })),
+      ])
+    ])
+  ]
 })
 export class ConversationComponent implements AfterViewChecked {
 
@@ -50,6 +63,7 @@ export class ConversationComponent implements AfterViewChecked {
   private touching = false;
 
   backgroundColor = 'primary'
+  newMessage = '';
 
   constructor(
     private modalController: ModalController
@@ -71,6 +85,16 @@ export class ConversationComponent implements AfterViewChecked {
     }
   }
 
+  sendPhoto() {
+
+  }
+
+  sendMessage() {
+
+  }
+
+
+  /* conversation view */
 
   touchStart() {
     this.touching = true;

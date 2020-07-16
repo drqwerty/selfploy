@@ -75,8 +75,22 @@
 
 
 
-<ion-footer>
+<ion-footer class="footer-message-input">
   <ion-toolbar>
-    <ion-title>Footer</ion-title>
+    <ion-row>
+      <ion-col size="11" class="col-input">
+        <ion-textarea rows="1" #textArea autosize [maxRows]="4" class="message-input" [(ngModel)]="newMessage">
+        </ion-textarea>
+        <div class="separator-bar"></div>
+        <ion-button @cameraButton class="camera-button" fill="clear" *ngIf="!newMessage.length" (click)="sendPhoto()">
+          <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="1" class="col-button">
+        <ion-button fill="clear" [disabled]="!newMessage.length" (click)="sendMessage()">
+          <ion-icon slot="icon-only" name="send"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-footer>
