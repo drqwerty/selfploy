@@ -68,13 +68,14 @@ export class TabsPage {
 
           await modal.present();
         }
-      })
+      });
   }
 
 
   ionViewWillEnter() {
     this.data.observeMyRequests();
     this.data.observeFollowingRequests();
+    this.data.observeMyConversations();
   }
 
 

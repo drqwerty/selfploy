@@ -1,9 +1,11 @@
-import { Component, ViewChild, ElementRef, AfterViewChecked, ViewChildren, QueryList } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewChecked, ViewChildren, QueryList, Input, OnInit } from '@angular/core';
 import { ModalController, IonContent, IonGrid, IonImg } from '@ionic/angular';
 import * as moment from 'moment';
 import { FivGallery, FivGalleryImage } from '@fivethree/core';
 import { takeUntil } from 'rxjs/operators';
 import { trigger, transition, style, animate, keyframes } from '@angular/animations';
+import { Message, Conversation } from 'src/app/models/conversation-model';
+import { DataService } from 'src/app/providers/data.service';
 
 @Component({
   selector: 'app-conversation',
@@ -22,60 +24,68 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
     ])
   ]
 })
-export class ConversationComponent implements AfterViewChecked {
+export class ConversationComponent implements OnInit, AfterViewChecked {
+
+  @Input() requestId: string;
+  @Input() partnerId: string;
 
 
-  messages: any = [
-    { fromMe: true, hasPendingWrites: false, timestamp1: 1594552754943, text: "aaa" },
-    { fromMe: false, hasPendingWrites: false, timestamp1: 1594553754949, text: "no puede ser" },
-    { fromMe: false, hasPendingWrites: false, timestamp1: 1594554754955, text: "estás ahi???" },
-    { fromMe: true, hasPendingWrites: false, timestamp1: 1594555754958, text: "siiiii" },
-    { fromMe: true, hasPendingWrites: false, timestamp1: 1594556754961, text: "sadfasdf" },
-    { fromMe: true, hasPendingWrites: false, timestamp1: 1594557754978, text: "sdfasdf asd fasd fsadfsad fsd fsd sd sadf df sda fsd f" },
-    { fromMe: false, hasPendingWrites: false, timestamp1: 1594558754988, text: " asdf asd fadsfs dfewsfs dfsfs fs fdadsa ffsafdadffdf d af asdf asdfsadfads fasd fasdf mkn" },
-    { fromMe: true, hasPendingWrites: false, timestamp1: 1594626154943, text: "aaa" },
-    { fromMe: true, isImage: true, timestamp1: 1594626154945, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2FkKGZcjO3CNuM4e5FnlEp%2FkKGZcjO3CNuM4e5FnlEp-1594031085.jpg?alt=media&token=461520f7-34ca-40ce-a69c-1f5e13d7f67b" },
-    { fromMe: true, isImage: true, timestamp1: 1594626154946, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2F1bqlv6A4zXmEu5el8Ymd%2F1bqlv6A4zXmEu5el8Ymd-1594030816.jpg?alt=media&token=02217d1f-3c77-44bc-ba9d-d3f5c8daa54e" },
-    { fromMe: false, hasPendingWrites: false, timestamp1: 1594626254949, text: "no puede ser" },
-    { fromMe: false, hasPendingWrites: false, timestamp1: 1594626354955, text: "estás ahi???" },
-    { fromMe: false, isImage: true, timestamp1: 1594626154946, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2FGrwtwj1UzZ66NXYC0adY%2FGrwtwj1UzZ66NXYC0adY-1594030945.jpg?alt=media&token=770fa807-c799-4432-900d-5694ab6dd177" },
-    { fromMe: true, hasPendingWrites: false, timestamp1: 1594626454958, text: "siiiii" },
-    { fromMe: true, hasPendingWrites: false, timestamp1: 1594626554961, text: "sadfasdf" },
-    { fromMe: true, hasPendingWrites: false, timestamp1: 1594626654978, text: "sdfasdf asd fasd fsadfsad fsd fsd sd sadf df sda fsd f" },
-    { fromMe: false, hasPendingWrites: false, timestamp1: 1594626754988, text: " asdf asd fadsfs dfewsfs dfsfs fs fdadsa ffsafdadffdf d af asdf asdfsadfads fasd fasdf mkn" }
-  ];
+  // messages: any = [
+  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594552754943, text: "aaa" },
+  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594553754949, text: "no puede ser" },
+  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594554754955, text: "estás ahi???" },
+  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594555754958, text: "siiiii" },
+  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594556754961, text: "sadfasdf" },
+  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594557754978, text: "sdfasdf asd fasd fsadfsad fsd fsd sd sadf df sda fsd f" },
+  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594558754988, text: " asdf asd fadsfs dfewsfs dfsfs fs fdadsa ffsafdadffdf d af asdf asdfsadfads fasd fasdf mkn" },
+  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594626154943, text: "aaa" },
+  //   { fromMe: true, isImage: true, timestamp1: 1594626154945, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2FkKGZcjO3CNuM4e5FnlEp%2FkKGZcjO3CNuM4e5FnlEp-1594031085.jpg?alt=media&token=461520f7-34ca-40ce-a69c-1f5e13d7f67b" },
+  //   { fromMe: true, isImage: true, timestamp1: 1594626154946, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2F1bqlv6A4zXmEu5el8Ymd%2F1bqlv6A4zXmEu5el8Ymd-1594030816.jpg?alt=media&token=02217d1f-3c77-44bc-ba9d-d3f5c8daa54e" },
+  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594626254949, text: "no puede ser" },
+  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594626354955, text: "estás ahi???" },
+  //   { fromMe: false, isImage: true, timestamp1: 1594626154946, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2FGrwtwj1UzZ66NXYC0adY%2FGrwtwj1UzZ66NXYC0adY-1594030945.jpg?alt=media&token=770fa807-c799-4432-900d-5694ab6dd177" },
+  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594626454958, text: "siiiii" },
+  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594626554961, text: "sadfasdf" },
+  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594626654978, text: "sdfasdf asd fasd fsadfsad fsd fsd sd sadf df sda fsd f" },
+  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594626754988, text: " asdf asd fadsfs dfewsfs dfsfs fs fdadsa ffsafdadffdf d af asdf asdfsadfads fasd fasdf mkn" }
+  // ];
 
 
 
-  @ViewChild(IonContent) ionContentO: IonContent;
-  @ViewChild(IonContent, { read: ElementRef }) ionContent: ElementRef;
-  @ViewChild(IonGrid, { read: ElementRef }) ionGrid: ElementRef;
+  @ViewChild(IonContent)                       ionContentO     : IonContent;
+  @ViewChild(IonContent, { read: ElementRef }) ionContent      : ElementRef;
+  @ViewChild(IonGrid, { read: ElementRef })    ionGrid         : ElementRef;
 
-  @ViewChild('bottomToolbar') bottomToolbar: ElementRef;
-  @ViewChild(FivGallery) fivGallery: FivGallery;
-  @ViewChildren(FivGalleryImage) fivGalleryImage: QueryList<FivGalleryImage>;
-  @ViewChildren(IonImg) ionImg: QueryList<any>;
-  
+  @ViewChild('bottomToolbar')                  bottomToolbar   : ElementRef;
+  @ViewChild(FivGallery)                       fivGallery      : FivGallery;
+  @ViewChildren(FivGalleryImage)               fivGalleryImage : QueryList<FivGalleryImage>;
+  @ViewChildren(IonImg)                        ionImg          : QueryList<any>;
+
   image: HTMLImageElement = null;
   bottomIntersectionObserver: IntersectionObserver;
 
-  private nearToBottom = true;
-  private touching = false;
-
   backgroundColor = 'primary'
+
+  private nearToBottom = true;
+  private touching     = false;
+
+  conversation: Conversation;
+  messages: { [id: string]: Message };
   newMessage = '';
 
   constructor(
-    private modalController: ModalController
+    private modalController: ModalController,
+    private data: DataService,
   ) {
-    this.messages.forEach(message => {
-      message.timestamp = moment(message.timestamp1);
-    })
+    // this.messages.forEach(message => {
+    //   message.timestamp = moment(message.timestamp1);
+    // });
   }
 
 
-  ionViewWillEnter() {
-    this.setCornersStyle();
+  ngOnInit() {
+    console.log(this.requestId, this.partnerId);
+    this.getMessages();
   }
 
 
@@ -85,12 +95,31 @@ export class ConversationComponent implements AfterViewChecked {
     }
   }
 
+
+  ionViewWillEnter() {
+    this.setCornersStyle();
+  }
+
+
+  getMessages() {
+    this.conversation = this.data.getConversation(this.requestId, this.partnerId);
+    this.messages = this.conversation?.messages;
+  }
+
+
   sendPhoto() {
 
   }
 
-  sendMessage() {
 
+  async sendMessage() {
+    const message = this.newMessage;
+    this.newMessage = '';
+    const promise = this.data.sendMessage(this.requestId, this.partnerId, this.conversation?.id, message);
+    setTimeout(() => this.ionContentO.scrollToBottom(), 50);
+    
+    await promise;
+    if (!this.conversation) this.getMessages();
   }
 
 
@@ -138,10 +167,15 @@ export class ConversationComponent implements AfterViewChecked {
 
 
   onSameDay(index1: number, index2: number) {
-    const date1 = <moment.Moment>this.messages[index1]?.timestamp;
-    const date2 = <moment.Moment>this.messages[index2].timestamp;
+    const date1 = <moment.Moment>Object.values(this.messages)[index1]?.timestamp
+    const date2 = <moment.Moment>Object.values(this.messages)[index2].timestamp
 
-    return date2.isSame(date1, 'day');
+    return date1?.isSame(date2, 'day');
+  }
+
+
+  formatDate(date: moment.Moment, format: 'LL' | 'HH:mm') {
+    return date.format(format);
   }
 
 

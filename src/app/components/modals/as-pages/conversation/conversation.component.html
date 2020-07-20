@@ -28,12 +28,12 @@
         </ion-toolbar>
       </fiv-gallery-toolbar>
 
-      <ng-container *ngFor="let message of messages; let i = index">
+      <ng-container *ngFor="let message of messages | objectToArray; let i = index">
 
         <ion-row *ngIf="!onSameDay(i-1, i)">
           <ion-col class="col-date" size="8">
             <div class="date">
-              {{ message.timestamp.format('LL') }}
+              {{ formatDate(message.timestamp, 'LL') }}
             </div>
           </ion-col>
         </ion-row>
@@ -50,7 +50,7 @@
 
           <ion-col size="2" [attr.offset]="message.fromMe ? '0': '3'">
             <div class="time">
-              {{ message.timestamp.format('HH:mm') }}
+              {{ formatDate(message.timestamp, 'HH:mm') }}
             </div>
           </ion-col>
 
@@ -59,7 +59,7 @@
 
       </ng-container>
 
-      <fiv-gallery-toolbar position="bottom">
+      <!-- <fiv-gallery-toolbar position="bottom">
         <ion-toolbar color="transparent">
           <div #bottomToolbar class="content">
             <div class="box">
@@ -67,7 +67,7 @@
             </div>
           </div>
         </ion-toolbar>
-      </fiv-gallery-toolbar>
+      </fiv-gallery-toolbar> -->
 
     </fiv-gallery>
   </ion-grid>
@@ -82,7 +82,7 @@
         <ion-textarea rows="1" #textArea autosize [maxRows]="4" class="message-input" [(ngModel)]="newMessage">
         </ion-textarea>
         <div class="separator-bar"></div>
-        <ion-button @cameraButton class="camera-button" fill="clear" *ngIf="!newMessage.length" (click)="sendPhoto()">
+        <ion-button @cameraButton class="camera-button" fill="clear" *ngIf="!newMessage.length" color="medium" (click)="sendPhoto()">
           <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
         </ion-button>
       </ion-col>

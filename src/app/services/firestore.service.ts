@@ -5,17 +5,17 @@ import { FirebaseStorage } from './firebase-storage.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { GeoFirestore, GeoQuerySnapshot } from 'geofirestore';
 import { firestore } from 'firebase/app';
-const { Timestamp } = firestore;
 import { LatLng } from 'leaflet';
 import { StorageService } from './storage.service';
 import * as _ from 'lodash';
 import Utils from "src/app/utils";
-const { GeoPoint } = firestore;
 import { dbKeys } from 'src/app/models/db-keys'
 import { Request, RequestStatus, RequestProperties } from 'src/app/models/request-model';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-
+import { Message, Conversation, ConversationProperties } from '../models/conversation-model';
+import * as moment from 'moment';
+const { GeoPoint, Timestamp } = firestore;
 @Injectable({
   providedIn: 'root'
 })
@@ -34,7 +34,7 @@ export class FirestoreService {
     this.geofirestore = new GeoFirestore(db.firestore);
   }
 
-  
+
   /* user profile */
 
   async createUserProfile(uid: string, user: User) {
@@ -103,7 +103,7 @@ export class FirestoreService {
     return this.getUserProfile(uid);
   }
 
-  
+
   /* find users */
 
   async findProfessionalOf(categoryName, serviceName, coordinates) {
@@ -165,7 +165,7 @@ export class FirestoreService {
     return this.translateCoordinatesAndSortByDistance(query);
   }
 
-  
+
   /* favorites */
 
   async saveFavorite(userId: string) {
@@ -208,7 +208,7 @@ export class FirestoreService {
     await docRef.update(value);
   }
 
-  
+
   /* requests */
 
   async removeRequest(request: Request) {
@@ -235,6 +235,7 @@ export class FirestoreService {
     const requestList = [];
     const requests = await Promise.all(Object.values(requestListObject).map((path: string) => this.getRequestFromPath(path)));
     requests.forEach(request => {
+      if (!request) return;
       if (request.status == RequestStatus.delete) this.removeRequestFromUserList(request);
       else requestList.push(request);
     });
@@ -246,6 +247,8 @@ export class FirestoreService {
   async getRequestFromPath(path: string): Promise<Request> {
     const docData = (await this.db.doc(path).get().toPromise());
     const { uid } = await this.aFAuth.currentUser;
+
+    if (!docData.exists) return null;
 
     const request = new Request(<Request>docData.data().d);
     request.id = docData.id;
@@ -280,6 +283,7 @@ export class FirestoreService {
 
     await this.addRequestToUserList(docRef);
     const requestSaved = await this.getRequestFromPath(docRef.path);
+    if (!requestSaved) return null;
     return { id: docRef.id, path: docRef.path, requestSaved };
   }
 
@@ -373,7 +377,83 @@ export class FirestoreService {
           this.db.doc(doc.ref.path).update({ 'd.status': 0 })));
   }
 
-  
+
+  /* conversations */
+
+  async getMyConversationListObserver(uid: string) {
+    return this.db
+      .collection(dbKeys.conversations, ref => ref.where(`participants.${uid}`, '==', true))
+      .stateChanges(["added"])
+      .pipe(
+        map(conversations =>
+          conversations.map(({ payload }) => {
+            const id = payload.doc.id;
+            const data = <Conversation>payload.doc.data();
+            return { id, ...data };
+          }))
+      )
+  }
+
+
+  async getConversationObserver(conversationId: string, uid: string) {
+    return this.db
+      .collection(dbKeys.conversations)
+      .doc(conversationId)
+      .collection(dbKeys.messages, ref => ref.orderBy(ConversationProperties.timestamp))
+      .stateChanges(["added"])
+      .pipe(
+        map(messages =>
+          messages.map(({ payload }) => {
+            const id = payload.doc.id;
+            const data = <Message>payload.doc.data();
+            data.fromMe = data.senderUid == uid;
+            data.timestamp = (payload.doc.metadata.hasPendingWrites)
+              ? moment()
+              : moment(data.timestamp.toDate());
+            return { id, ...data };
+          }))
+      )
+  }
+
+
+  async createConversation(requestId: string, partner: string, uid: string) {
+
+    const conversationId = firestore().collection(dbKeys.conversations).doc().id;
+
+    await this.db
+      .collection(dbKeys.conversations)
+      .doc(conversationId)
+      .set({
+        [ConversationProperties.request]: requestId,
+        [ConversationProperties.participants]: {
+          [partner]: true,
+          [uid]: true
+        }
+      })
+
+    return conversationId;
+  }
+
+
+  async sendMessage(requestId: string, partnerId: string, conversationId: string, message: string) {
+    const { uid } = await this.aFAuth.currentUser;
+
+    if (!conversationId) conversationId = await this.createConversation(requestId, partnerId, uid);
+
+    await this.db
+      .collection(dbKeys.conversations)
+      .doc(conversationId)
+      .collection(dbKeys.messages)
+      .add({
+        [ConversationProperties.readed]    : false,
+        [ConversationProperties.senderUid] : uid,
+        [ConversationProperties.text]      : message,
+        [ConversationProperties.timestamp] : firestore.FieldValue.serverTimestamp(),
+        [ConversationProperties.isImage]   : false,
+      })
+  }
+
+
   /* notifications */
 
   async saveFCMToken(fcmToken: string) {

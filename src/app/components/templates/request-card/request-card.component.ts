@@ -44,11 +44,15 @@ export class RequestCardComponent implements AfterViewInit {
     event.stopPropagation();
 
     const modal = await this.modalController.create({
-    component: ConversationComponent,
-    enterAnimation: ModalAnimationSlideWithOpacityEnter,
-    leaveAnimation: ModalAnimationSlideWithOpacityLeave,
+      component: ConversationComponent,
+      enterAnimation: ModalAnimationSlideWithOpacityEnter,
+      leaveAnimation: ModalAnimationSlideWithOpacityLeave,
+      componentProps: {
+        requestId: this.request.id,
+        partnerId: this.request.owner
+      },
     });
-  
+
     await modal.present();
   }
 

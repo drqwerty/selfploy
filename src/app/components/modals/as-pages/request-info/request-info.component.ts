@@ -78,11 +78,15 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
 
   async openConversation() {
     const modal = await this.modalController.create({
-    component: ConversationComponent,
-    enterAnimation: ModalAnimationSlideWithOpacityFromModalEnter,
-    leaveAnimation: ModalAnimationSlideWithOpacityFromModalLeave,
+      component: ConversationComponent,
+      enterAnimation: ModalAnimationSlideWithOpacityFromModalEnter,
+      leaveAnimation: ModalAnimationSlideWithOpacityFromModalLeave,
+      componentProps: {
+        requestId: this.request.id,
+        partnerId: this.request.owner
+      },
     });
-  
+
     await modal.present();
   }
 

@@ -13,6 +13,8 @@ import * as moment from 'moment';
 import { NotificationService } from '../services/notification.service';
 import * as diff from 'changeset';
 import { dbKeys } from '../models/db-keys';
+import { firestore } from 'firebase';
+import { Conversation, Message } from '../models/conversation-model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +29,8 @@ export class DataService {
   public favorites: User[];
   public myRequestList: Request[];
   public followingRequestList: Request[];
+  public conversations: { [id: string]: Conversation } = {};
+  public newMessageSubject = new Subject<string>();
   private followingRequestsSubscription: { [id: string]: Subscription } = {};
   public favoritesChangedSubject = new Subject<void>();
   public myRequestListChangedSubject = new Subject<void>();
@@ -441,6 +445,47 @@ export class DataService {
 
   resetRequestStates() {
     this.firestore.setAllRequestToDraftState();
+  }
+
+
+  /* conversations */
+
+
+  async observeMyConversations() {
+    const { id: uid } = await this.getMyProfile();
+    (await this.firestore.getMyConversationListObserver(uid))
+      .subscribe(conversationList => {
+        conversationList.forEach(async conversation =>
+          (await this.firestore.getConversationObserver(conversation.id, uid))
+            .subscribe(messages => this.saveMessages(conversation, messages))
+        )
+      })
+  }
+
+
+  saveMessages(conversation: Conversation, messages: Message[]) {
+
+    if (!this.conversations.hasOwnProperty(conversation.id)) {
+      conversation.messages = {};
+      this.conversations[conversation.id] = conversation;
+    }
+
+    messages.forEach(message => this.conversations[conversation.id].messages[message.id] = message);
+
+    console.log(this.conversations);
+    this.newMessageSubject.next(conversation.id);
+  }
+
+
+  getConversation(requestId: string, partnerId: string) {
+    return Object
+      .values(this.conversations)
+      .find(conversation => conversation.request == requestId);
+  }
+
+
+  async sendMessage(requestId: string, partnerId: string, conversationId: string, message: string) {
+    await this.firestore.sendMessage(requestId, partnerId, conversationId, message);
   }
 
 

@@ -7,6 +7,7 @@ import { StatusBarModule } from 'src/app/components/utils/status-bar/status-bar.
 import { FivGalleryModule } from '@fivethree/core';
 import { ImageMessagesPipe } from 'src/app/pipes/image-messages.pipe';
 import { AutosizeModule } from 'ngx-autosize';
+import { ObjectToArrayPipe } from 'src/app/pipes/object-to-array.pipe';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { AutosizeModule } from 'ngx-autosize';
   declarations: [
     ConversationComponent,
     ImageMessagesPipe,
+    ObjectToArrayPipe,
   ],
   exports: [
     ConversationComponent
