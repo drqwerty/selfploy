@@ -8,7 +8,12 @@
         <ion-icon color="light" slot="icon-only" name="chevron-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Header</ion-title>
+    <ion-avatar slot="start">
+      <div class="profile-img">
+        <img *ngIf="anotherUser?.hasProfilePic" [src]="anotherUser?.profilePic" />
+      </div>
+    </ion-avatar>
+    <ion-title>{{anotherUser?.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -42,7 +47,7 @@
         <ion-row class="row-messages">
 
           <ion-col class="col-message" size="9" [attr.offset]="message.fromMe ? '3': '0'">
-            <div *ngIf="!message.isImage; else image" class="div-message" [class.fromMe]="message.fromMe">{{ message.text }}</div>
+            <div *ngIf="!message.isImage; else image" class="div-message" [class]="backgroundColor" [class.fromMe]="message.fromMe">{{ message.text }}</div>
             <ng-template #image>
               <fiv-gallery-image [src]="message.url" [style.margin-left]="message.fromMe ? 'auto' : null"></fiv-gallery-image>
             </ng-template>
@@ -87,7 +92,7 @@
         </ion-button>
       </ion-col>
       <ion-col size="1" class="col-button">
-        <ion-button fill="clear" [disabled]="!newMessage.length" (click)="sendMessage()">
+        <ion-button fill="clear" [disabled]="!newMessage.length" (click)="sendMessage()" [color]="backgroundColor">
           <ion-icon slot="icon-only" name="send"></ion-icon>
         </ion-button>
       </ion-col>

@@ -1,0 +1,13 @@
+<ion-list lines="none" *ngFor="let conversation of (conversations | objectToArray | filterByRequestId: currentRequest.id)">
+  <ion-item button (click)="openConversation(conversation)">
+    <ion-avatar slot="start">
+      <div class="profile-img">
+        <img *ngIf="conversation.anotherUser.hasProfilePic" [src]="conversation.anotherUser.profilePic" />
+      </div>
+    </ion-avatar>
+    <ion-label>
+      <h2 class="font-weight-500">{{conversation.anotherUser.name}}</h2>
+      <p>{{getLastMessage(conversation.messages).text}}</p>
+    </ion-label>
+  </ion-item>
+</ion-list>

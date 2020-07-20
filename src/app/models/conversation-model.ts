@@ -1,5 +1,6 @@
 import { Moment } from 'moment';
 import { firestore } from 'firebase';
+import { User } from './user-model';
 
 export enum ConversationProperties {
   participants = 'participants',
@@ -13,13 +14,15 @@ export enum ConversationProperties {
   isImage      = 'isImage',
   url          = 'url',
   fromMe       = 'fromMe',
+  anotherUser  = 'anotherUser'
 }
 
 export class Conversation {
   [ConversationProperties.id]          : string;
   [ConversationProperties.participants]: { [uid: string]: boolean };
   [ConversationProperties.request]     : string;
-  [ConversationProperties.messages]    : { [id: string]: Message }
+  [ConversationProperties.messages]    : { [id: string]: Message };
+  [ConversationProperties.anotherUser] : User;
 }
 
 export class Message {

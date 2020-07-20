@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Message } from '../models/conversation-model';
 
 @Pipe({
   name: 'objectToArray',
@@ -7,11 +6,11 @@ import { Message } from '../models/conversation-model';
 })
 export class ObjectToArrayPipe implements PipeTransform {
 
-  transform(allMessages: { [id: string]: Message }): Message[] {
-    if (!allMessages) return [];
-    const messages = [];
-    Object.values(allMessages).forEach(message => messages.push(message));
-    return messages;
+  transform(object: any) {
+    if (!object) return [];
+    const values = [];
+    Object.values(object).forEach(value => values.push(value));
+    return values;
   }
 
 }

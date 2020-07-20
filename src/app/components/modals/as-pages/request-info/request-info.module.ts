@@ -16,6 +16,8 @@ import { RequestCardActionSheetModule } from 'src/app/components/action-sheets/r
 import { RequestNewModule } from '../request-new/request-new.module';
 import { DeleteConfirmActionSheetModule } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.module';
 import { ConversationModule } from '../conversation/conversation.module';
+import { PipesModule } from 'src/app/pipes/pipes.module';
+import { ConversationListComponent } from 'src/app/components/templates/conversation-list/conversation-list.component';
 
 @NgModule({
   imports: [
@@ -35,12 +37,14 @@ import { ConversationModule } from '../conversation/conversation.module';
     RequestNewModule,
     DeleteConfirmActionSheetModule,
     ConversationModule,
+    PipesModule,
   ],
   declarations: [
-    RequestInfoComponent
+    RequestInfoComponent,
+    ConversationListComponent,
   ],
   exports: [
     RequestInfoComponent
-  ]
+  ],
 })
 export class RequestInfoModule { }

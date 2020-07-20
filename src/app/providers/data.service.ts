@@ -451,15 +451,8 @@ export class DataService {
   /* conversations */
 
 
-  async observeMyConversations() {
-    const { id: uid } = await this.getMyProfile();
-    (await this.firestore.getMyConversationListObserver(uid))
-      .subscribe(conversationList => {
-        conversationList.forEach(async conversation =>
-          (await this.firestore.getConversationObserver(conversation.id, uid))
-            .subscribe(messages => this.saveMessages(conversation, messages))
-        )
-      })
+  async sendMessage(requestId: string, partnerId: string, conversationId: string, message: string) {
+    await this.firestore.sendMessage(requestId, partnerId, conversationId, message);
   }
 
 
@@ -477,15 +470,30 @@ export class DataService {
   }
 
 
-  getConversation(requestId: string, partnerId: string) {
-    return Object
-      .values(this.conversations)
-      .find(conversation => conversation.request == requestId);
+  async observeMyConversations() {
+    const { id: uid } = await this.getMyProfile();
+    (await this.firestore.getMyConversationListObserver(uid))
+      .subscribe(conversationList => {
+        conversationList.forEach(async conversation => {
+          conversation.anotherUser = await this.getAnotherUser(uid, conversation.participants);
+          (await this.firestore.getConversationObserver(conversation.id, uid))
+            .subscribe(messages => this.saveMessages(conversation, messages))
+        })
+      })
   }
 
 
-  async sendMessage(requestId: string, partnerId: string, conversationId: string, message: string) {
-    await this.firestore.sendMessage(requestId, partnerId, conversationId, message);
+  getAnotherUser(uid: string, participantsI: any) {
+    const participants = Object.keys(participantsI);
+    const anotherUser = participants[1 - participants.indexOf(uid)];
+    return this.getUserProfile(anotherUser)
+  }
+
+
+  getConversation(requestId: string, partnerId: string) {
+    return Object
+      .values(this.conversations)
+      .find(conversation => conversation.request == requestId && conversation.participants[partnerId]);
   }
 
 

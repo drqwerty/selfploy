@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { trigger, transition, style, animate, keyframes } from '@angular/animations';
 import { Message, Conversation } from 'src/app/models/conversation-model';
 import { DataService } from 'src/app/providers/data.service';
+import { User } from 'src/app/models/user-model';
 
 @Component({
   selector: 'app-conversation',
@@ -28,6 +29,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
 
   @Input() requestId: string;
   @Input() partnerId: string;
+  @Input() backgroundColor = 'primary';
 
 
   // messages: any = [
@@ -64,11 +66,11 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   image: HTMLImageElement = null;
   bottomIntersectionObserver: IntersectionObserver;
 
-  backgroundColor = 'primary'
-
   private nearToBottom = true;
-  private touching     = false;
+  private touching = false;
 
+  myUid: string;
+  anotherUser: User;
   conversation: Conversation;
   messages: { [id: string]: Message };
   newMessage = '';
@@ -84,8 +86,8 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
 
 
   ngOnInit() {
-    console.log(this.requestId, this.partnerId);
     this.getMessages();
+    this.getAnotherUser();
   }
 
 
@@ -107,6 +109,12 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   }
 
 
+  async getAnotherUser() {
+    this.anotherUser = this.conversation?.anotherUser;
+    if (!this.anotherUser) this.anotherUser = await this.data.getUserProfile(this.partnerId);
+  }
+
+
   sendPhoto() {
 
   }
@@ -117,7 +125,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
     this.newMessage = '';
     const promise = this.data.sendMessage(this.requestId, this.partnerId, this.conversation?.id, message);
     setTimeout(() => this.ionContentO.scrollToBottom(), 50);
-    
+
     await promise;
     if (!this.conversation) this.getMessages();
   }

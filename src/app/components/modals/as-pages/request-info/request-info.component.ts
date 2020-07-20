@@ -10,6 +10,7 @@ import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-she
 import { RequestNewComponent } from '../request-new/request-new.component';
 import { ConversationComponent } from '../conversation/conversation.component';
 import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
+import { Conversation } from 'src/app/models/conversation-model';
 
 @Component({
   selector: 'app-request-info',
@@ -35,7 +36,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   collapsedFab = false;
 
   hideShadow = true;
-  conversations = [];
+  conversations: { [id: string]: Conversation } = {};
   ownerName: string;
 
   constructor(
@@ -46,6 +47,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.data.getUserProfile(this.request.owner).then(user => this.ownerName = user.name);
+    this.getConversations();
   }
 
 
@@ -68,6 +70,11 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
       background.style.backgroundColor = `var(--ion-color-${this.backgroundColor})`;
       content.style.borderRadius = '40px 40px 0 0';
     });
+  }
+
+
+  getConversations() {
+    this.conversations = this.data.conversations;
   }
 
 

@@ -70,8 +70,8 @@
     <super-tabs-container autoScrollTop>
       <super-tab>
         <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event)">
-          <ng-container *ngIf="conversations.length; else emptyContent">
-            
+          <ng-container *ngIf="conversations | objectToArray | conversationFromThisRequest: request.id; else emptyContent">
+            <conversation-list [currentRequest]="request"></conversation-list>
           </ng-container>
           <ng-template #emptyContent>
             <empty-content class="super-tabs" image="no-conversations" text="Aún sin respuestas"></empty-content>

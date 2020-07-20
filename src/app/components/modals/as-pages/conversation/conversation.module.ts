@@ -8,6 +8,7 @@ import { FivGalleryModule } from '@fivethree/core';
 import { ImageMessagesPipe } from 'src/app/pipes/image-messages.pipe';
 import { AutosizeModule } from 'ngx-autosize';
 import { ObjectToArrayPipe } from 'src/app/pipes/object-to-array.pipe';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -17,11 +18,10 @@ import { ObjectToArrayPipe } from 'src/app/pipes/object-to-array.pipe';
     StatusBarModule,
     FivGalleryModule,
     AutosizeModule,
+    PipesModule,
   ],
   declarations: [
     ConversationComponent,
-    ImageMessagesPipe,
-    ObjectToArrayPipe,
   ],
   exports: [
     ConversationComponent
