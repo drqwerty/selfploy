@@ -13,7 +13,6 @@ import * as moment from 'moment';
 import { NotificationService } from '../services/notification.service';
 import * as diff from 'changeset';
 import { dbKeys } from '../models/db-keys';
-import { firestore } from 'firebase';
 import { Conversation, Message } from '../models/conversation-model';
 
 @Injectable({
@@ -453,6 +452,18 @@ export class DataService {
 
   async sendMessage(requestId: string, partnerId: string, conversationId: string, message: string) {
     await this.firestore.sendMessage(requestId, partnerId, conversationId, message);
+  }
+
+
+  async sendImage(conversationId: string, imageBase64: string, requestId: string, partnerId: string) {
+
+    if (!conversationId) {
+      const { id } = await this.getMyProfile();
+      conversationId = await this.firestore.createConversation(requestId, partnerId, id)
+    }
+
+    const url = await this.fStorage.uploadImageToConversation(imageBase64, conversationId);
+    await this.firestore.sendMessage(requestId, partnerId, conversationId, url, true);
   }
 
 

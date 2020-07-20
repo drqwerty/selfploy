@@ -6,6 +6,7 @@ import { Moment } from 'moment';
 import { ModalController } from '@ionic/angular';
 import { ConversationComponent } from '../../modals/as-pages/conversation/conversation.component';
 import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
+import { last } from 'lodash';
 
 @Component({
   selector: 'conversation-list',
@@ -32,7 +33,10 @@ export class ConversationListComponent implements OnInit {
 
 
   getLastMessage(messages: { [id: string]: Message }) {
-    return Object.values(messages).sort((a, b) => (<Moment>a.timestamp).isAfter(b.timestamp) ? -1 : 1)[0];
+    const lastMessage = Object.values(messages).sort((a, b) => (<Moment>a.timestamp).isAfter(b.timestamp) ? -1 : 1)[0];
+    return lastMessage.isImage
+      ? '📷 Foto'
+      : lastMessage.text;
   }
 
 

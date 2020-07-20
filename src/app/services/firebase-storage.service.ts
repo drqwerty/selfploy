@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { dbKeys } from '../models/db-keys';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,20 @@ export class FirebaseStorage {
 
     const imageNameDeletedList = imageNameList.filter(name => !conservedImageNameList.includes(name));
     this.removeImages(requestId, imageNameDeletedList);
+  }
+
+
+  async uploadImageToConversation(image: string, conversationId: string) {
+    const metadata = { contentType: 'image/jpeg' };
+    const name = moment().unix().toString();
+    image = image.replace(/^data:image\/(png|jpeg);base64,/, '');
+
+    const uploadTask = await firebase.storage()
+      .ref(`${dbKeys.conversations}/${conversationId}/${name}.jpg`)
+      .putString(image, 'base64', metadata);
+
+    const url = await uploadTask.ref.getDownloadURL();
+    return url;
   }
 
 

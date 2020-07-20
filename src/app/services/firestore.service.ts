@@ -435,7 +435,7 @@ export class FirestoreService {
   }
 
 
-  async sendMessage(requestId: string, partnerId: string, conversationId: string, message: string) {
+  async sendMessage(requestId: string, partnerId: string, conversationId: string, content: string, isImage = false) {
     const { uid } = await this.aFAuth.currentUser;
 
     if (!conversationId) conversationId = await this.createConversation(requestId, partnerId, uid);
@@ -447,9 +447,10 @@ export class FirestoreService {
       .add({
         [ConversationProperties.readed]    : false,
         [ConversationProperties.senderUid] : uid,
-        [ConversationProperties.text]      : message,
+        [ConversationProperties.text]      : isImage ? '' : content,
         [ConversationProperties.timestamp] : firestore.FieldValue.serverTimestamp(),
-        [ConversationProperties.isImage]   : false,
+        [ConversationProperties.isImage]   : isImage,
+        [ConversationProperties.url]       : isImage ? content : '',
       })
   }
 

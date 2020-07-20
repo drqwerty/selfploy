@@ -7,7 +7,11 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
 import { Message, Conversation } from 'src/app/models/conversation-model';
 import { DataService } from 'src/app/providers/data.service';
 import { User } from 'src/app/models/user-model';
+import { CameraSourceActionSheetComponent } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.component';
+import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-conversation',
   templateUrl: './conversation.component.html',
@@ -32,28 +36,6 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   @Input() backgroundColor = 'primary';
 
 
-  // messages: any = [
-  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594552754943, text: "aaa" },
-  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594553754949, text: "no puede ser" },
-  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594554754955, text: "estás ahi???" },
-  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594555754958, text: "siiiii" },
-  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594556754961, text: "sadfasdf" },
-  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594557754978, text: "sdfasdf asd fasd fsadfsad fsd fsd sd sadf df sda fsd f" },
-  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594558754988, text: " asdf asd fadsfs dfewsfs dfsfs fs fdadsa ffsafdadffdf d af asdf asdfsadfads fasd fasdf mkn" },
-  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594626154943, text: "aaa" },
-  //   { fromMe: true, isImage: true, timestamp1: 1594626154945, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2FkKGZcjO3CNuM4e5FnlEp%2FkKGZcjO3CNuM4e5FnlEp-1594031085.jpg?alt=media&token=461520f7-34ca-40ce-a69c-1f5e13d7f67b" },
-  //   { fromMe: true, isImage: true, timestamp1: 1594626154946, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2F1bqlv6A4zXmEu5el8Ymd%2F1bqlv6A4zXmEu5el8Ymd-1594030816.jpg?alt=media&token=02217d1f-3c77-44bc-ba9d-d3f5c8daa54e" },
-  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594626254949, text: "no puede ser" },
-  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594626354955, text: "estás ahi???" },
-  //   { fromMe: false, isImage: true, timestamp1: 1594626154946, url: "https://firebasestorage.googleapis.com/v0/b/tfg-selfploy.appspot.com/o/requests%2FGrwtwj1UzZ66NXYC0adY%2FGrwtwj1UzZ66NXYC0adY-1594030945.jpg?alt=media&token=770fa807-c799-4432-900d-5694ab6dd177" },
-  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594626454958, text: "siiiii" },
-  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594626554961, text: "sadfasdf" },
-  //   { fromMe: true, hasPendingWrites: false, timestamp1: 1594626654978, text: "sdfasdf asd fasd fsadfsad fsd fsd sd sadf df sda fsd f" },
-  //   { fromMe: false, hasPendingWrites: false, timestamp1: 1594626754988, text: " asdf asd fadsfs dfewsfs dfsfs fs fdadsa ffsafdadffdf d af asdf asdfsadfads fasd fasdf mkn" }
-  // ];
-
-
-
   @ViewChild(IonContent)                       ionContentO     : IonContent;
   @ViewChild(IonContent, { read: ElementRef }) ionContent      : ElementRef;
   @ViewChild(IonGrid, { read: ElementRef })    ionGrid         : ElementRef;
@@ -63,11 +45,11 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   @ViewChildren(FivGalleryImage)               fivGalleryImage : QueryList<FivGalleryImage>;
   @ViewChildren(IonImg)                        ionImg          : QueryList<any>;
 
-  image: HTMLImageElement = null;
-  bottomIntersectionObserver: IntersectionObserver;
-
   private nearToBottom = true;
   private touching = false;
+
+  image: HTMLImageElement = null;
+  bottomIntersectionObserver: IntersectionObserver;
 
   myUid: string;
   anotherUser: User;
@@ -78,11 +60,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   constructor(
     private modalController: ModalController,
     private data: DataService,
-  ) {
-    // this.messages.forEach(message => {
-    //   message.timestamp = moment(message.timestamp1);
-    // });
-  }
+  ) { }
 
 
   ngOnInit() {
@@ -92,14 +70,29 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
 
 
   ngAfterViewChecked() {
-    if (!this.touching && this.nearToBottom) {
-      this.ionContentO.scrollToBottom();
-    }
+    if (!this.touching && this.nearToBottom) this.ionContentO.scrollToBottom();
   }
 
 
   ionViewWillEnter() {
     this.setCornersStyle();
+    this.subscribeNewMessages();
+  }
+
+
+  subscribeNewMessages() {
+    this.data.newMessageSubject
+      .pipe(untilDestroyed(this))
+      .subscribe(conversationId => {
+        if (conversationId === this.conversation.id && Object.values(this.messages).slice(-1)[0].isImage) {
+          setTimeout(() => {
+            this.fivGallery.updateImagesIndex();
+            this.fivGallery.images.last.click
+              .pipe(untilDestroyed(this))
+              .subscribe(image => this.fivGallery.open(image)); 
+          });
+        }
+      })
   }
 
 
@@ -115,8 +108,31 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   }
 
 
-  sendPhoto() {
+  async takePhoto() {
+    const modal = await this.modalController.create({
+      component: CameraSourceActionSheetComponent,
+      enterAnimation: ActionSheetEnter,
+      leaveAnimation: ActionSheetLeave,
+      cssClass: 'action-sheet',
+      componentProps: {
+        showRemoveButton: false,
+      }
+    })
 
+    modal.onWillDismiss().then(({ data }) => {
+      if (data?.image) this.sendPhoto(data.image);
+    });
+
+    modal.present();
+  }
+
+
+  async sendPhoto(image: string) {
+    const promise = this.data.sendImage(this.conversation?.id, image, this.requestId, this.anotherUser.id);
+    setTimeout(() => this.ionContentO.scrollToBottom(), 50);
+
+    await promise;
+    if (!this.conversation) this.getMessages();
   }
 
 
