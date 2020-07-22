@@ -15,7 +15,6 @@ import * as moment from 'moment';
 import { RequestNewActionSheetComponent } from 'src/app/components/action-sheets/request-new-action-sheet/request-new-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
-import { WorkingHours } from 'src/app/models/user-model';
 
 @Component({
   selector: 'app-request-new',

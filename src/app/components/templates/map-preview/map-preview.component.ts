@@ -16,6 +16,10 @@ export class MapPreviewComponent {
   @Input() private coordinates: LatLng;
   @Input() private radiusKm: number;
   @Input() private hideMarker: boolean;
+  @Input() isAChatMessage = false;
+  @Input() isMine: boolean;
+  @Input() address: string;
+  @Input() color: string;
 
 
   idPrefix = 'map-preview-';
@@ -27,20 +31,24 @@ export class MapPreviewComponent {
     private modalController: ModalController,
   ) { }
 
+
   initMap() {
+    if (this.map) return;
+
     this.loadMap();
     this.disableInteractions();
     this.createCircleRadius();
     this.createMarker();
   }
 
+
   private loadMap() {
-    if (this.map) return;
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
 
     this.map = new leafletMap(this.idPrefix + this.id, { zoomControl: false, attributionControl: false }).setView(this.coordinates, 9);
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
   }
+
 
   private disableInteractions() {
     this.map.dragging.disable();

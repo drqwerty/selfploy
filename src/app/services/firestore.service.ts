@@ -410,6 +410,10 @@ export class FirestoreService {
             data.timestamp = (payload.doc.metadata.hasPendingWrites)
               ? moment()
               : moment(data.timestamp.toDate());
+            if (data.isCoordinate) {
+              const coords = <firestore.GeoPoint>data.coordinates;
+              data.coordinates = new LatLng(coords.latitude, coords.longitude);
+            }
             return { id, ...data };
           }))
       )
@@ -435,23 +439,49 @@ export class FirestoreService {
   }
 
 
-  async sendMessage(requestId: string, partnerId: string, conversationId: string, content: string, isImage = false) {
+  async sendMessage(
+    options:
+      {
+        requestId      : string,
+        partnerId      : string,
+        conversationId : string,
+        content?       : string,
+        address?       : string,
+        coordinates?   : LatLng,
+        type           : ConversationProperties.isText | ConversationProperties.isImage | ConversationProperties.isCoordinate,
+      },
+    ) {
     const { uid } = await this.aFAuth.currentUser;
 
-    if (!conversationId) conversationId = await this.createConversation(requestId, partnerId, uid);
+    if (!options.conversationId) options.conversationId = await this.createConversation(options.requestId, options.partnerId, uid);
+
+    const data = {
+      [ConversationProperties.readed]    : false,
+      [ConversationProperties.senderUid] : uid,
+      [ConversationProperties.timestamp] : firestore.FieldValue.serverTimestamp(),
+      [options.type]                     : true,
+    };
+
+    switch (options.type) {
+      case ConversationProperties.isText:
+        data[ConversationProperties.text] = options.content;
+        break;
+
+      case ConversationProperties.isImage:
+        data[ConversationProperties.url] = options.content;
+        break;
+
+      case ConversationProperties.isCoordinate:
+        data[ConversationProperties.address]     = options.address;
+        data[ConversationProperties.coordinates] = new GeoPoint(options.coordinates.lat, options.coordinates.lng);
+        break;
+    }
 
     await this.db
       .collection(dbKeys.conversations)
-      .doc(conversationId)
+      .doc(options.conversationId)
       .collection(dbKeys.messages)
-      .add({
-        [ConversationProperties.readed]    : false,
-        [ConversationProperties.senderUid] : uid,
-        [ConversationProperties.text]      : isImage ? '' : content,
-        [ConversationProperties.timestamp] : firestore.FieldValue.serverTimestamp(),
-        [ConversationProperties.isImage]   : isImage,
-        [ConversationProperties.url]       : isImage ? content : '',
-      })
+      .add(data)
   }
 
 

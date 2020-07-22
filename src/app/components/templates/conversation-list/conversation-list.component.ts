@@ -52,7 +52,8 @@ export class ConversationListComponent implements OnInit {
       },
     });
 
-    await modal.present();
+    modal.onWillDismiss().then(() => modal.classList.remove('background-black'));
+    modal.present().then(() => modal.classList.add('background-black'));
   }
 
 

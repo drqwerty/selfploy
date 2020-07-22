@@ -8,6 +8,7 @@ import { environment } from "src/environments/environment";
 import { Plugins, StatusBarStyle, PermissionType, Capacitor } from '@capacitor/core';
 import { MapSearchComponent } from '../map-search/map-search.component';
 import { Animations } from 'src/app/animations/animations';
+import * as moment from 'moment';
 const { StatusBar, Geolocation, Permissions } = Plugins;
 
 @Component({
@@ -25,12 +26,16 @@ export class MapLocationComponent {
   @Input() hideLocationAccuracy: boolean;
   @Input() addressFull: string;
   @Input() addressCity: string;
+  @Input() showTooltip = true;
+  @Input() showHideLocation = true;
+  @Input() acceptButtonText = 'Guardar';
 
 
   @ViewChild('innerLocationCircle') animationElement: ElementRef;
   @ViewChild('tooltip') tooltip: ElementRef;
   @ViewChild('fab') fab: any;
 
+  idSufix = moment().unix();
   map: leafletMap;
   lc: Control.Locate;
   geocodeService: any;
@@ -88,7 +93,7 @@ export class MapLocationComponent {
     const urlApiMapbox = 'https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
 
     const zoom = this.addressCity == null ? 9 : 16;
-    this.map = new leafletMap('map-location', { zoomControl: false, attributionControl: false }).setView(this.coordinates, zoom);
+    this.map = new leafletMap(`map-location-${this.idSufix}`, { zoomControl: false, attributionControl: false }).setView(this.coordinates, zoom);
     tileLayer(urlApiMapbox, { accessToken: environment.mapboxConfig.apiKey, id: 'streets-v11' }).addTo(this.map);
 
     this.lc = control
@@ -212,7 +217,7 @@ export class MapLocationComponent {
 
 
   showTooltipIfNeeded() {
-    if (this.addressFull == null || this.addressFull == '') {
+    if (this.showTooltip && (this.addressFull == null || this.addressFull == '')) {
       this.createTooltipAnimation();
       this.tooltipToggleVisibily(true);
     }

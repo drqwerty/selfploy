@@ -1,15 +1,19 @@
-import { Component, ViewChild, ElementRef, AfterViewChecked, ViewChildren, QueryList, Input, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewChecked, ViewChildren, QueryList, Input, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, IonContent, IonGrid, IonImg } from '@ionic/angular';
 import * as moment from 'moment';
 import { FivGallery, FivGalleryImage } from '@fivethree/core';
 import { takeUntil } from 'rxjs/operators';
-import { trigger, transition, style, animate, keyframes } from '@angular/animations';
+import { trigger, transition, style, animate } from '@angular/animations';
 import { Message, Conversation } from 'src/app/models/conversation-model';
 import { DataService } from 'src/app/providers/data.service';
 import { User } from 'src/app/models/user-model';
 import { CameraSourceActionSheetComponent } from 'src/app/components/action-sheets/camera-source-action-sheet/camera-source-action-sheet.component';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { MapLocationComponent } from '../map-location/map-location.component';
+import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
+import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
+import { LatLng } from 'leaflet';
 
 @UntilDestroy()
 @Component({
@@ -17,7 +21,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   templateUrl: './conversation.component.html',
   styleUrls: ['./conversation.component.scss'],
   animations: [
-    trigger('cameraButton', [
+    trigger('button', [
       transition(':enter', [
         style({ opacity: 0, transform: 'scale(0)' }),
         animate(".25s ease", style({ transform: 'scale(1)', opacity: 1, })),
@@ -29,7 +33,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     ])
   ]
 })
-export class ConversationComponent implements OnInit, AfterViewChecked {
+export class ConversationComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   @Input() requestId: string;
   @Input() partnerId: string;
@@ -39,6 +43,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   @ViewChild(IonContent)                       ionContentO     : IonContent;
   @ViewChild(IonContent, { read: ElementRef }) ionContent      : ElementRef;
   @ViewChild(IonGrid, { read: ElementRef })    ionGrid         : ElementRef;
+  @ViewChildren(MapPreviewComponent)           mapPreviewList  : QueryList<MapPreviewComponent>;
 
   @ViewChild('bottomToolbar')                  bottomToolbar   : ElementRef;
   @ViewChild(FivGallery)                       fivGallery      : FivGallery;
@@ -70,13 +75,31 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
 
 
   ngAfterViewChecked() {
-    if (!this.touching && this.nearToBottom) this.ionContentO.scrollToBottom();
+    this.scrollToBottom();
+  }
+
+
+  ngOnDestroy() {
   }
 
 
   ionViewWillEnter() {
     this.setCornersStyle();
     this.subscribeNewMessages();
+  }
+
+
+  ionViewDidEnter() {
+    this.mapPreviewList.toArray().forEach(el => el.initMap());
+    this.mapPreviewList
+      .changes
+      .pipe(untilDestroyed(this))
+      .subscribe((list: QueryList<MapPreviewComponent>) => setTimeout(() => list.last?.initMap()));
+  }
+
+
+  scrollToBottom() {
+    if (!this.touching && this.nearToBottom) this.ionContentO.scrollToBottom();
   }
 
 
@@ -108,7 +131,28 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   }
 
 
-  async takePhoto() {
+  async openMapToSendLocation() {
+    const modal = await this.modalController.create({
+      component: MapLocationComponent,
+      enterAnimation: ModalAnimationSlideWithOpacityFromModalEnter,
+      leaveAnimation: ModalAnimationSlideWithOpacityFromModalLeave,
+      componentProps: {
+        coordinates: undefined,
+        showTooltip: false,
+        showHideLocation: false,
+        acceptButtonText: 'Enviar',
+      }
+    });
+
+    modal.onWillDismiss().then(({ data }) => {
+      if (data) this.sendLocation(data.addressFull, data.coordinates)
+    });
+
+    modal.present();
+  }
+
+
+  async openImageSource() {
     const modal = await this.modalController.create({
       component: CameraSourceActionSheetComponent,
       enterAnimation: ActionSheetEnter,
@@ -127,11 +171,19 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   }
 
 
-  async sendPhoto(image: string) {
-    const promise = this.data.sendImage(this.conversation?.id, image, this.requestId, this.anotherUser.id);
+  async sendLocation(addressFull: string, coordinates: LatLng) {
+    const promise = this.data.sendLocation(this.requestId, this.partnerId, this.conversation?.id, addressFull, coordinates)
     setTimeout(() => this.ionContentO.scrollToBottom(), 50);
 
     await promise;
+    if (!this.conversation) this.getMessages();
+  }
+
+
+  async sendPhoto(image: string) {
+    await this.data.sendImage(this.conversation?.id, image, this.requestId, this.anotherUser.id);
+    setTimeout(() => this.ionContentO.scrollToBottom(), 50);
+
     if (!this.conversation) this.getMessages();
   }
 

@@ -1,10 +1,39 @@
 ion-card {
   box-shadow: none;
-  height: 150px;
   --background: #dddddd;
 
   .map-wrapper {
     pointer-events: none;
     height: 150px;
+  }
+
+  &.chatMessage {
+    max-width: 200px;
+    margin: 0;
+    border-radius: 15px;
+    border-style: solid;
+    border-width: 1px;
+    --color: #e0e0e0;
+
+    &.isMine {
+      float: right;
+      border-width: 4px;
+
+      &.primary {
+        --color: #fdead7;
+
+        ion-toolbar {
+          --background: #fdead7;
+        }
+      }
+
+      &.secondary {
+        --color: #d7eafd;
+
+        ion-toolbar {
+          --background: #d7eafd;
+        }
+      }
+    }
   }
 }

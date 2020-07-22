@@ -1,6 +1,7 @@
 import { Moment } from 'moment';
 import { firestore } from 'firebase';
 import { User } from './user-model';
+import { LatLng } from 'leaflet';
 
 export enum ConversationProperties {
   participants = 'participants',
@@ -11,10 +12,14 @@ export enum ConversationProperties {
   text         = 'text',
   timestamp    = 'timestamp',
   id           = 'id',
+  isText       = 'isText',
   isImage      = 'isImage',
+  isCoordinate = 'isCoordinate',
   url          = 'url',
   fromMe       = 'fromMe',
-  anotherUser  = 'anotherUser'
+  anotherUser  = 'anotherUser',
+  address      = 'address',
+  coordinates  = 'coordinates',
 }
 
 export class Conversation {
@@ -26,12 +31,17 @@ export class Conversation {
 }
 
 export class Message {
-  [ConversationProperties.id]       : string;
-  [ConversationProperties.fromMe]   : boolean;
-  [ConversationProperties.readed]   : boolean;
-  [ConversationProperties.senderUid]: string;
-  [ConversationProperties.text]     : string;
-  [ConversationProperties.timestamp]: firestore.Timestamp | Moment;
-  [ConversationProperties.isImage]  : boolean;
-  [ConversationProperties.url]      : string;
+  [ConversationProperties.id]           : string;
+  [ConversationProperties.fromMe]       : boolean;
+  [ConversationProperties.readed]       : boolean;
+  [ConversationProperties.senderUid]    : string;
+  [ConversationProperties.text]         : string;
+  [ConversationProperties.timestamp]    : firestore.Timestamp | Moment;
+  [ConversationProperties.isText]       : boolean;
+  [ConversationProperties.isImage]      : boolean;
+  [ConversationProperties.isCoordinate] : boolean;
+  [ConversationProperties.url]          : string;
+  [ConversationProperties.address]      : string;
+  [ConversationProperties.coordinates]  : firestore.GeoPoint | LatLng;
+  
 }

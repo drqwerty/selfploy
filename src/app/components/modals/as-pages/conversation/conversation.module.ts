@@ -9,6 +9,8 @@ import { ImageMessagesPipe } from 'src/app/pipes/image-messages.pipe';
 import { AutosizeModule } from 'ngx-autosize';
 import { ObjectToArrayPipe } from 'src/app/pipes/object-to-array.pipe';
 import { PipesModule } from 'src/app/pipes/pipes.module';
+import { MapLocationModule } from '../map-location/map-location.module';
+import { MapPreviewModule } from 'src/app/components/templates/map-preview/map-preview.module';
 
 @NgModule({
   imports: [
@@ -19,6 +21,8 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
     FivGalleryModule,
     AutosizeModule,
     PipesModule,
+    MapLocationModule,
+    MapPreviewModule,
   ],
   declarations: [
     ConversationComponent,

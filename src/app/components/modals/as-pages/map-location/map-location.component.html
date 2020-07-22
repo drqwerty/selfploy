@@ -21,7 +21,7 @@
 
 
   <img class="gradient top absolute" src="/assets/background-drawings/gradient.png">
-  <div id="map-location">
+  <div class="map" [id]="'map-location-'+idSufix">
     <div class="tooltip-container">
       <img src="/assets/marker-location-picker.svg">
       <div #tooltip class="top">
@@ -44,7 +44,7 @@
 
 <ion-footer class="ion-no-border buttons-cancel-confirm">
 
-  <ion-toolbar>
+  <ion-toolbar *ngIf="showHideLocation">
     <ion-list lines="none" class="ion-no-padding">
       <ion-item [disabled]="addressFull == null || addressFull == ''">
         <ion-label (click)="hideLocationAccuracy = !hideLocationAccuracy">
@@ -64,7 +64,7 @@
         Cancelar
       </ion-button>
       <ion-button [disabled]="addressFull == null || addressFull == ''" (click)="accept()" class="confirm-button">
-        Guardar
+        {{acceptButtonText}}
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

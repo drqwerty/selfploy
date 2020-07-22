@@ -13,7 +13,8 @@ import * as moment from 'moment';
 import { NotificationService } from '../services/notification.service';
 import * as diff from 'changeset';
 import { dbKeys } from '../models/db-keys';
-import { Conversation, Message } from '../models/conversation-model';
+import { Conversation, Message, ConversationProperties } from '../models/conversation-model';
+import { LatLng } from 'leaflet';
 
 @Injectable({
   providedIn: 'root'
@@ -451,7 +452,12 @@ export class DataService {
 
 
   async sendMessage(requestId: string, partnerId: string, conversationId: string, message: string) {
-    await this.firestore.sendMessage(requestId, partnerId, conversationId, message);
+    await this.firestore.sendMessage({ requestId, partnerId, conversationId, content: message, type: ConversationProperties.isText });
+  }
+
+
+  async sendLocation(requestId: string, partnerId: string, conversationId: string, address: string, coordinates: LatLng) {
+    await this.firestore.sendMessage({ requestId, partnerId, conversationId, address, coordinates, type: ConversationProperties.isCoordinate })
   }
 
 
@@ -463,7 +469,7 @@ export class DataService {
     }
 
     const url = await this.fStorage.uploadImageToConversation(imageBase64, conversationId);
-    await this.firestore.sendMessage(requestId, partnerId, conversationId, url, true);
+    await this.firestore.sendMessage({ requestId, partnerId, conversationId, content: url, type: ConversationProperties.isImage });
   }
 
 
@@ -485,10 +491,16 @@ export class DataService {
     const { id: uid } = await this.getMyProfile();
     (await this.firestore.getMyConversationListObserver(uid))
       .subscribe(conversationList => {
+
         conversationList.forEach(async conversation => {
-          conversation.anotherUser = await this.getAnotherUser(uid, conversation.participants);
-          (await this.firestore.getConversationObserver(conversation.id, uid))
-            .subscribe(messages => this.saveMessages(conversation, messages))
+          let activeRequest = this.followingRequestList?.findIndex(request => request.id === conversation.request) > -1;
+          if (!activeRequest) activeRequest = this.myRequestList.findIndex(request => request.id === conversation.request) > -1;
+
+          if (activeRequest) {
+            conversation.anotherUser = await this.getAnotherUser(uid, conversation.participants);
+            (await this.firestore.getConversationObserver(conversation.id, uid))
+              .subscribe(messages => this.saveMessages(conversation, messages))
+          }
         })
       })
   }

@@ -1,3 +1,8 @@
-<ion-card mode="ios" (click)="openFullScreenMap()">
+<ion-card mode="ios" (click)="openFullScreenMap()" [ngClass]="{chatMessage: isAChatMessage, isMine: isMine}" [class]="color">
   <div [id]="idPrefix+id" class="map-wrapper"></div>
+  <ion-footer *ngIf="isAChatMessage" mode="md" class="ion-no-margin">
+    <ion-toolbar>
+      <div class="ion-padding">{{address}}</div>
+    </ion-toolbar>
+  </ion-footer>
 </ion-card>
