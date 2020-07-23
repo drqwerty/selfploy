@@ -481,6 +481,7 @@ export class DataService {
     }
 
     messages.forEach(message => this.conversations[conversation.id].messages[message.id] = message);
+    this.storage.saveConversations(this.conversations);
 
     console.log(this.conversations);
     this.newMessageSubject.next(conversation.id);
@@ -488,6 +489,13 @@ export class DataService {
 
 
   async observeMyConversations() {
+
+    this.conversations = await this.storage.getConversations();
+    Object.values(this.conversations)
+      .forEach(conversation => Object.values(conversation.messages)
+        .forEach(message => message.timestamp = moment(message.timestamp))
+      )
+
     const { id: uid } = await this.getMyProfile();
     (await this.firestore.getMyConversationListObserver(uid))
       .subscribe(conversationList => {

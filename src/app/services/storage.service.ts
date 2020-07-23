@@ -118,6 +118,16 @@ export class StorageService {
   }
 
 
+  async saveConversations(conversations) {
+    return this.saveData(dbKeys.conversations, conversations);
+  }
+
+
+  getConversations() {
+    return this.getData(dbKeys.conversations);
+  }
+
+
   /* user config */
 
   async createUserConfig() {

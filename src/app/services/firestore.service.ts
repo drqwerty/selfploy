@@ -407,7 +407,7 @@ export class FirestoreService {
             const id = payload.doc.id;
             const data = <Message>payload.doc.data();
             data.fromMe = data.senderUid == uid;
-            data.timestamp = (payload.doc.metadata.hasPendingWrites)
+            data.timestamp = payload.doc.metadata.hasPendingWrites
               ? moment()
               : moment(data.timestamp.toDate());
             if (data.isCoordinate) {
