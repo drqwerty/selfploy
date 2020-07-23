@@ -11,6 +11,7 @@ import { ObjectToArrayPipe } from 'src/app/pipes/object-to-array.pipe';
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { MapLocationModule } from '../map-location/map-location.module';
 import { MapPreviewModule } from 'src/app/components/templates/map-preview/map-preview.module';
+import { EmptyContentModule } from 'src/app/components/templates/empty-content/empty-content.module';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { MapPreviewModule } from 'src/app/components/templates/map-preview/map-p
     PipesModule,
     MapLocationModule,
     MapPreviewModule,
+    EmptyContentModule,
   ],
   declarations: [
     ConversationComponent,

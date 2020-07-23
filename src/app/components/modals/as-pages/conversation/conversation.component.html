@@ -33,44 +33,51 @@
         </ion-toolbar>
       </fiv-gallery-toolbar>
 
-      <ng-container *ngFor="let message of (messages | objectToArray); let i = index">
+      
+      <ng-container *ngIf="messages; else emptyContent">
+        <ng-container *ngFor="let message of (messages | objectToArray); let i = index">
 
-        <ion-row *ngIf="!onSameDay(i-1, i)">
-          <ion-col class="col-date" size="8">
-            <div class="date">
-              {{ formatDate(message.timestamp, 'LL') }}
-            </div>
-          </ion-col>
-        </ion-row>
-
-
-        <ion-row class="row-messages">
-
-          <ion-col class="col-message" size="9" [attr.offset]="message.fromMe ? '3': '0'">
-            <div *ngIf="message.isText" class="div-message" [class]="backgroundColor" [class.fromMe]="message.fromMe">{{ message.text }}</div>
-            <fiv-gallery-image *ngIf="message.isImage" [src]="message.url" [class]="backgroundColor" [class.fromMe]="message.fromMe"></fiv-gallery-image>
-            <map-preview 
-              *ngIf="message.isCoordinate"
-              [coordinates]="message.coordinates"
-              [id]="'message-location-' + message.id"
-              [isAChatMessage]="true"
-              [isMine]="message.fromMe"
-              [address]="message.address"
-              [color]="backgroundColor"
-            ></map-preview>
-
-          </ion-col>
-
-          <ion-col size="2" [attr.offset]="message.fromMe ? '0': '3'">
-            <div class="time">
-              {{ formatDate(message.timestamp, 'HH:mm') }}
-            </div>
-          </ion-col>
-
-        </ion-row>
+          <ion-row *ngIf="!onSameDay(i-1, i)">
+            <ion-col class="col-date" size="8">
+              <div class="date">
+                {{ formatDate(message.timestamp, 'LL') }}
+              </div>
+            </ion-col>
+          </ion-row>
 
 
+          <ion-row class="row-messages">
+
+            <ion-col class="col-message" size="9" [attr.offset]="message.fromMe ? '3': '0'">
+              <div *ngIf="message.isText" class="div-message" [class]="backgroundColor" [class.fromMe]="message.fromMe">{{ message.text }}</div>
+              <fiv-gallery-image *ngIf="message.isImage" [src]="message.url" [class]="backgroundColor" [class.fromMe]="message.fromMe"></fiv-gallery-image>
+              <map-preview 
+                *ngIf="message.isCoordinate"
+                [coordinates]="message.coordinates"
+                [id]="'message-location-' + message.id"
+                [isAChatMessage]="true"
+                [isMine]="message.fromMe"
+                [address]="message.address"
+                [color]="backgroundColor"
+              ></map-preview>
+
+            </ion-col>
+
+            <ion-col size="2" [attr.offset]="message.fromMe ? '0': '3'">
+              <div class="time">
+                {{ formatDate(message.timestamp, 'HH:mm') }}
+              </div>
+            </ion-col>
+
+          </ion-row>
+
+
+        </ng-container>
       </ng-container>
+
+      <ng-template #emptyContent>
+        <empty-content image="conversation-empty" text="Solo tú puedes iniciar la conversación, ¡adelante!"></empty-content>
+      </ng-template>
 
       <fiv-gallery-toolbar position="bottom">
         <ion-toolbar color="transparent">

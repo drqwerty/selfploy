@@ -106,7 +106,19 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   subscribeNewMessages() {
     this.data.newMessageSubject
       .pipe(untilDestroyed(this))
-      .subscribe(conversationId => {
+      .subscribe(async conversationId => {
+
+        if (!this.conversation) {
+          await new Promise(resolve => {
+            const a = setInterval(() => {
+              if (this.conversation) {
+                clearInterval(a);
+                resolve();
+              }
+            }, 250)
+          })
+        }
+
         if (conversationId === this.conversation.id && Object.values(this.messages).slice(-1)[0].isImage) {
           setTimeout(() => {
             this.fivGallery.updateImagesIndex();
