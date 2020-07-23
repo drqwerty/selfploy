@@ -9,5 +9,10 @@
       <h2 class="font-weight-500">{{conversation.anotherUser.name}}</h2>
       <p>{{getLastMessage(conversation.messages)}}</p>
     </ion-label>
+    <ion-label slot="end" class="message-info">
+      <!-- <h3>4</h3> -->
+      <p>{{getLastTimestamp(conversation.messages)}}</p>
+    </ion-label>
   </ion-item>
+
 </ion-list>

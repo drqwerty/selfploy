@@ -2,11 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Conversation, Message } from 'src/app/models/conversation-model';
 import { DataService } from 'src/app/providers/data.service';
 import { Request } from 'src/app/models/request-model';
-import { Moment } from 'moment';
 import { ModalController } from '@ionic/angular';
 import { ConversationComponent } from '../../modals/as-pages/conversation/conversation.component';
 import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
-import { last } from 'lodash';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'conversation-list',
@@ -34,9 +34,24 @@ export class ConversationListComponent implements OnInit {
 
   getLastMessage(messages: { [id: string]: Message }) {
     const lastMessage = Object.values(messages).sort((a, b) => (<Moment>a.timestamp).isAfter(b.timestamp) ? -1 : 1)[0];
-    return lastMessage.isImage
-      ? '📷 Foto'
-      : lastMessage.text;
+
+    if (lastMessage.isText)       return lastMessage.text
+    if (lastMessage.isImage)      return '📷 Foto'
+    if (lastMessage.isCoordinate) return '📍 ' + lastMessage.address
+  }
+
+
+  getLastTimestamp(messages: { [id: string]: Message }) {
+    const { timestamp } = Object.values(messages).sort((a, b) => (<Moment>a.timestamp).isAfter(b.timestamp) ? -1 : 1)[0];
+
+    const today        = moment(moment().format('L'), 'DD/MM/YYYY');
+    const timestampDay = moment((<Moment>timestamp).format('L'), 'DD/MM/YYYY');
+
+    return today.isSame(timestampDay, 'day')
+      ? (<Moment>timestamp).format('LT')
+      : today.diff(timestampDay, 'days') == 1
+        ? 'Ayer'
+        : (<Moment>timestamp).format('L');
   }
 
 
