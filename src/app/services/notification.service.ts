@@ -73,7 +73,22 @@ export class NotificationService {
     // Method called when tapping on a notification
     PushNotifications.addListener('pushNotificationActionPerformed',
       (notification: PushNotificationActionPerformed) => {
-        alert('Push action performed: ' + JSON.stringify(notification));
+
+        const { data } = notification.notification;
+
+        console.log(data)
+
+        switch (data.notification_type) {
+          case this.CHANNELS.request.id:
+            this.openRequestInfoSubject.next(data.request_id);
+            break;
+  
+          case this.CHANNELS.message.id:
+            this.openConversationSubject.next({ requestId: data.request_id, conversationId: data.conversation_id });
+            break;
+        }
+
+        // alert('Push action performed: ' + JSON.stringify(notification));
       }
     );
   }

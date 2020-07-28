@@ -1,4 +1,4 @@
-import { Component, ViewChild, } from '@angular/core';
+import { Component, } from '@angular/core';
 import { Platform, ModalController } from '@ionic/angular';
 import { playLoginAnimation } from "../../animations/log-in-out-transition";
 
@@ -10,6 +10,8 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { takeUntil } from 'rxjs/operators';
 import { RequestInfoComponent } from 'src/app/components/modals/as-pages/request-info/request-info.component';
 import { ConversationComponent } from 'src/app/components/modals/as-pages/conversation/conversation.component';
+import { Request } from 'src/app/models/request-model';
+import { Conversation } from 'src/app/models/conversation-model';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -64,37 +66,71 @@ export class TabsPage {
       .pipe(takeUntil(this.data.userLogout))
       .subscribe(async requestId => {
 
-        const request = await this.data.getRequest(requestId);
+        let request: Request = await this.data.getRequest(requestId);
 
         if (request) {
-          const modal = await this.modalController.create({
-            component: RequestInfoComponent,
-            componentProps: { request }
-          });
+          this.openRequest(request);
 
-          await modal.present();
+        } else {
+          let i = 1;
+          const interval = setInterval(async () => {
+            request = await this.data.getRequest(requestId);
+            if (request || i > 5) {
+              clearInterval(interval);
+              this.openRequest(request);
+            }
+            i++;
+          }, 250);
         }
+
       });
 
 
     this.notifications.openConversationSubject
       .pipe(takeUntil(this.data.userLogout))
-      .subscribe(async ({ conversationId, requestId }) => {
+      .subscribe(async ({ conversationId }) => {
 
-        const conversation = this.data.getConversationFromId(conversationId);
-
+        let conversation: Conversation = this.data.getConversationFromId(conversationId);
+        
         if (conversation) {
-          const modal = await this.modalController.create({
-            component: ConversationComponent,
-            componentProps: {
-              requestId,
-              partnerId: conversation.anotherUser.id
-            }
-          });
+          this.openConversation(conversation)
 
-          await modal.present();
+        } else {
+          let i = 1;
+          const interval = setInterval(async () => {
+            conversation = this.data.getConversationFromId(conversationId);
+            if (conversation || i > 5) {
+              clearInterval(interval);
+              this.openConversation(conversation);
+            }
+            i++;
+          }, 250);
         }
+
       });
+  }
+
+
+  async openRequest(request: Request) {
+    const modal = await this.modalController.create({
+      component: RequestInfoComponent,
+      componentProps: { request }
+    });
+
+    await modal.present();
+  }
+
+
+  async openConversation(conversation: Conversation) {
+    const modal = await this.modalController.create({
+      component: ConversationComponent,
+      componentProps: {
+        requestId: conversation.request,
+        partnerId: conversation.anotherUser.id
+      }
+    });
+
+    await modal.present();
   }
 
 
