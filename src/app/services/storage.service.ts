@@ -53,7 +53,7 @@ export class StorageService {
 
 
   removeUserProfile() {
-    return this.removeKeys(dbKeys.user, dbKeys.favorites, dbKeys.requests, dbKeys.requestsFollowing, dbKeys.userConfig);
+    return Storage.clear();
   }
 
 

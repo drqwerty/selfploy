@@ -4,8 +4,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Plugins, PushNotification, PushNotificationToken, PushNotificationActionPerformed, Capacitor } from '@capacitor/core';
 import { environment } from 'src/environments/environment';
 import { ToastController } from '@ionic/angular';
-import { Request } from 'src/app/models/request-model';
 import { Subject } from 'rxjs';
+import { DataService } from '../providers/data.service';
 const { PushNotifications } = Plugins;
 
 @Injectable({
@@ -13,12 +13,13 @@ const { PushNotifications } = Plugins;
 })
 export class NotificationService {
 
-  readonly REQUEST_CHANNEL_ID = 'selfploy.request';
-  readonly REQUEST_CHANNEL_NAME = 'Encargos';
-  readonly CHAT_CHANNEL_ID = 'selfploy.message';
-  readonly CHAT_CHANNEL_NAME = 'Mensajes';
+  readonly CHANNELS = {
+    request: { id: 'selfploy.request', name: 'Encargos' },
+    message: { id: 'selfploy.message', name: 'Mensajes' },
+  }
 
-  openRequestInfoSubject = new Subject<string>();
+  openRequestInfoSubject  = new Subject<string>();
+  openConversationSubject = new Subject<{ requestId: string, conversationId: string }>();
 
   constructor(
     private httpClient: HttpClient,
@@ -46,10 +47,12 @@ export class NotificationService {
         // alert('Push registration success, token: ' + token.value);
         console.log('Push registration success, token: ' + token.value);
 
-        PushNotifications.createChannel({
-          id: this.REQUEST_CHANNEL_ID,
-          name: this.REQUEST_CHANNEL_NAME,
-          importance: 5
+        Object.values(this.CHANNELS).forEach(channel => {
+          PushNotifications.createChannel({
+            importance : 5,
+            name       : channel.name,
+            id         : channel.id,
+          });
         })
 
         resolve(token.value);
@@ -76,19 +79,44 @@ export class NotificationService {
   }
 
 
-  send(title: string, body: string, fcmtokens: string[], requestId: string) {
+  sendRequestNotification(title: string, body: string, fcmtokens: string[], requestId: string) {
     const postData = {
       registration_ids: fcmtokens,
       notification: {
         title,
         body,
-        android_channel_id: this.REQUEST_CHANNEL_ID,
+        android_channel_id: this.CHANNELS.request.id,
       },
       data: {
-        request_id: requestId
+        request_id: requestId,
+        notification_type: this.CHANNELS.request.id
       },
     }
 
+    this.send(postData);
+  }
+
+
+  sendMessageNotification(title: string, body: string, fcmtoken: string, requestId: string, conversationId: string) {
+    const postData = {
+      to: fcmtoken,
+      notification: {
+        title,
+        body,
+        android_channel_id: this.CHANNELS.message.id,
+      },
+      data: {
+        request_id: requestId,
+        conversation_id: conversationId,
+        notification_type: this.CHANNELS.message.id
+      },
+    }
+
+    this.send(postData);
+  }
+
+
+  send(postData: any) {
     var headers = new HttpHeaders({
       'Authorization': `key=${environment.fcmAuthToken}`,
       'Content-Type': 'application/json'
@@ -105,6 +133,8 @@ export class NotificationService {
   async createLocalNotification(notification: PushNotification) {
 
     (await this.toastController.getTop())?.dismiss();
+
+    if (this.notificationFromCurrentConversation(notification)) return;
 
     const toast = await this.toastController.create({
       // duration: 5000,
@@ -125,11 +155,27 @@ export class NotificationService {
 
     toast.addEventListener('click', () => {
       toast.dismiss();
-      this.openRequestInfoSubject.next(notification.data.request_id);
+      const { data } = notification;
+
+      switch (data.notification_type) {
+        case this.CHANNELS.request.id:
+          this.openRequestInfoSubject.next(data.request_id);
+          break;
+
+        case this.CHANNELS.message.id:
+          this.openConversationSubject.next({ requestId: data.request_id, conversationId: data.conversation_id });
+          break;
+      }
     })
 
     toast.shadowRoot.querySelector('button').addEventListener('click', event => event.stopPropagation());
     toast.present();
+  }
+
+
+  notificationFromCurrentConversation({ data }) {
+    return (data.notification_type === this.CHANNELS.message.id
+      && data.conversation_id === DataService.conversationOpenedList[0]) 
   }
 
 }

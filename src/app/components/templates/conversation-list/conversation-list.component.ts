@@ -35,9 +35,9 @@ export class ConversationListComponent implements OnInit {
   getLastMessage(messages: { [id: string]: Message }) {
     const lastMessage = Object.values(messages).sort((a, b) => (<Moment>a.timestamp).isAfter(b.timestamp) ? -1 : 1)[0];
 
-    if (lastMessage.isText)       return lastMessage.text
-    if (lastMessage.isImage)      return '📷 Foto'
-    if (lastMessage.isCoordinate) return '📍 ' + lastMessage.address
+    if (lastMessage.isText)       return lastMessage.text;
+    if (lastMessage.isImage)      return '📷 Foto';
+    if (lastMessage.isCoordinate) return '📍 ' + lastMessage.address;
   }
 
 

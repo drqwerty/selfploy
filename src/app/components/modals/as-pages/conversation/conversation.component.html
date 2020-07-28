@@ -103,7 +103,7 @@
         </ion-textarea>
       </ion-col>
       <ion-col size="1.4" class="col-button">
-        <ion-button @button fill="clear" *ngIf="newMessage.length" (click)="sendMessage()" [color]="backgroundColor">
+        <ion-button @button fill="clear" *ngIf="newMessage.length" (click)="sendText()" [color]="backgroundColor">
           <ion-icon slot="icon-only" name="send"></ion-icon>
         </ion-button>
       </ion-col>

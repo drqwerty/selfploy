@@ -4,17 +4,17 @@ import { TabBarState } from 'src/app/animations/tab-bar-transition'
 import { StorageService } from 'src/app/services/storage.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
-import Utils from 'src/app/utils';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { Request, RequestStatus } from 'src/app/models/request-model';
-import { map, takeWhile, filter, retry, takeUntil } from 'rxjs/operators';
+import { map, takeWhile, filter, takeUntil } from 'rxjs/operators';
 import { Action, DocumentSnapshot } from '@angular/fire/firestore';
-import * as moment from 'moment';
 import { NotificationService } from '../services/notification.service';
-import * as diff from 'changeset';
 import { dbKeys } from '../models/db-keys';
 import { Conversation, Message, ConversationProperties } from '../models/conversation-model';
 import { LatLng } from 'leaflet';
+import Utils from 'src/app/utils';
+import * as moment from 'moment';
+import * as diff from 'changeset';
 
 @Injectable({
   providedIn: 'root'
@@ -22,27 +22,28 @@ import { LatLng } from 'leaflet';
 export class DataService {
 
   static tabBarState: TabBarState;
+  static conversationOpenedList      : string[] = [];
 
-  public userLogout = new Subject<void>();
-
-  public user: User;
-  public favorites: User[];
-  public myRequestList: Request[];
-  public followingRequestList: Request[];
-  public conversations: { [id: string]: Conversation } = {};
-  public newMessageSubject = new Subject<string>();
-  private followingRequestsSubscription: { [id: string]: Subscription } = {};
-  public favoritesChangedSubject = new Subject<void>();
-  public myRequestListChangedSubject = new Subject<void>();
-  public followingRequestListChangedSubject = new Subject<void>();
-  public userConfigChangedSubject = new Subject<UserConfig>();
-  public userConfig: UserConfig;
+  
+  user                               : User;
+  favorites                          : User[];
+  myRequestList                      : Request[];
+  followingRequestList               : Request[];
+  conversations                      : { [id: string]: Conversation } = {};
+  followingRequestsSubscription      : { [id: string]: Subscription } = {};
+  userConfig                         : UserConfig;
+  userLogout                         = new Subject<void>();
+  newMessageSubject                  = new Subject<string>();
+  favoritesChangedSubject            = new Subject<void>();
+  myRequestListChangedSubject        = new Subject<void>();
+  followingRequestListChangedSubject = new Subject<void>();
+  userConfigChangedSubject           = new Subject<UserConfig>();
 
   constructor(
-    private storage: StorageService,
-    private fStorage: FirebaseStorage,
-    private firestore: FirestoreService,
-    private notifications: NotificationService,
+    private storage       : StorageService,
+    private fStorage      : FirebaseStorage,
+    private firestore     : FirestoreService,
+    private notifications : NotificationService,
   ) { }
 
 
@@ -451,13 +452,13 @@ export class DataService {
   /* conversations */
 
 
-  async sendMessage(requestId: string, partnerId: string, conversationId: string, message: string) {
-    await this.firestore.sendMessage({ requestId, partnerId, conversationId, content: message, type: ConversationProperties.isText });
+  sendText(requestId: string, partnerId: string, conversationId: string, message: string) {
+    return this.sendMessage({ requestId, partnerId, conversationId, content: message, type: ConversationProperties.isText });
   }
 
 
-  async sendLocation(requestId: string, partnerId: string, conversationId: string, address: string, coordinates: LatLng) {
-    await this.firestore.sendMessage({ requestId, partnerId, conversationId, address, coordinates, type: ConversationProperties.isCoordinate })
+  sendLocation(requestId: string, partnerId: string, conversationId: string, address: string, coordinates: LatLng) {
+    return this.sendMessage({ requestId, partnerId, conversationId, address, coordinates, type: ConversationProperties.isCoordinate })
   }
 
 
@@ -469,7 +470,36 @@ export class DataService {
     }
 
     const url = await this.fStorage.uploadImageToConversation(imageBase64, conversationId);
-    await this.firestore.sendMessage({ requestId, partnerId, conversationId, content: url, type: ConversationProperties.isImage });
+    return this.sendMessage({ requestId, partnerId, conversationId, content: url, type: ConversationProperties.isImage });
+  }
+
+
+  async sendMessage(options:
+    {
+      requestId      : string,
+      partnerId      : string,
+      conversationId : string,
+      content?       : string,
+      address?       : string,
+      coordinates?   : LatLng,
+      type           : ConversationProperties.isText | ConversationProperties.isImage | ConversationProperties.isCoordinate,
+    },) {
+    await this.firestore.sendMessage(options);
+
+    let message: string;
+    switch (options.type) {
+      case ConversationProperties.isText:
+        message = options.content;
+        break;
+      case ConversationProperties.isImage:
+        message = '📷 Foto';
+        break;
+      case ConversationProperties.isCoordinate:
+        message = '📍 ' + options.address;
+        break;
+    }
+
+    await this.sendMessageNotification(options.partnerId, message, options.requestId, options.conversationId)
   }
 
 
@@ -490,8 +520,9 @@ export class DataService {
 
   async observeMyConversations() {
 
-    this.conversations = await this.storage.getConversations();
-    Object.values(this.conversations)
+    this.conversations = await this.storage.getConversations() ?? {};
+    Object.
+      values(this.conversations)
       .forEach(conversation => Object.values(conversation.messages)
         .forEach(message => message.timestamp = moment(message.timestamp))
       )
@@ -528,6 +559,13 @@ export class DataService {
   }
 
 
+  getConversationFromId(conversationId: string) {
+    return Object
+      .values(this.conversations)
+      .find(({ id }) => id === conversationId);
+  }
+
+
   /* notifications */
 
 
@@ -553,11 +591,32 @@ export class DataService {
   async sendRequestNotifications(requestData: { id: string; path: string; requestSaved: Request; }) {
     const { category, service, coordinates } = requestData.requestSaved;
     const { name: ownersName } = await this.getMyProfile();
-    const professionalList = await this.firestore.findProfessionalOf(category, service, coordinates);
+    const professionalList     = await this.firestore.findProfessionalOf(category, service, coordinates);
 
-    console.log(professionalList);
+    const { fcmTokenList, professionalIdList } = this.filterProfesionalList(professionalList, requestData)
 
-    let filteredProfessionalList = professionalList
+    this.firestore.addRequestToFollowingUsersList(professionalIdList, { id: requestData.id, path: requestData.path });
+    
+    if (fcmTokenList.length) {
+      this.notifications.sendRequestNotification(
+        'Nuevo trabajo disponible',
+        `${ownersName} necesita un servicio de ${requestData.requestSaved.service}`,
+        fcmTokenList,
+        requestData.id,
+      );
+    }
+  }
+
+
+  async sendMessageNotification(userId: string, message: string, requestId: string, conversationId: string) {
+    const { name } = await this.getMyProfile();
+    const { fcmToken } = await this.getUserProfile(userId);
+    this.notifications.sendMessageNotification(name, message, fcmToken, requestId, conversationId);
+  }
+
+
+  private filterProfesionalList(list: User[], requestData) {
+    let filteredProfessionalList = list
       .filter(user => user.fcmToken)
       .filter(user => user.distance <= user.radiusKm);
 
@@ -571,21 +630,7 @@ export class DataService {
     const professionalIdList = filteredProfessionalList
       .map(professional => professional.id);
 
-    this.firestore.addRequestToFollowingUsersList(professionalIdList, { id: requestData.id, path: requestData.path });
-
-    console.log(fcmTokenList);
-
-    this.sendNotifications(
-      'Nuevo trabajo disponible',
-      `${ownersName} necesita un servicio de ${requestData.requestSaved.service}`,
-      fcmTokenList,
-      requestData.id,
-    );
-  }
-
-
-  async sendNotifications(title, body, fcmTokenList, requestId) {
-    if (fcmTokenList.length) this.notifications.send(title, body, fcmTokenList, requestId);
+    return {fcmTokenList, professionalIdList};
   }
 
 

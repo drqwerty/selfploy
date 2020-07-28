@@ -98,6 +98,11 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   }
 
 
+  ionViewWillLeave() {
+    if (this.conversation?.id) DataService.conversationOpenedList.shift();
+  }
+
+
   scrollToBottom() {
     if (!this.touching && this.nearToBottom) this.ionContentO.scrollToBottom();
   }
@@ -134,6 +139,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   getMessages() {
     this.conversation = this.data.getConversation(this.requestId, this.partnerId);
     this.messages = this.conversation?.messages;
+    if (this.conversation?.id) DataService.conversationOpenedList.unshift(this.conversation.id);
   }
 
 
@@ -200,10 +206,10 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   }
 
 
-  async sendMessage() {
+  async sendText() {
     const message = this.newMessage;
     this.newMessage = '';
-    const promise = this.data.sendMessage(this.requestId, this.partnerId, this.conversation?.id, message);
+    const promise = this.data.sendText(this.requestId, this.partnerId, this.conversation?.id, message);
     setTimeout(() => this.ionContentO.scrollToBottom(), 50);
 
     await promise;

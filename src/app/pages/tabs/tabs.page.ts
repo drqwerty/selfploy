@@ -9,6 +9,7 @@ import { DataService } from 'src/app/providers/data.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { takeUntil } from 'rxjs/operators';
 import { RequestInfoComponent } from 'src/app/components/modals/as-pages/request-info/request-info.component';
+import { ConversationComponent } from 'src/app/components/modals/as-pages/conversation/conversation.component';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -54,16 +55,41 @@ export class TabsPage {
     }, 500);
     this.data.saveFCMToken();
 
-    notifications.openRequestInfoSubject
-      .pipe(takeUntil(data.userLogout))
+    this.suscribeNotifications();
+  }
+
+
+  suscribeNotifications() {
+    this.notifications.openRequestInfoSubject
+      .pipe(takeUntil(this.data.userLogout))
       .subscribe(async requestId => {
 
-        const request = await data.getRequest(requestId);
+        const request = await this.data.getRequest(requestId);
 
         if (request) {
           const modal = await this.modalController.create({
             component: RequestInfoComponent,
             componentProps: { request }
+          });
+
+          await modal.present();
+        }
+      });
+
+
+    this.notifications.openConversationSubject
+      .pipe(takeUntil(this.data.userLogout))
+      .subscribe(async ({ conversationId, requestId }) => {
+
+        const conversation = this.data.getConversationFromId(conversationId);
+
+        if (conversation) {
+          const modal = await this.modalController.create({
+            component: ConversationComponent,
+            componentProps: {
+              requestId,
+              partnerId: conversation.anotherUser.id
+            }
           });
 
           await modal.present();

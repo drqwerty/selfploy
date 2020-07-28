@@ -8,7 +8,6 @@ import { Plugins } from '@capacitor/core';
 const { StatusBar, SplashScreen, Keyboard, StatusBarPlugin } = Plugins;
 import * as moment from 'moment';
 import 'moment/locale/es';
-import { NotificationService } from './services/notification.service';
 
 @Component({
   selector: 'app-root',
