@@ -1,0 +1,20 @@
+<div class="nav-bar-space" *ngIf="pageLoaded" [class.limit-height]="!professionals">
+
+  <ng-template *ngIf="professionals then showContent; else demo"></ng-template>
+  <ng-template #demo>
+    <professional-card *ngFor="let i of [].constructor(4)"></professional-card>
+  </ng-template>
+
+  <ng-template #showContent>
+    <ng-template *ngIf="professionals.length then professionalList; else emptyContent"></ng-template>
+
+    <ng-template #emptyContent>
+      <empty-content image="no-professionals" text="Parece que no hay nadie por aquí..."></empty-content>
+    </ng-template>
+
+    <ng-template #professionalList>
+      <professional-card *ngFor="let professional of professionals" [user]="professional"></professional-card>
+    </ng-template>
+  </ng-template>
+
+</div>

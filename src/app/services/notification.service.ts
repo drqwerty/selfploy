@@ -18,6 +18,7 @@ export class NotificationService {
     message: { id: 'selfploy.message', name: 'Mensajes' },
   }
 
+  conversationOpenedList  : string[]; 
   openRequestInfoSubject  = new Subject<string>();
   openConversationSubject = new Subject<{ requestId: string, conversationId: string }>();
 
@@ -190,7 +191,7 @@ export class NotificationService {
 
   notificationFromCurrentConversation({ data }) {
     return (data.notification_type === this.CHANNELS.message.id
-      && data.conversation_id === DataService.conversationOpenedList[0]) 
+      && data.conversation_id === this.conversationOpenedList[0]) 
   }
 
 }

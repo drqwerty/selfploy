@@ -1,11 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
-import { User } from 'src/app/models/user-model';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/service-filter/service-filter.component';
 import { Animations } from 'src/app/animations/animations';
-import { DataService } from 'src/app/providers/data.service';
+import { ProfessionalListComponent } from 'src/app/components/templates/professional-list/professional-list.component';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -16,19 +15,17 @@ const { StatusBar } = Plugins;
 export class ProfessionalListPage {
 
   @ViewChild('filterButton') filterButton: any;
+  @ViewChild(ProfessionalListComponent) professionalList: ProfessionalListComponent;
 
-  professionals: User[];
 
   serviceName: string;
   categoryName: string;
 
-  pageLoaded = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private navController: NavController,
-    private data: DataService,
     private modalController: ModalController,
     private animations: Animations,
   ) {
@@ -36,25 +33,19 @@ export class ProfessionalListPage {
       if (this.router.getCurrentNavigation().extras.state) {
         this.serviceName = this.router.getCurrentNavigation().extras.state?.serviceName;
         this.categoryName = this.router.getCurrentNavigation().extras.state?.categoryName;
-        this.getProfessionals();
       }
     });
   }
-
-
-  async getProfessionals() {
-    this.professionals = await this.data.findProfessionalOf(this.categoryName, this.serviceName);
-    console.table(this.professionals);
-  }
-
-
+  
+  
   ionViewWillEnter() {
+    this.professionalList?.getProfessionals(this.serviceName, this.categoryName);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
 
   ionViewDidEnter() {
-    this.pageLoaded = true;
+    this.professionalList.pageLoaded = true;
   }
 
 

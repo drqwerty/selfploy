@@ -44,7 +44,9 @@ export class DataService {
     private fStorage      : FirebaseStorage,
     private firestore     : FirestoreService,
     private notifications : NotificationService,
-  ) { }
+  ) { 
+    notifications.conversationOpenedList = DataService.conversationOpenedList;
+  }
 
 
   /* user */
