@@ -1,8 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { Animations } from 'src/app/animations/animations';
-import { ModalController, IonRange } from '@ionic/angular';
-import { FilterDefaultValues, Filters } from 'src/assets/filters'
+import { ModalController } from '@ionic/angular';
+import { FilterDefaultValues, Filters, Order } from 'src/assets/filters'
 import { CustomRangeComponent } from 'src/app/components/utils/custom-range/custom-range.component';
+import { WorkingHours } from 'src/app/models/user-model';
 
 @Component({
   selector: 'app-service-filter',
@@ -11,9 +12,12 @@ import { CustomRangeComponent } from 'src/app/components/utils/custom-range/cust
 })
 export class ServiceFilterComponent {
 
+  @Input() filterValues: Filters;
+
+
   @ViewChild(CustomRangeComponent) customRange: CustomRangeComponent;
 
-  filterValues: Filters = JSON.parse(JSON.stringify(FilterDefaultValues));
+  resetFilters = true;
 
   constructor(
     private animations: Animations,
@@ -38,32 +42,69 @@ export class ServiceFilterComponent {
   }
 
 
+  async apply() {
+    await this.animations.startReverseAnimation();
+    this.modalController.dismiss({
+      filterValues: this.filterValues,
+      resetFilters: this.resetFilters,
+    });
+  }
+
+
   rangeChange() {
-    // console.log(this.filterValues.distance.value);
+    console.log(this.filterValues.distance.value);
+    
+    this.resetFilters = false;
   }
 
 
-  orderByName() {
+  setOrder(option: { name: Order, checked: boolean }) {
+    const { value, options } = this.filterValues.order;
 
+    if (option.checked) {
+      value.ascendent = !value.ascendent;
+    } else {
+      options.find(({ checked }) => checked).checked = false;
+      option.checked = true;
+      value.ascendent = true;
+      value.order = option.name;
+    }
+    this.resetFilters = false;
   }
 
 
-  filterByClassification() {
+  filterByClassification(option: { name: string, value: number, checked: boolean }) {
+    const { classification } = this.filterValues;
 
+    if (!option.checked) {
+      classification.options.find(({ checked }) => checked).checked = false;
+      option.checked = true;
+      classification.value = option.value;
+    }
+    this.resetFilters = false;
   }
 
 
-  filterByWorkingHours() {
+  filterByWorkingHours(option: { name: WorkingHours, checked: boolean }) {
+    const { value } = this.filterValues.workingHours;
 
-  }
+    option.checked = !option.checked;
 
-
-  apply() {
-
+    if (option.checked) {
+      value.push(option.name)
+    } else {
+      const index = this.filterValues.workingHours.value.findIndex(s => s === option.name);
+      if (index > -1) value.splice(index, 1);
+    }
+    this.resetFilters = false;
   }
 
 
   restartFilters() {
-
+    this.filterValues = JSON.parse(JSON.stringify(FilterDefaultValues));
+    this.customRange.setValue(30);
+    setTimeout(() => {
+      this.resetFilters = true;
+    });
   }
 }

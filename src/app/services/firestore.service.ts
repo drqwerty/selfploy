@@ -21,6 +21,8 @@ const { GeoPoint, Timestamp } = firestore;
 })
 export class FirestoreService {
 
+  readonly DEFAULT_RADIUS = 30;
+
   private prodMode = true;
 
   geofirestore: GeoFirestore;
@@ -111,7 +113,7 @@ export class FirestoreService {
 
     const query = await this.geofirestore
       .collection(dbKeys.users)
-      .near({ center: new firestore.GeoPoint(coordinates.lat, coordinates.lng), radius: 1000 }) // 1000 km
+      .near({ center: new firestore.GeoPoint(coordinates.lat, coordinates.lng), radius: this.DEFAULT_RADIUS })
       .where(`${UserProperties.services}.${categoryName}`, 'array-contains', serviceName)
       .where(UserProperties.professionalProfileActivated, '==', true)
       .get()
@@ -127,7 +129,7 @@ export class FirestoreService {
 
     let query = await this.geofirestore
       .collection(dbKeys.users)
-      .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: 1000 }) // 1000 km
+      .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: this.DEFAULT_RADIUS })
       .where(UserProperties.name_splited, 'array-contains', Utils.normalize(userName))
       .get()
       .then(value => this.translateCoordinatesAndSortByDistance(value));

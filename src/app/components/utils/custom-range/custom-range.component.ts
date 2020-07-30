@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild, Output, EventEmitter, ElementRef } from '@angular/core';
 import { IonRange } from '@ionic/angular';
 
 @Component({
@@ -16,7 +16,8 @@ export class CustomRangeComponent {
   @Output() valueChange = new EventEmitter<number>();
 
 
-  @ViewChild(IonRange) ionRange: any;
+  @ViewChild(IonRange) ionRange: IonRange;
+  @ViewChild(IonRange, { read: ElementRef }) ionRangeEl: ElementRef;
 
   constructor() { }
 
@@ -27,9 +28,9 @@ export class CustomRangeComponent {
 
 
   setPinText() {
-    const rangeSlider = this.ionRange.el.shadowRoot.querySelector('.range-slider') as HTMLElement;
+    const rangeSlider = this.ionRangeEl.nativeElement.shadowRoot.querySelector('.range-slider') as HTMLElement;
     const rangeSliderRect = rangeSlider.getBoundingClientRect();
-    const rangePing = this.ionRange.el.shadowRoot.querySelector('.range-pin') as HTMLElement;
+    const rangePing = this.ionRangeEl.nativeElement.shadowRoot.querySelector('.range-pin') as HTMLElement;
     rangePing.style.whiteSpace = 'nowrap';
 
     if (this.pinPinned) rangePing.style.transform = "none";
@@ -46,6 +47,12 @@ export class CustomRangeComponent {
 
     rangeSlider.addEventListener('pointerdown', ev => setContent(ev));
     rangeSlider.addEventListener('pointermove', ev => setContent(ev));
+  }
+
+
+  setValue(value: number) {
+    this.ionRange.value = value;
+    (this.ionRangeEl.nativeElement.shadowRoot.querySelector('.range-pin') as HTMLElement).textContent = value + ' km';
   }
 
 }

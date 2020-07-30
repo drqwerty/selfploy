@@ -5,6 +5,7 @@ import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/service-filter/service-filter.component';
 import { Animations } from 'src/app/animations/animations';
 import { ProfessionalListComponent } from 'src/app/components/templates/professional-list/professional-list.component';
+import { Filters, FilterDefaultValues } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/filters';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -17,6 +18,7 @@ export class ProfessionalListPage {
   @ViewChild('filterButton') filterButton: any;
   @ViewChild(ProfessionalListComponent) professionalList: ProfessionalListComponent;
 
+  filterValues: Filters = JSON.parse(JSON.stringify(FilterDefaultValues));
 
   serviceName: string;
   categoryName: string;
@@ -36,8 +38,8 @@ export class ProfessionalListPage {
       }
     });
   }
-  
-  
+
+
   ionViewWillEnter() {
     this.professionalList?.getProfessionals(this.serviceName, this.categoryName);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
@@ -58,10 +60,17 @@ export class ProfessionalListPage {
     const modal = await this.modalController.create({
       component: ServiceFilterComponent,
       animated: false,
-      componentProps: { data: 'example' }
+      componentProps: {
+        filterValues: JSON.parse(JSON.stringify(this.filterValues))
+      }
     });
 
     await this.animations.addElement(this.filterButton.el, '#fff').startAnimation();
+
+    modal.onWillDismiss().then(({ data }) => {
+      if (data) this.filterValues = data.filterValues;
+      this.professionalList.filterResults(this.filterValues, data.resetFilters);
+    })
 
     modal.present();
   }
