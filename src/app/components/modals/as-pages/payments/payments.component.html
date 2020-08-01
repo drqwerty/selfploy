@@ -1,0 +1,88 @@
+<status-bar color="#F8F8F8"></status-bar>
+
+<ion-header class="ion-no-border">
+  <ion-toolbar></ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="background-wrapper" *ngIf="paymentMade" @elementPayment>
+    <empty-content image="payment-complete" text="Pago confimado"></empty-content>
+  </div>
+
+  <ion-toolbar>
+    <ion-title color="tertiary" @element *ngIf="!paymentMade">Resumen de pago</ion-title>
+  </ion-toolbar>
+  <ion-list @element *ngIf="!paymentMade" lines="none" class="ion-padding-horizontal">
+    <ion-item lines="full">
+      <ion-label>
+        <h1>Factura #12345</h1>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <div class="relative">
+          <h2>Mano de obra</h2>
+          <ion-note color="tertiary">50 €</ion-note>
+        </div>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <div class="relative">
+          <h2>Transporte</h2>
+          <ion-note color="tertiary">150 €</ion-note>
+        </div>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label>
+        <div class="relative">
+          <h2>Materiales</h2>
+          <ion-note color="tertiary">200 €</ion-note>
+        </div>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label class="font-weight-600" color="medium">
+        <div class="relative">
+          Subtotal
+          <ion-note color="tertiary">400 €</ion-note>
+        </div>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label class="font-weight-600" color="medium">
+        <div class="relative">
+          Impuestos
+          <ion-note color="tertiary">50 €</ion-note>
+        </div>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label class="font-weight-600" color="medium">
+        <div class="relative">
+          <ion-text color="tertiary">
+            <h1>Total</h1>
+          </ion-text>
+          <ion-note color="tertiary">
+            <h1>450 €</h1>
+          </ion-note>
+        </div>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<div @elementReverse class="footer-border-radius" *ngIf="!paymentMade"></div>
+
+
+
+<ion-footer class="ion-no-border buttons-cancel-confirm">
+  <ion-toolbar color="tertiary" @elementReverse *ngIf="!paymentMade">
+    <ion-buttons slot="end" mode="ios">
+      <ion-button (click)="cancel()">Cancelar</ion-button>
+      <ion-button (click)="continue()" class="confirm-button">Realizar pago</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

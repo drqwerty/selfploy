@@ -12,6 +12,7 @@ import { RequestInfoComponent } from 'src/app/components/modals/as-pages/request
 import { ConversationComponent } from 'src/app/components/modals/as-pages/conversation/conversation.component';
 import { Request } from 'src/app/models/request-model';
 import { Conversation } from 'src/app/models/conversation-model';
+import { PaymentsComponent } from 'src/app/components/modals/as-pages/payments/payments.component';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -58,6 +59,23 @@ export class TabsPage {
     this.data.saveFCMToken();
 
     this.suscribeNotifications();
+  }
+
+
+  ionViewWillEnter() {
+    this.data.observeMyRequests();
+    this.data.observeFollowingRequests();
+    this.data.observeMyConversations();
+    this.presentModal();
+  }
+
+
+  async presentModal() {
+    const modal = await this.modalController.create({
+    component: PaymentsComponent,
+    });
+  
+    await modal.present();  
   }
 
 
@@ -131,13 +149,6 @@ export class TabsPage {
     });
 
     await modal.present();
-  }
-
-
-  ionViewWillEnter() {
-    this.data.observeMyRequests();
-    this.data.observeFollowingRequests();
-    this.data.observeMyConversations();
   }
 
 

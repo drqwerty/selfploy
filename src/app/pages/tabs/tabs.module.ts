@@ -6,6 +6,7 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 import { TabsPage } from './tabs.page';
 import { FivAppBarModule, FivFabModule, FivIconModule } from '@fivethree/core';
 import { RequestNewModule } from 'src/app/components/modals/as-pages/request-new/request-new.module';
+import { PaymentsModule } from 'src/app/components/modals/as-pages/payments/payments.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { RequestNewModule } from 'src/app/components/modals/as-pages/request-new
     FivFabModule,
     FivIconModule,
     RequestNewModule,
+    PaymentsModule,
   ],
   declarations: [
     TabsPage,
