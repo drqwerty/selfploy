@@ -15,7 +15,7 @@ const { StatusBar } = Plugins;
 export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() user: User;
-
+  @Input() selectingProfessionals = false;
 
   @ViewChild('card') card: any;
 
@@ -78,14 +78,17 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   requestService() {
-    
+    if (this.selectingProfessionals) this.user.selectedForRequest = !this.user.selectedForRequest;
   }
 
 
   async viewProfile(user: User) {
     const modal = await this.modalController.create({
       component: ProfileModalComponent,
-      componentProps: { backgroundColor: 'primary', user }
+      componentProps: { 
+        backgroundColor: 'primary', user,
+        selectingProfessionals: this.selectingProfessionals,
+       }
     });
 
     modal.onWillDismiss().then(() => {

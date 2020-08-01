@@ -15,6 +15,7 @@ import { CameraSourceActionSheetModule } from 'src/app/components/action-sheets/
 import { GalleryModule } from 'src/app/components/fiv/gallery/gallery.module';
 import { CalendarModule } from 'ion2-calendar';
 import { RequestNewActionSheetComponent } from 'src/app/components/action-sheets/request-new-action-sheet/request-new-action-sheet.component';
+import { ProfessionalListModule } from '../professional-list/professional-list.module';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { RequestNewActionSheetComponent } from 'src/app/components/action-sheets
     CameraSourceActionSheetModule,
     GalleryModule,
     CalendarModule,
+    ProfessionalListModule,
   ],
   declarations: [
     RequestNewComponent,

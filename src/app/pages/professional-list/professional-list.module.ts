@@ -9,11 +9,8 @@ import { ProfessionalListPageRoutingModule } from './professional-list-routing.m
 import { ProfessionalListPage } from './professional-list.page';
 import { StatusBarModule } from 'src/app/components/utils/status-bar/status-bar.module';
 import { CustomHeaderModule } from 'src/app/components/utils/custom-header/custom-header.module';
-import { ProfessionalCardModule } from 'src/app/components/templates/professional-card/professional-card.module';
-import { CustomRangeModule } from 'src/app/components/utils/custom-range/custom-range.module';
-import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/service-filter/service-filter.component';
-import UpperCaseFirstLetterModule from 'src/app/directives/uppercase-first-letter.module';
-import { ProfessionalListModule } from 'src/app/components/templates/professional-list/professional-list.module';
+import { ServiceFilterModule } from 'src/app/components/modals/as-pages/service-filter/service-filter.module';
+import { ProfessionalListTemplateModule } from 'src/app/components/templates/professional-list-template/professional-list-template.module';
 
 @NgModule({
   imports: [
@@ -23,14 +20,11 @@ import { ProfessionalListModule } from 'src/app/components/templates/professiona
     ProfessionalListPageRoutingModule,
     StatusBarModule,
     CustomHeaderModule,
-    ProfessionalCardModule,
-    CustomRangeModule,
-    UpperCaseFirstLetterModule,
-    ProfessionalListModule,
+    ProfessionalListTemplateModule,
+    ServiceFilterModule,
   ],
   declarations: [
     ProfessionalListPage,
-    ServiceFilterComponent,
   ]
 })
 export class ProfessionalListPageModule {}

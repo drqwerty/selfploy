@@ -590,22 +590,38 @@ export class DataService {
   }
 
 
-  async sendRequestNotifications(requestData: { id: string; path: string; requestSaved: Request; }) {
+  async sendMassiveRequestNotifications(requestData: { id: string; path: string; requestSaved: Request; }) {
     const { category, service, coordinates } = requestData.requestSaved;
     const { name: ownersName } = await this.getMyProfile();
     const professionalList     = await this.firestore.findProfessionalOf(category, service, coordinates);
 
     const { fcmTokenList, professionalIdList } = this.filterProfesionalList(professionalList, requestData)
 
-    this.firestore.addRequestToFollowingUsersList(professionalIdList, { id: requestData.id, path: requestData.path });
+    this.sendRequestNotifications(professionalIdList, requestData, fcmTokenList, ownersName);
+  }
+
+
+  async sendRequestNotificationsTo(requestData: { id: string; path: string; requestSaved: Request; }, professionalList: User[]) {
+    const { name: ownersName } = await this.getMyProfile();
+
+    const fcmTokenList       = professionalList.map(professional => professional.fcmToken);
+    const professionalIdList = professionalList.map(professional => professional.id);
+ 
+    this.sendRequestNotifications(professionalIdList, requestData, fcmTokenList, ownersName);
+  }
+  
+  
+
+  private sendRequestNotifications(professionalIdList: string[], requestData: { id: string; path: string; requestSaved: Request; }, fcmTokenList: string[], ownersName: string) {
+    const { id, path, requestSaved: { service } } = requestData;
+    this.firestore.addRequestToFollowingUsersList(professionalIdList, { id, path });
     
     if (fcmTokenList.length) {
       this.notifications.sendRequestNotification(
         'Nuevo trabajo disponible',
-        `${ownersName} necesita un servicio de ${requestData.requestSaved.service}`,
+        `${ownersName} necesita un servicio de ${service}`,
         fcmTokenList,
-        requestData.id,
-      );
+        id);
     }
   }
 

@@ -105,6 +105,7 @@ export class ServiceFilterComponent {
     this.customRange.setValue(30);
     setTimeout(() => {
       this.resetFilters = true;
+      this.apply();
     });
   }
 }

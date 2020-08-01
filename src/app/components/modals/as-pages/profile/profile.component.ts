@@ -13,6 +13,7 @@ const { StatusBar } = Plugins;
 })
 export class ProfileModalComponent {
 
+  @Input() selectingProfessionals = false;
   @Input() backgroundColor: string;
   @Input() user: User;
 
@@ -70,7 +71,7 @@ export class ProfileModalComponent {
 
 
   requestService() {
-
+    if (this.selectingProfessionals) this.user.selectedForRequest = !this.user.selectedForRequest
   }
 
 }

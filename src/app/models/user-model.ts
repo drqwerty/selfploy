@@ -50,6 +50,7 @@ export enum UserProperties {
   distance                     = 'distance',
   isFav                        = 'isFav',
   fcmToken                     = 'fcmToken',
+  selectedForRequest           = 'selectedForRequest',
 }
 
 export class User {
@@ -79,4 +80,5 @@ export class User {
   [UserProperties.distance]                     : number;
   [UserProperties.isFav]                        : boolean;
   [UserProperties.fcmToken]                     : string;
+  [UserProperties.selectedForRequest]           : boolean;
 }

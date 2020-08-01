@@ -3,7 +3,7 @@ import { Animations } from 'src/app/animations/animations';
 import { ModalController, IonContent, LoadingController } from '@ionic/angular';
 import { Request, RequestProperties, RequestStatus } from 'src/app/models/request-model';
 import { MapLocationComponent } from 'src/app/components/modals/as-pages/map-location/map-location.component';
-import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
+import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave, ModalAnimationFadeEnter, ModalAnimationFadeLeave } from 'src/app/animations/page-transitions';
 import { Validators, FormControl, FormBuilder } from '@angular/forms';
 import { InputBottomSheetComponent } from 'src/app/components/bottom-sheets/input-bottom-sheet/input-bottom-sheet.component';
 import { ServicePickerComponent } from 'src/app/components/modals/as-pages/service-picker/service-picker.component';
@@ -15,6 +15,8 @@ import * as moment from 'moment';
 import { RequestNewActionSheetComponent } from 'src/app/components/action-sheets/request-new-action-sheet/request-new-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
 import { ActionSheetEnter, ActionSheetLeave } from 'src/app/animations/action-sheet-transition';
+import { User } from 'src/app/models/user-model';
+import { ProfessionalListComponent } from '../professional-list/professional-list.component';
 
 @Component({
   selector: 'app-request-new',
@@ -81,7 +83,8 @@ export class RequestNewComponent implements OnInit {
           break;
 
         case 'choose':
-          this.saveRequest(RequestStatus.open);
+          // this.saveRequest(RequestStatus.open);
+          this.chooseProfessionals();
           console.log('c', data);
           break;
 
@@ -115,9 +118,31 @@ export class RequestNewComponent implements OnInit {
   }
 
 
+  async chooseProfessionals() {
+    const modal = await this.modalController.create({
+      component: ProfessionalListComponent,
+      enterAnimation: ModalAnimationFadeEnter,
+      leaveAnimation: ModalAnimationFadeLeave,
+      componentProps: {
+        request: this.tempRequest,
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+
+    if (data) {
+      const requestData = await this.saveRequest(RequestStatus.open);
+      await this.data.sendRequestNotificationsTo(requestData, data.professionalList);
+      this.loadingController.dismiss().then(() => this.modalController.dismiss());
+    }
+  }
+
+
   async notifyAll() {
     const requestData = await this.saveRequest(RequestStatus.open);
-    await this.data.sendRequestNotifications(requestData);
+    await this.data.sendMassiveRequestNotifications(requestData);
     this.loadingController.dismiss().then(() => this.modalController.dismiss());
   }
 

@@ -14,8 +14,8 @@
   </ion-button>
 
   <fab-with-text requestServiceButton 
-    iconName="reader-outline" 
-    text="Solicitar servicios"
+    [iconName]="user.selectedForRequest ? 'reader' : 'reader-outline'" 
+    [text]="user.selectedForRequest ? 'Eliminar solicitud&nbsp;' : 'Solicitar servicios'"
     [collapsed]="collapsedFab"
     (clicked)="requestService()"
   ></fab-with-text>

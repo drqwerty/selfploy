@@ -9,7 +9,8 @@
         <ion-icon *ngIf="!isFav" color="light" slot="icon-only" name="heart-outline"></ion-icon>
       </ion-button>
       <ion-button size="small" (click)="requestService()" fill="clear">
-        <ion-icon color="light" slot="icon-only" name="reader-outline"></ion-icon>
+        <ion-icon *ngIf="user.selectedForRequest" color="light" slot="icon-only" name="reader"></ion-icon>
+        <ion-icon *ngIf="!user.selectedForRequest" color="light" slot="icon-only" name="reader-outline"></ion-icon>
       </ion-button>
     </div>
 

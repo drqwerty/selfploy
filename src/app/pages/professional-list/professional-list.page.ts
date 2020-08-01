@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavController, ModalController } from '@ionic/angular';
 import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 import { ServiceFilterComponent } from 'src/app/components/modals/as-pages/service-filter/service-filter.component';
 import { Animations } from 'src/app/animations/animations';
-import { ProfessionalListComponent } from 'src/app/components/templates/professional-list/professional-list.component';
+import { ProfessionalListTemplateComponent } from 'src/app/components/templates/professional-list-template/professional-list-template.component';
 import { Filters, FilterDefaultValues } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/filters';
 const { StatusBar } = Plugins;
 
@@ -15,8 +15,8 @@ const { StatusBar } = Plugins;
 })
 export class ProfessionalListPage {
 
-  @ViewChild('filterButton') filterButton: any;
-  @ViewChild(ProfessionalListComponent) professionalList: ProfessionalListComponent;
+  @ViewChild('filterButton', { read: ElementRef }) filterButton: ElementRef;
+  @ViewChild(ProfessionalListTemplateComponent) professionalList: ProfessionalListTemplateComponent;
 
   filterValues: Filters = JSON.parse(JSON.stringify(FilterDefaultValues));
 
@@ -41,7 +41,8 @@ export class ProfessionalListPage {
 
 
   ionViewWillEnter() {
-    this.professionalList?.getProfessionals(this.serviceName, this.categoryName);
+    if (!this.professionalList.pageLoaded) 
+      this.professionalList?.getProfessionals(this.serviceName, this.categoryName);
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
   }
 
@@ -65,12 +66,14 @@ export class ProfessionalListPage {
       }
     });
 
-    await this.animations.addElement(this.filterButton.el, '#fff').startAnimation();
-
     modal.onWillDismiss().then(({ data }) => {
-      if (data) this.filterValues = data.filterValues;
-      this.professionalList.filterResults(this.filterValues, data.resetFilters);
-    })
+      if (data) {
+        this.filterValues = data.filterValues;
+        this.professionalList.filterResults(this.filterValues, data.resetFilters);
+      }
+    });
+
+    await this.animations.addElement(this.filterButton.nativeElement, '#fff').startAnimation();
 
     modal.present();
   }

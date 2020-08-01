@@ -1,0 +1,26 @@
+<status-bar color="#fff"></status-bar>
+
+<custom-header [title]="serviceName">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button #filterButton (click)="filter()">
+        <ion-icon color="tertiary" slot="icon-only" name="options"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</custom-header>
+
+<ion-content>
+  <professional-list [selectingProfessionals]="true"></professional-list>
+</ion-content>
+
+<div class="footer-border-radius"></div>
+
+<ion-footer class="ion-no-border buttons-cancel-confirm">
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="end" mode="ios">
+      <ion-button (click)="goBack()">Cancelar</ion-button>
+      <ion-button (click)="continue()" class="confirm-button">Continuar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

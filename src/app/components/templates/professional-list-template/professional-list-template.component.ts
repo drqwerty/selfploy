@@ -1,17 +1,22 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { User } from 'src/app/models/user-model';
 import { DataService } from 'src/app/providers/data.service';
 import { Filters, Order } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/filters';
+import { Request } from 'src/app/models/request-model';
+import { FilterDefaultValues } from 'src/assets/filters';
 
 @Component({
   host: {
     style: 'display: contents',
   },
   selector: 'professional-list',
-  templateUrl: './professional-list.component.html',
-  styleUrls: ['./professional-list.component.scss'],
+  templateUrl: './professional-list-template.component.html',
+  styleUrls: ['./professional-list-template.component.scss'],
 })
-export class ProfessionalListComponent implements OnInit {
+export class ProfessionalListTemplateComponent {
+
+  @Input() selectingProfessionals = false;
+
 
   professionalsWithoutFilters : User[];
   professionals               : User[];
@@ -25,15 +30,21 @@ export class ProfessionalListComponent implements OnInit {
   ) { }
 
 
-  ngOnInit() { }
-
-
   async getProfessionals(serviceName: string, categoryName: string) {
     this.serviceName   = serviceName;
     this.categoryName  = categoryName;
     this.professionals = await this.dataService.findProfessionalOf(this.categoryName, this.serviceName);
     this.professionalsWithoutFilters = this.professionals;
     console.table(this.professionals);
+  }
+
+
+  async getProfessionalsFiltered(serviceName: string, categoryName: string, filterValues: Filters) {
+    this.serviceName   = serviceName;
+    this.categoryName  = categoryName;
+    this.professionalsWithoutFilters = await this.dataService.findProfessionalOf(this.categoryName, this.serviceName);
+
+    this.filterResults(filterValues, false);
   }
 
 
@@ -49,10 +60,10 @@ export class ProfessionalListComponent implements OnInit {
         if (filterValues.order.value.order == Order.distance) {
 
           if (filterValues.order.value.ascendent) {
-            this.professionals.sort((a, b) => a.distance - b.distance);
+            this.professionals?.sort((a, b) => a.distance - b.distance);
             
           } else {
-            this.professionals.sort((a, b) => b.distance - a.distance);
+            this.professionals?.sort((a, b) => b.distance - a.distance);
           }
 
         } else {

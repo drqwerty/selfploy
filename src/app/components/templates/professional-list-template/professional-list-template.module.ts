@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProfessionalListComponent } from './professional-list.component';
+import { ProfessionalListTemplateComponent } from './professional-list-template.component';
 import { ProfessionalCardModule } from '../professional-card/professional-card.module';
 import { EmptyContentModule } from '../empty-content/empty-content.module';
 
@@ -15,10 +15,10 @@ import { EmptyContentModule } from '../empty-content/empty-content.module';
     EmptyContentModule,
   ],
   declarations: [
-    ProfessionalListComponent,
+    ProfessionalListTemplateComponent
   ],
   exports: [
-    ProfessionalListComponent,
+    ProfessionalListTemplateComponent
   ],
 })
-export class ProfessionalListModule { }
+export class ProfessionalListTemplateModule { }
