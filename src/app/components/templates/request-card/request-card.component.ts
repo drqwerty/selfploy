@@ -157,7 +157,7 @@ export class RequestCardComponent implements AfterViewInit {
     });
     
     modal.onDidDismiss().then(({ data }) => {
-      if (data !== undefined) this.dataService.completeRequest(this.request);
+      if (data !== undefined) this.dataService.completeRequest(this.request, professional.id);
     });
     
     modal.present();

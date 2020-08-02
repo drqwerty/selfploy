@@ -285,6 +285,11 @@ export class DataService {
   }
 
 
+  getTotalNumberCompletedRequestsBy(userId: string) {
+    return this.firestore.getTotalNumberCompletedRequestsBy(userId);
+  }
+
+
   async saveRequest(request: Request) {
     let requestData: {
       id: string;
@@ -440,8 +445,9 @@ export class DataService {
   }
 
 
-  completeRequest(request: Request) {
-    request.status = RequestStatus.completed;
+  completeRequest(request: Request, completedById: string) {
+    request.completedBy = completedById;
+    request.status      = RequestStatus.completed;
     this.saveRequest(request);
   }
 

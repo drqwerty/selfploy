@@ -213,7 +213,7 @@ export class FirestoreService {
     const docRef = this.db.collection(dbKeys.favorites).doc(uid);
     const value = { [`${dbKeys.favoriteList}.${userId}`]: firestore.FieldValue.delete() };
 
-    await docRef.update(value);
+    try { await docRef.update(value); } catch { }
   }
 
 
@@ -265,6 +265,19 @@ export class FirestoreService {
     if (request.hasImages) request.images = await this.fStorage.getRequestImages(request.id);
 
     return request;
+  }
+
+
+  async getTotalNumberCompletedRequestsBy(userId: string) {
+    const snapshot = await this.db
+      .collection(dbKeys.requests, ref => ref.where(`d.${RequestProperties.completedBy}`, '==', userId))
+      .get()
+      .toPromise();
+
+      console.log(snapshot.docs);
+      
+
+    return snapshot.size;
   }
 
 

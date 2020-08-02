@@ -4,6 +4,7 @@
   [mapId]="user?.id"
   [scrollEvents]="true"
   (scrollEvent)="scrollEvent($event)"
+  [completedRequests]="completedRequests"
 >
 
   <ion-button buttonsStart (click)="goBack()">

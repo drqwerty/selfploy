@@ -232,7 +232,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     });
     
     modal.onDidDismiss().then(({ data }) => {
-      if (data !== undefined) this.dataService.completeRequest(this.request);
+      if (data !== undefined) this.dataService.completeRequest(this.request, professional.id);
     });
     
     modal.present();

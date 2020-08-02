@@ -4,6 +4,7 @@ import { User, UserRole } from 'src/app/models/user-model';
 import { IonContent } from '@ionic/angular';
 import { auditTime, } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DataService } from 'src/app/providers/data.service';
 
 @UntilDestroy()
 @Component({
@@ -18,6 +19,7 @@ export class ProfileViewComponent implements AfterViewInit {
   @Input() mapId: string;
   @Input() navBarSpace = false;
   @Input() scrollEvents = false;
+  @Input() completedRequests = 0;
 
   @Output() scrollEvent = new EventEmitter<any>();
 
@@ -32,10 +34,14 @@ export class ProfileViewComponent implements AfterViewInit {
   userRol = UserRole;
   showSpinner = true;
 
-  constructor() { }
+
+  constructor(
+    private dataService: DataService,
+  ) { }
 
 
   ngAfterViewInit() {
+    this.getTotalNumberCompletedRequests();
     this.startScrollSubscription();
     this.setCornersStyle();
   }
@@ -43,6 +49,11 @@ export class ProfileViewComponent implements AfterViewInit {
 
   initMap() {
     if (this.user.role === this.userRol.professional) this.mapPreview.initMap();
+  }
+
+
+  async getTotalNumberCompletedRequests() {
+    if (this.user) this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
   }
 
 

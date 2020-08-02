@@ -22,13 +22,13 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
   isFav = true;
 
   stars = 3;
-  jobs = 12;
+  completedRequests = 0;
 
   showSpinner = true;
   cardIntersectionObserver: IntersectionObserver;
 
   constructor(
-    private data: DataService,
+    private dataService: DataService,
     private modalController: ModalController
   ) { }
 
@@ -39,8 +39,14 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
 
   async ngAfterViewInit() {
+    await this.getTotalNumberCompletedRequests();
     await this.checkFavState();
     if (this.user) this.startCardIntersectionObserver();
+  }
+
+
+  async getTotalNumberCompletedRequests() {
+    this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
   }
 
 
@@ -51,12 +57,12 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   async checkFavState() {
     if (!this.user) return;
-    this.isFav = !!(await this.data.getFavoriteList()).find(user => user.id === this.user.id);
+    this.isFav = !!(await this.dataService.getFavoriteList()).find(user => user.id === this.user.id);
   }
 
 
   async getImage() {
-    if (this.user?.hasProfilePic) this.user.profilePic = await this.data.getUserProfilePic(this.user.id);
+    if (this.user?.hasProfilePic) this.user.profilePic = await this.dataService.getUserProfilePic(this.user.id);
   }
 
 
@@ -72,8 +78,8 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   toggleFav() {
     if (this.user && this.user.isFav !== this.isFav) {
-      if (this.isFav) this.data.saveFavorite(this.user);
-      else this.data.removeFavorite(this.user);
+      if (this.isFav) this.dataService.saveFavorite(this.user);
+      else this.dataService.removeFavorite(this.user);
     }
   }
 
@@ -88,6 +94,7 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
       componentProps: { 
         backgroundColor: 'primary', user,
         selectingProfessionals: this.selectingProfessionals,
+        completedRequests: this.completedRequests
        }
     });
 
@@ -103,7 +110,10 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   startCardIntersectionObserver() {
     this.cardIntersectionObserver = new IntersectionObserver(async entries => {
-      if (entries[0].isIntersecting) await this.checkFavState();
+      if (entries[0].isIntersecting) {
+        await this.getTotalNumberCompletedRequests();
+        await this.checkFavState();
+      }
     }, { threshold: 0 });
     this.cardIntersectionObserver.observe(this.card.el);
   }

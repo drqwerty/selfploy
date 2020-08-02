@@ -54,6 +54,7 @@ export enum RequestProperties {
   lastEditAt           = 'lastEditAt',
   isMine               = 'isMine',
   contactsTotalNumber  = 'contactsTotalNumber',
+  completedBy          = 'completedBy',
 }
 
 export class Request {
@@ -80,6 +81,7 @@ export class Request {
   [RequestProperties.lastEditAt]           : firestore.Timestamp;
   [RequestProperties.isMine]               : boolean;
   [RequestProperties.contactsTotalNumber]  : number = 0;
+  [RequestProperties.completedBy]          : string;
 
   constructor(request?: Request) {
     if (request) {

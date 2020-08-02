@@ -16,6 +16,7 @@ export class ProfileModalComponent {
   @Input() selectingProfessionals = false;
   @Input() backgroundColor: string;
   @Input() user: User;
+  @Input() completedRequests: number;
 
 
   @ViewChild(ProfileViewComponent) profileView: ProfileViewComponent;
