@@ -11,6 +11,7 @@ import { RequestNewComponent } from '../request-new/request-new.component';
 import { ConversationComponent } from '../conversation/conversation.component';
 import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
 import { Conversation } from 'src/app/models/conversation-model';
+import { PaymentsComponent } from '../payments/payments.component';
 
 @Component({
   selector: 'app-request-info',
@@ -183,7 +184,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   async completeRequest() {
     (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
-        if (confirm) this.data.completeRequest(this.request);
+        if (confirm) this.presentPaymentModal();
       });
   }
 
@@ -211,6 +212,22 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
           this.modalController.dismiss();
         }
       });
+  }
+
+
+  async presentPaymentModal() {
+    const modal = await this.modalController.create({
+      component: PaymentsComponent,
+      componentProps: {
+        requestId: this.request.id
+      },
+    });
+    
+    modal.onDidDismiss().then(({ data }) => {
+      if (data !== undefined) this.data.completeRequest(this.request);
+    });
+    
+    await modal.present();
   }
 
 

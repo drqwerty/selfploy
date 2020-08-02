@@ -9,6 +9,7 @@ import { RequestNewComponent } from 'src/app/components/modals/as-pages/request-
 import { RequestInfoComponent } from '../../modals/as-pages/request-info/request-info.component';
 import { ConversationComponent } from '../../modals/as-pages/conversation/conversation.component';
 import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
+import { PaymentsComponent } from '../../modals/as-pages/payments/payments.component';
 
 @Component({
   selector: 'request-card',
@@ -113,7 +114,7 @@ export class RequestCardComponent implements AfterViewInit {
   async completeRequest() {
     (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
-        if (confirm) this.data.completeRequest(this.request);
+        if (confirm) this.presentPaymentModal();
       });
   }
 
@@ -138,6 +139,22 @@ export class RequestCardComponent implements AfterViewInit {
       .onDidDismiss().then(({ data: confirm }) => {
         if (confirm) this.data.removeRequest(this.request);
       });
+  }
+
+
+  async presentPaymentModal() {
+    const modal = await this.modalController.create({
+      component: PaymentsComponent,
+      componentProps: {
+        requestId: this.request.id
+      },
+    });
+    
+    modal.onDidDismiss().then(({ data }) => {
+      if (data !== undefined) this.data.completeRequest(this.request);
+    });
+    
+    await modal.present();
   }
 
 

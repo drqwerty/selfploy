@@ -9,6 +9,7 @@ import { DeleteConfirmActionSheetModule } from '../../action-sheets/delete-confi
 import { RequestNewModule } from '../../modals/as-pages/request-new/request-new.module';
 import { RequestInfoModule } from '../../modals/as-pages/request-info/request-info.module';
 import { ConversationModule } from '../../modals/as-pages/conversation/conversation.module';
+import { PaymentsModule } from '../../modals/as-pages/payments/payments.module';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { ConversationModule } from '../../modals/as-pages/conversation/conversat
     RequestNewModule,
     RequestInfoModule,
     ConversationModule,
+    PaymentsModule,
   ],
   declarations: [
     RequestCardComponent,

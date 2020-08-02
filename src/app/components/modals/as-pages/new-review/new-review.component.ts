@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { User } from 'src/app/models/user-model';
+import { DataService } from 'src/app/providers/data.service';
 
 @Component({
   selector: 'app-new-review',
@@ -9,8 +11,9 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 })
 export class NewReviewComponent {
 
-  @Input() professionalId: string;
+  @Input() requestId: string;
 
+  professional: User;
 
   readonly TEXT_LIMIT = 300;
   textLength = 0;
@@ -21,8 +24,14 @@ export class NewReviewComponent {
   constructor(
     private modalController: ModalController,
     private formBuilder: FormBuilder,
+    private dataService: DataService,
   ) {
     this.initForm();
+  }
+
+
+  ionViewWillEnter() {
+    this.professional = this.dataService.getFirstUserOfRequestConversations(this.requestId);
   }
 
 

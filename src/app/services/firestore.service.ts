@@ -82,7 +82,13 @@ export class FirestoreService {
         ...essentialUserData,
       }
     await this.geofirestore.collection(dbKeys.users).doc(uid).update(dataToUpdate);
-    return this.getUserProfile(uid);
+
+    let userUpdated: User;
+    do {
+      userUpdated = await this.getUserProfile(uid);
+    } while (userUpdated.lastEditAt == null);
+
+    return userUpdated;
   }
 
 

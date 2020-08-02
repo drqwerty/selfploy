@@ -635,7 +635,7 @@ export class DataService {
 
   private filterProfesionalList(list: User[], requestData) {
     let filteredProfessionalList = list
-      .filter(user => user.fcmToken)
+      // .filter(user => user.fcmToken)
       .filter(user => user.distance <= user.radiusKm);
 
     if (!requestData.requestSaved.priority)
@@ -667,6 +667,17 @@ export class DataService {
     await this.storage.updateUserConfig(newConfig);
     this.userConfig = newConfig;
     this.userConfigChangedSubject.next(newConfig);
+  }
+
+
+  /* reviews */
+
+
+  getFirstUserOfRequestConversations(requestId: string): User | undefined {
+    return Object
+      .values(this.conversations)
+      .find(({ request }) => request === requestId)
+      ?.anotherUser;
   }
 
 

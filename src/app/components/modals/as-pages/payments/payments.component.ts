@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { trigger, transition, style, animate, keyframes } from '@angular/animations';
 import { NewReviewComponent } from '../new-review/new-review.component';
@@ -35,6 +35,9 @@ import { ModalAnimationFadeEnter } from 'src/app/animations/page-transitions';
 export class PaymentsComponent {
 
 
+  @Input() requestId: string;
+
+
   paymentMade = false;
   modal: HTMLIonModalElement;
 
@@ -47,7 +50,6 @@ export class PaymentsComponent {
 
   ionViewDidEnter() {
     this.getCurrentModal();
-    this.presentReviewModal();
   }
 
 
@@ -65,6 +67,7 @@ export class PaymentsComponent {
     await this.presentLoading();
     setTimeout(async () => {
       await this.presentReviewModal();
+      // this.modal.dismiss(true);
       this.modal.dismiss();
     }, 200);
   }
@@ -83,8 +86,11 @@ export class PaymentsComponent {
 
   async presentReviewModal() {
     const modal = await this.modalController.create({
+      enterAnimation: ModalAnimationFadeEnter,
       component: NewReviewComponent,
-      enterAnimation: ModalAnimationFadeEnter
+      componentProps: {
+        requestId: this.requestId,
+      },
     });
 
     await modal.present();

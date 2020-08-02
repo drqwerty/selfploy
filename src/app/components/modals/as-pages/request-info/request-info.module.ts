@@ -18,6 +18,7 @@ import { DeleteConfirmActionSheetModule } from 'src/app/components/action-sheets
 import { ConversationModule } from '../conversation/conversation.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { ConversationListComponent } from 'src/app/components/templates/conversation-list/conversation-list.component';
+import { PaymentsModule } from '../payments/payments.module';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { ConversationListComponent } from 'src/app/components/templates/conversa
     DeleteConfirmActionSheetModule,
     ConversationModule,
     PipesModule,
+    PaymentsModule,
   ],
   declarations: [
     RequestInfoComponent,

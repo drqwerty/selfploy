@@ -16,7 +16,10 @@
 <ion-content>
 
   <ion-toolbar>
-    <ion-title color="tertiary">Valora el servicio</ion-title>
+    <ion-title color="tertiary">Valora el servicio de</ion-title>
+    <ion-text color="tertiary">
+      <h1 class="subtitle">{{professional?.name}}</h1>
+    </ion-text>
   </ion-toolbar>
 
   <form [formGroup]="reviewForm">

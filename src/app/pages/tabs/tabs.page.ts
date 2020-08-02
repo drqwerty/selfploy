@@ -66,16 +66,6 @@ export class TabsPage {
     this.data.observeMyRequests();
     this.data.observeFollowingRequests();
     this.data.observeMyConversations();
-    this.presentModal();
-  }
-
-
-  async presentModal() {
-    const modal = await this.modalController.create({
-    component: PaymentsComponent,
-    });
-  
-    await modal.present();  
   }
 
 
