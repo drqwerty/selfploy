@@ -5,11 +5,11 @@ import { User } from 'src/app/models/user-model';
 import { DataService } from 'src/app/providers/data.service';
 
 @Component({
-  selector: 'app-new-review',
-  templateUrl: './new-review.component.html',
-  styleUrls: ['./new-review.component.scss'],
+  selector: 'app-review-new',
+  templateUrl: './review-new.component.html',
+  styleUrls: ['./review-new.component.scss'],
 })
-export class NewReviewComponent {
+export class ReviewNewComponent {
 
   readonly TEXT_LIMIT = 300;
 

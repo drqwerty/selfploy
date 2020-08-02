@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ModalController, LoadingController } from '@ionic/angular';
 import { trigger, transition, style, animate, keyframes } from '@angular/animations';
-import { NewReviewComponent } from '../new-review/new-review.component';
+import { ReviewNewComponent } from '../review-new/review-new.component';
 import { ModalAnimationFadeEnter } from 'src/app/animations/page-transitions';
 import { User } from 'src/app/models/user-model';
 
@@ -98,7 +98,7 @@ export class PaymentsComponent {
   async presentReviewModal() {
     const modal = await this.modalController.create({
       enterAnimation: ModalAnimationFadeEnter,
-      component: NewReviewComponent,
+      component: ReviewNewComponent,
       componentProps: {
         professional: this.professional,
       },
