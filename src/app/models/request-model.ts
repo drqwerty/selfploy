@@ -53,6 +53,7 @@ export enum RequestProperties {
   unreadMesseages      = 'unreadMesseages',
   lastEditAt           = 'lastEditAt',
   isMine               = 'isMine',
+  contactsTotalNumber  = 'contactsTotalNumber',
 }
 
 export class Request {
@@ -78,6 +79,7 @@ export class Request {
   [RequestProperties.unreadMesseages]      : boolean;
   [RequestProperties.lastEditAt]           : firestore.Timestamp;
   [RequestProperties.isMine]               : boolean;
+  [RequestProperties.contactsTotalNumber]  : number = 0;
 
   constructor(request?: Request) {
     if (request) {

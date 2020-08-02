@@ -31,9 +31,7 @@ export class RequestCardComponent implements AfterViewInit {
   ) { }
 
 
-  ngAfterViewInit() {
-    // console.log(this.request);
-  }
+  ngAfterViewInit() { }
 
 
   imageLoaded() {

@@ -515,7 +515,6 @@ export class DataService {
     messages.forEach(message => this.conversations[conversation.id].messages[message.id] = message);
     this.storage.saveConversations(this.conversations);
 
-    console.log(this.conversations);
     this.newMessageSubject.next(conversation.id);
   }
 
@@ -534,6 +533,15 @@ export class DataService {
       .subscribe(conversationList => {
 
         conversationList.forEach(async conversation => {
+
+          this.getRequest(conversation.request).then(request => {
+            if (request.contactsTotalNumber == null) {
+              request.contactsTotalNumber = 1;
+            } else {
+              request.contactsTotalNumber++;
+            }
+          })
+
           let activeRequest = this.followingRequestList?.findIndex(request => request.id === conversation.request) > -1;
           if (!activeRequest) activeRequest = this.myRequestList.findIndex(request => request.id === conversation.request) > -1;
 
