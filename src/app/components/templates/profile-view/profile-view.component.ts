@@ -20,6 +20,7 @@ export class ProfileViewComponent implements AfterViewInit {
   @Input() navBarSpace = false;
   @Input() scrollEvents = false;
   @Input() completedRequests = 0;
+  @Input() reviewStats = { avg: 0, reviews: 0 };
 
   @Output() scrollEvent = new EventEmitter<any>();
 
@@ -41,7 +42,10 @@ export class ProfileViewComponent implements AfterViewInit {
 
 
   ngAfterViewInit() {
-    this.getTotalNumberCompletedRequests();
+    if (this.user?.role === this.userRol.professional) {
+      this.getTotalNumberCompletedRequests();
+      this.getReviewStats();
+    }
     this.startScrollSubscription();
     this.setCornersStyle();
   }
@@ -53,7 +57,12 @@ export class ProfileViewComponent implements AfterViewInit {
 
 
   async getTotalNumberCompletedRequests() {
-    if (this.user) this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
+    this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
+  }
+
+
+  async getReviewStats() {
+    if (!this.reviewStats) this.reviewStats = await this.dataService.getReviewStats(this.user.id);
   }
 
 

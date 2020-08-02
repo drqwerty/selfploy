@@ -36,7 +36,7 @@
       <div #profileImageWrapper class="image-profile">
         <ng-container *ngTemplateOutlet="profileImageTemplate"></ng-container>
         <div *ngIf="user?.role === userRol.professional" class="stars">
-          <span class="number">4.5</span>
+          <span class="number">{{reviewStats.avg}}</span>
         </div>
       </div>
 
@@ -52,7 +52,7 @@
         <div class="image-space"></div>
         <div class="opinions">
           <ion-text color="primary">
-            <h1 class="number">13</h1>
+            <h1 class="number">{{reviewStats.reviews}}</h1>
           </ion-text>
           <ion-text color="tertiary">
             Opiniones

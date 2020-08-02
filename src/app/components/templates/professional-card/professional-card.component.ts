@@ -21,7 +21,7 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   isFav = true;
 
-  stars = 3;
+  reviewStats = { avg: 0, reviews: 0 };
   completedRequests = 0;
 
   showSpinner = true;
@@ -40,6 +40,7 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   async ngAfterViewInit() {
     await this.getTotalNumberCompletedRequests();
+    await this.getReviewStats();
     await this.checkFavState();
     if (this.user) this.startCardIntersectionObserver();
   }
@@ -47,6 +48,11 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   async getTotalNumberCompletedRequests() {
     this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
+  }
+
+
+  async getReviewStats() {
+    this.reviewStats = await this.dataService.getReviewStats(this.user.id);
   }
 
 
@@ -94,7 +100,8 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
       componentProps: { 
         backgroundColor: 'primary', user,
         selectingProfessionals: this.selectingProfessionals,
-        completedRequests: this.completedRequests
+        completedRequests: this.completedRequests,
+        reviewStats: this.reviewStats,
        }
     });
 
@@ -111,7 +118,9 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
   startCardIntersectionObserver() {
     this.cardIntersectionObserver = new IntersectionObserver(async entries => {
       if (entries[0].isIntersecting) {
-        await this.getTotalNumberCompletedRequests();
+        // Si se piden actualizaciones constantes se alcanza rapidamente el limite gratuito del plan spark de Firebase
+        // await this.getTotalNumberCompletedRequests();
+        // await this.getReviewStats();
         await this.checkFavState();
       }
     }, { threshold: 0 });

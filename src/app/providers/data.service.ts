@@ -6,16 +6,17 @@ import { FirestoreService } from 'src/app/services/firestore.service';
 import { FirebaseStorage } from 'src/app/services/firebase-storage.service';
 import { Subject, Observable, Subscription } from 'rxjs';
 import { Request, RequestStatus } from 'src/app/models/request-model';
-import { map, takeWhile, filter, takeUntil } from 'rxjs/operators';
+import { map, takeWhile, filter, takeUntil, debounceTime } from 'rxjs/operators';
 import { Action, DocumentSnapshot } from '@angular/fire/firestore';
 import { NotificationService } from '../services/notification.service';
 import { dbKeys } from '../models/db-keys';
 import { Conversation, Message, ConversationProperties } from '../models/conversation-model';
 import { LatLng } from 'leaflet';
 import Utils from 'src/app/utils';
+import { Review } from '../models/review-model';
 import * as moment from 'moment';
 import * as diff from 'changeset';
-import { Review } from '../models/review-model';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class DataService {
 
   static tabBarState: TabBarState;
   static conversationOpenedList      : string[] = [];
+  static syncFavoritesSubject        = new Subject();
 
   
   user                               : User;
@@ -46,7 +48,8 @@ export class DataService {
     private firestore     : FirestoreService,
     private notifications : NotificationService,
   ) { 
-    notifications.conversationOpenedList = DataService.conversationOpenedList;
+    notifications.conversationOpenedList = DataService.conversationOpenedList;    
+    DataService.syncFavoritesSubject.pipe(debounceTime(500)).subscribe(() => this.syncFavorites());
   }
 
 
@@ -194,7 +197,7 @@ export class DataService {
       }
 
     } else {
-      this.syncFavorites();
+      DataService.syncFavoritesSubject.next();
     }
 
     return this.favorites;
@@ -288,6 +291,11 @@ export class DataService {
 
   getTotalNumberCompletedRequestsBy(userId: string) {
     return this.firestore.getTotalNumberCompletedRequestsBy(userId);
+  }
+
+
+  getReviewStats(userId: string) {
+    return this.firestore.getReviewStats(userId);
   }
 
 

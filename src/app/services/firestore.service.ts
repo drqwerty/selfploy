@@ -15,7 +15,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Message, Conversation, ConversationProperties } from '../models/conversation-model';
 import * as moment from 'moment';
-import { Review } from '../models/review-model';
+import { Review, ReviewProperties } from '../models/review-model';
 const { GeoPoint, Timestamp } = firestore;
 @Injectable({
   providedIn: 'root'
@@ -274,11 +274,25 @@ export class FirestoreService {
       .collection(dbKeys.requests, ref => ref.where(`d.${RequestProperties.completedBy}`, '==', userId))
       .get()
       .toPromise();
-
-      console.log(snapshot.docs);
       
-
     return snapshot.size;
+  }
+
+
+  async getReviewStats(userId: string) {
+    const snapshot = await this.db
+      .collection(dbKeys.reviews, ref => ref.where(`${ReviewProperties.professionalId}`, '==', userId))
+      .get()
+      .toPromise();
+
+    if (!snapshot.size) return { avg: 0, reviews: 0 };
+      
+    const sum = snapshot.docs
+      .map(doc => (<Review>doc.data()).stars)
+      .reduce(( a, b ) => a + b, 0);
+    const avg = sum/snapshot.size
+      
+    return { avg, reviews: snapshot.size };
   }
 
 
