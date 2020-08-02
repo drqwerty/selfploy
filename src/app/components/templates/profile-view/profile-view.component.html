@@ -36,7 +36,7 @@
       <div #profileImageWrapper class="image-profile">
         <ng-container *ngTemplateOutlet="profileImageTemplate"></ng-container>
         <div *ngIf="user?.role === userRol.professional" class="stars">
-          <span class="number">{{reviewStats.avg}}</span>
+          <span class="number">{{reviewStats.avg | number:'1.0-1'}}</span>
         </div>
       </div>
 
