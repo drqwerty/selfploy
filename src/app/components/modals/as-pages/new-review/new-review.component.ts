@@ -36,7 +36,7 @@ export class NewReviewComponent {
         Validators.required,
         Validators.minLength(1)
       ]),
-      review: new FormControl('', [
+      text: new FormControl('', [
         Validators.maxLength(this.TEXT_LIMIT),
       ]),
     });
@@ -48,16 +48,15 @@ export class NewReviewComponent {
   }
 
 
-  post() {
+  async post() {
+    const { starRating, text } = this.reviewForm.value;
+    await this.dataService.postReview(this.professional.id, starRating, text);
     this.modalController.dismiss();
-
-    console.log(this.reviewForm.value.starRating);
-    console.log(this.reviewForm.value.review);
   }
 
 
   countText() {
-    this.textLength = this.reviewForm.value.review.length;
+    this.textLength = this.reviewForm.value.text.length;
   }
 
 }

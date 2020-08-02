@@ -37,7 +37,7 @@
 
   <div class="ion-padding-horizontal">
     <ion-item>
-      <ion-textarea rows="1" [maxRows]="8" autosize placeholder="¿Hay algo que quieras destacar?" formControlName="review" (ionChange)="countText()"></ion-textarea>
+      <ion-textarea rows="1" [maxRows]="8" autosize placeholder="¿Hay algo que quieras destacar?" formControlName="text" (ionChange)="countText()"></ion-textarea>
     </ion-item>
     <ion-note class="ion-float-right ion-margin-top">{{textLength}}/{{TEXT_LIMIT}}</ion-note>
   </div>

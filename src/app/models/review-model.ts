@@ -20,15 +20,20 @@ export class Review {
   [ReviewProperties.timestamp]      : Moment | firestore.Timestamp;
 
 
-  constructor({ id, professionalId, ownerId, text, stars, timestamp }: Review) {
-    this.id             = id;
-    this.professionalId = professionalId;
-    this.ownerId        = ownerId;
-    this.text           = text;
-    this.stars          = stars;
+  constructor(review: Review = null) {
+    if (review) {
+      const { id, professionalId, ownerId, text, stars, timestamp } = review;
 
-    this.timestamp = timestamp?.constructor.name == 't'
-      ? moment(timestamp.toDate())
-      : moment(timestamp);
+      this.id             = id;
+      this.professionalId = professionalId;
+      this.ownerId        = ownerId;
+      this.text           = text;
+      this.stars          = stars;
+
+      this.timestamp = timestamp?.constructor.name == 't'
+        ? moment(timestamp.toDate())
+        : moment(timestamp);
+    }
+
   }
 }

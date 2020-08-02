@@ -15,6 +15,7 @@ import { LatLng } from 'leaflet';
 import Utils from 'src/app/utils';
 import * as moment from 'moment';
 import * as diff from 'changeset';
+import { Review } from '../models/review-model';
 
 @Injectable({
   providedIn: 'root'
@@ -692,6 +693,20 @@ export class DataService {
       .values(this.conversations)
       .find(({ request }) => request === requestId)
       ?.anotherUser;
+  }
+
+
+  
+  async postReview(userId: string, starRating: number, text: string) {
+    const { id } = await this.getMyProfile();
+
+    const review = new Review();
+    review.ownerId = id;
+    review.professionalId = userId;
+    review.stars = starRating;
+    review.text = text
+
+    this.firestore.postReview(review)
   }
 
 

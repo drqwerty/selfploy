@@ -15,6 +15,7 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Message, Conversation, ConversationProperties } from '../models/conversation-model';
 import * as moment from 'moment';
+import { Review } from '../models/review-model';
 const { GeoPoint, Timestamp } = firestore;
 @Injectable({
   providedIn: 'root'
@@ -503,6 +504,14 @@ export class FirestoreService {
       .doc(options.conversationId)
       .collection(dbKeys.messages)
       .add(data)
+  }
+
+
+  async postReview(review: Review) {
+    (<firestore.FieldValue>review.timestamp) = firestore.FieldValue.serverTimestamp();
+    await this.db
+      .collection(dbKeys.reviews)
+      .add(Object.assign({}, review));
   }
 
 

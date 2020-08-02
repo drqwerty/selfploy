@@ -5,6 +5,7 @@ export enum dbKeys {
   favoriteList       = 'list',
   requests           = 'requests',
   requestsFollowing  = 'requestsFollowing',
+  reviews            = 'reviews',
   draft              = 'draft',
   published          = 'published ',
   
