@@ -46,6 +46,7 @@
     "geofirestore": "^3.6.0",
     "hammerjs": "^2.0.8",
     "ion2-calendar": "https://github.com/shaneparsons/ion2-calendar#76ae1e241183500a377647b363c931a03aa50bca",
+    "ionic5-star-rating": "https://github.com/JeongJun-Lee/ionic5-star-rating/tarball/master",
     "leaflet": "^1.6.0",
     "leaflet.locatecontrol": "^0.72.0",
     "lodash": "^4.17.15",

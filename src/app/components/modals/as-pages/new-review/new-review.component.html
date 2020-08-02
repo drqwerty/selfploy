@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" color="tertiary">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="post()" [disabled]="reviewForm.invalid" color="tertiary" class="no-transform">
+        Publicar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-toolbar>
+    <ion-title color="tertiary">Valora el servicio</ion-title>
+  </ion-toolbar>
+
+  <form [formGroup]="reviewForm">
+
+    <ionic5-star-rating #rating
+      activeIcon = "star"
+      defaultIcon = "star-outline"
+      activeColor = "#F69837" 
+      defaultColor = "#777777"
+      readonly="false"
+      rating="0"
+      fontSize = "32px"
+      formControlName="starRating">
+  </ionic5-star-rating>
+
+  <div class="ion-padding-horizontal">
+    <ion-item>
+      <ion-textarea rows="1" [maxRows]="8" autosize placeholder="¿Hay algo que quieras destacar?" formControlName="review" (ionChange)="countText()"></ion-textarea>
+    </ion-item>
+    <ion-note class="ion-float-right ion-margin-top">{{textLength}}/{{TEXT_LIMIT}}</ion-note>
+  </div>
+    
+</form>
+
+</ion-content>
+

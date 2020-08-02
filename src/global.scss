@@ -492,3 +492,13 @@ span.new-line::before {
     }
   }
 }
+
+.ionic5-star-rating {
+  display: flex;
+  justify-content: space-around;
+  margin: 30px;
+
+  button {
+    outline: none;
+  }
+}
