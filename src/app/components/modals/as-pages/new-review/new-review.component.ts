@@ -11,13 +11,13 @@ import { DataService } from 'src/app/providers/data.service';
 })
 export class NewReviewComponent {
 
-  @Input() requestId: string;
-
-  professional: User;
-
   readonly TEXT_LIMIT = 300;
-  textLength = 0;
 
+
+  @Input() professional: User;
+
+
+  textLength = 0;
   reviewForm: FormGroup;
 
 
@@ -27,11 +27,6 @@ export class NewReviewComponent {
     private dataService: DataService,
   ) {
     this.initForm();
-  }
-
-
-  ionViewWillEnter() {
-    this.professional = this.dataService.getFirstUserOfRequestConversations(this.requestId);
   }
 
 

@@ -3,6 +3,7 @@ import { ModalController, LoadingController } from '@ionic/angular';
 import { trigger, transition, style, animate, keyframes } from '@angular/animations';
 import { NewReviewComponent } from '../new-review/new-review.component';
 import { ModalAnimationFadeEnter } from 'src/app/animations/page-transitions';
+import { User } from 'src/app/models/user-model';
 
 @Component({
   selector: 'app-payments',
@@ -29,16 +30,24 @@ import { ModalAnimationFadeEnter } from 'src/app/animations/page-transitions';
           style({ transform: 'translateY(0)', opacity: 1, offset: 1 })
         ])),
       ]),
+      transition(':leave', [
+        style({ opacity: 1 }),
+        animate('1s ease-in', keyframes([
+          style({ transform: 'translateY(0)', opacity: 1, offset: 0.75 }),
+          style({ transform: 'translateY(20px)', opacity: 0, offset: 1 })
+        ])),
+      ]),
     ]),
   ]
 })
 export class PaymentsComponent {
 
 
-  @Input() requestId: string;
+  @Input() professional: User;
 
 
-  paymentMade = false;
+  paymentMade         = false;
+  showPaymentComplete = false;
   modal: HTMLIonModalElement;
 
 
@@ -65,22 +74,24 @@ export class PaymentsComponent {
 
   async continue() {
     await this.presentLoading();
+    setTimeout(() => this.showPaymentComplete = false, 1000);
     setTimeout(async () => {
       await this.presentReviewModal();
       // this.modal.dismiss(true);
       this.modal.dismiss();
-    }, 200);
+    }, 2000);
   }
 
 
   async presentLoading() {
     const loading = await this.loadingController.create({
-      duration: 100,
+      duration: 1000,
     });
     await loading.present();
 
     await loading.onDidDismiss();
     this.paymentMade = true;
+    this.showPaymentComplete = true;
   }
 
 
@@ -89,7 +100,7 @@ export class PaymentsComponent {
       enterAnimation: ModalAnimationFadeEnter,
       component: NewReviewComponent,
       componentProps: {
-        requestId: this.requestId,
+        professional: this.professional,
       },
     });
 

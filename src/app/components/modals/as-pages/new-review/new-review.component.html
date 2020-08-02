@@ -6,7 +6,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="post()" [disabled]="reviewForm.invalid" color="tertiary" class="no-transform">
+      <ion-button (click)="post()" [disabled]="reviewForm.invalid" [color]="reviewForm.invalid ? 'medium' : 'primary'" class="no-transform">
         Publicar
       </ion-button>
     </ion-buttons>

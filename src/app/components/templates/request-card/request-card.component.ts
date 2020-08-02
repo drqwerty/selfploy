@@ -1,6 +1,6 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
 import { Request, RequestStatus, RequestStatusText } from 'src/app/models/request-model';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { RequestCardActionSheetComponent } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.component';
 import { DeleteConfirmActionSheetComponent } from 'src/app/components/action-sheets/delete-confirm-action-sheet/delete-confirm-action-sheet.component';
 import { DataService } from 'src/app/providers/data.service';
@@ -10,6 +10,8 @@ import { RequestInfoComponent } from '../../modals/as-pages/request-info/request
 import { ConversationComponent } from '../../modals/as-pages/conversation/conversation.component';
 import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
 import { PaymentsComponent } from '../../modals/as-pages/payments/payments.component';
+import { ToastAnimationEnter, ToastAnimationLeave } from 'src/app/animations/toast-transitions';
+import { User } from 'src/app/models/user-model';
 
 @Component({
   selector: 'request-card',
@@ -27,7 +29,8 @@ export class RequestCardComponent implements AfterViewInit {
 
   constructor(
     private modalController: ModalController,
-    private data: DataService,
+    private dataService: DataService,
+    private toastController: ToastController,
   ) { }
 
 
@@ -104,16 +107,23 @@ export class RequestCardComponent implements AfterViewInit {
   async closeRequest() {
     (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
-        if (confirm) this.data.closeRequest(this.request);
+        if (confirm) this.dataService.closeRequest(this.request);
       });
   }
 
 
   async completeRequest() {
-    (await this.showConfirmAction('Continuar'))
+    const professional = this.dataService.getFirstUserOfRequestConversations(this.request.id);
+
+    if (professional) {
+      (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
-        if (confirm) this.presentPaymentModal();
+        if (confirm) this.presentPaymentModal(professional);
       });
+
+    } else {
+      this.presentNotPaymentAvailableToast();
+    }
   }
 
 
@@ -135,24 +145,35 @@ export class RequestCardComponent implements AfterViewInit {
   async deleteRequest() {
     (await this.showConfirmAction())
       .onDidDismiss().then(({ data: confirm }) => {
-        if (confirm) this.data.removeRequest(this.request);
+        if (confirm) this.dataService.removeRequest(this.request);
       });
   }
 
 
-  async presentPaymentModal() {
+  async presentPaymentModal(professional: User) {
     const modal = await this.modalController.create({
       component: PaymentsComponent,
-      componentProps: {
-        requestId: this.request.id
-      },
+      componentProps: { professional },
     });
     
     modal.onDidDismiss().then(({ data }) => {
-      if (data !== undefined) this.data.completeRequest(this.request);
+      if (data !== undefined) this.dataService.completeRequest(this.request);
     });
     
-    await modal.present();
+    modal.present();
+  }
+
+
+  async presentNotPaymentAvailableToast() {
+    const toast = await this.toastController.create({
+      message: 'No hay facturas disponibles',
+      duration: 2000,
+      mode: 'ios',
+      cssClass: 'login-toast',
+      enterAnimation: ToastAnimationEnter,
+      leaveAnimation: ToastAnimationLeave,
+    });
+    toast.present();
   }
 
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { InfoComponent } from 'src/app/components/modals/info/info.component';
 import { RequestStatus } from 'src/app/models/request-model';
 
@@ -25,14 +25,22 @@ export class RequestCardActionSheetComponent implements OnInit {
 
   constructor(
     private modalController: ModalController,
+    private toastController: ToastController
   ) { }
 
+
   ngOnInit() {
+    this.hideToast();
     const isMineAndNoDraft = this.isMine && this.status != this.states.draft;
     this.showButtons.close = isMineAndNoDraft && this.status != this.states.closed && this.status != this.states.completed;
     this.showButtons.complete = isMineAndNoDraft && this.status != this.states.completed;
     this.showButtons.edit = this.isMine && this.status == this.states.draft;
     this.showButtons.remove = true;
+  }
+
+
+  async hideToast() {
+    (await this.toastController.getTop())?.dismiss();
   }
 
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
-import { ModalController, IonContent } from '@ionic/angular';
+import { ModalController, IonContent, ToastController } from '@ionic/angular';
 import { Request, RequestStatus, RequestStatusText } from 'src/app/models/request-model';
 import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { SuperTabs, SuperTab } from '@ionic-super-tabs/angular';
@@ -12,6 +12,8 @@ import { ConversationComponent } from '../conversation/conversation.component';
 import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
 import { Conversation } from 'src/app/models/conversation-model';
 import { PaymentsComponent } from '../payments/payments.component';
+import { ToastAnimationEnter, ToastAnimationLeave } from 'src/app/animations/toast-transitions';
+import { User } from 'src/app/models/user-model';
 
 @Component({
   selector: 'app-request-info',
@@ -41,13 +43,14 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   ownerName: string;
 
   constructor(
-    private data: DataService,
+    private dataService: DataService,
     private modalController: ModalController,
+    private toastController: ToastController,
   ) { }
 
 
   ngOnInit() {
-    this.data.getUserProfile(this.request.owner).then(user => this.ownerName = user.name);
+    this.dataService.getUserProfile(this.request.owner).then(user => this.ownerName = user.name);
     this.getConversations();
   }
 
@@ -75,7 +78,7 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
 
 
   getConversations() {
-    this.conversations = this.data.conversations;
+    this.conversations = this.dataService.conversations;
   }
 
 
@@ -176,16 +179,23 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   async closeRequest() {
     (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
-        if (confirm) this.data.closeRequest(this.request);
+        if (confirm) this.dataService.closeRequest(this.request);
       });
   }
 
 
   async completeRequest() {
-    (await this.showConfirmAction('Continuar'))
+    const professional = this.dataService.getFirstUserOfRequestConversations(this.request.id);
+
+    if (professional) {
+      (await this.showConfirmAction('Continuar'))
       .onDidDismiss().then(({ data: confirm }) => {
-        if (confirm) this.presentPaymentModal();
+        if (confirm) this.presentPaymentModal(professional);
       });
+
+    } else {
+      this.presentNotPaymentAvailableToast();
+    }
   }
 
 
@@ -208,26 +218,37 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
     (await this.showConfirmAction())
       .onDidDismiss().then(({ data: confirm }) => {
         if (confirm) {
-          this.data.removeRequest(this.request);
+          this.dataService.removeRequest(this.request);
           this.modalController.dismiss();
         }
       });
   }
 
 
-  async presentPaymentModal() {
+  async presentPaymentModal(professional: User) {
     const modal = await this.modalController.create({
       component: PaymentsComponent,
-      componentProps: {
-        requestId: this.request.id
-      },
+      componentProps: { professional },
     });
     
     modal.onDidDismiss().then(({ data }) => {
-      if (data !== undefined) this.data.completeRequest(this.request);
+      if (data !== undefined) this.dataService.completeRequest(this.request);
     });
     
-    await modal.present();
+    modal.present();
+  }
+
+
+  async presentNotPaymentAvailableToast() {
+    const toast = await this.toastController.create({
+      message: 'No hay facturas disponibles',
+      duration: 2000,
+      mode: 'ios',
+      cssClass: 'login-toast',
+      enterAnimation: ToastAnimationEnter,
+      leaveAnimation: ToastAnimationLeave,
+    });
+    toast.present();
   }
 
 
