@@ -51,6 +51,7 @@ export enum UserProperties {
   isFav                        = 'isFav',
   fcmToken                     = 'fcmToken',
   selectedForRequest           = 'selectedForRequest',
+  imgLoaded                    = 'imgLoaded',
 }
 
 export class User {
@@ -81,4 +82,5 @@ export class User {
   [UserProperties.isFav]                        : boolean;
   [UserProperties.fcmToken]                     : string;
   [UserProperties.selectedForRequest]           : boolean;
+  [UserProperties.imgLoaded]                    : boolean;
 }

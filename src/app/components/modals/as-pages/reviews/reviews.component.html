@@ -1,0 +1,66 @@
+<status-bar color="#fff"></status-bar>
+
+<custom-header title="Opiniones">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon color="tertiary" slot="icon-only" name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</custom-header>
+
+<ion-content>
+
+  <div *ngIf="pageLoaded" class="container ion-padding-horizontal">
+
+    <ng-template *ngIf="reviewList then showContent; else demo"></ng-template>
+    <ng-template #demo>
+      <ion-list *ngFor="let i of [].constructor(4)" lines="none">
+        <ion-item>
+          <ion-avatar slot="start">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-avatar>
+          <ion-label>
+            <h2><ion-skeleton-text animated style="width: 55%"></ion-skeleton-text></h2>
+            <p><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></p>
+            <h3><ion-skeleton-text animated style="width: 80%"></ion-skeleton-text></h3>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+
+    <ng-template #showContent>
+      <ng-template *ngIf="reviewList.length then reviews; else emptyContent"></ng-template>
+
+      <ng-template #emptyContent>
+        <empty-content text="Aún sin opiniones" image="no-reviews"></empty-content>
+      </ng-template>
+
+      <ng-template #reviews>
+        <ion-list *ngFor="let review of reviewList" lines="none">
+          <ion-item>
+            <ion-avatar slot="start" style="visibility: hidden;"></ion-avatar>
+            <ion-avatar slot="start" class="user-image">
+              <ng-container *ngIf="review?.user.hasProfilePic">
+                <ion-spinner *ngIf="!review?.user.imgLoaded" name="crescent" color="medium"></ion-spinner>
+                <ion-img [src]="review?.user.profilePic" (ionImgDidLoad)="review?.user.imgLoaded=true"></ion-img>
+              </ng-container>
+            </ion-avatar>
+            
+            <ion-label>
+              <ion-text color="tertiary"><h2>{{review.user.name}}</h2></ion-text>
+              <ion-text color="medium"><p>{{formatDate(review.review.timestamp)}}</p></ion-text>
+              <div class="comment">
+                <img src="/assets/icon/quote.svg" class="quote">
+                <ion-text color="tertiary"><h3 class="ion-text-wrap">{{review.review.text}}</h3></ion-text>
+              </div>
+            </ion-label>
+            <ion-note class="font-weight-600" color="success">{{review.review.stars}}<ion-icon name="star"></ion-icon></ion-note>
+          </ion-item>
+        </ion-list>
+      </ng-template>
+
+    </ng-template>
+  </div>
+</ion-content>

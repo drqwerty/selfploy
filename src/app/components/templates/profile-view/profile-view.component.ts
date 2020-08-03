@@ -1,10 +1,12 @@
 import { Component, ViewChild, Input, Output, EventEmitter, AfterViewInit, ElementRef } from '@angular/core';
 import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { User, UserRole } from 'src/app/models/user-model';
-import { IonContent } from '@ionic/angular';
+import { IonContent, ModalController } from '@ionic/angular';
 import { auditTime, } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DataService } from 'src/app/providers/data.service';
+import { ReviewsComponent } from '../../modals/as-pages/reviews/reviews.component';
+import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave, ModalAnimationSlideEnter, ModalAnimationSlideLeave, ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
 
 @UntilDestroy()
 @Component({
@@ -21,6 +23,8 @@ export class ProfileViewComponent implements AfterViewInit {
   @Input() scrollEvents = false;
   @Input() completedRequests = 0;
   @Input() reviewStats = { avg: 0, reviews: 0 };
+  @Input() isAPage = false;
+
 
   @Output() scrollEvent = new EventEmitter<any>();
 
@@ -38,6 +42,7 @@ export class ProfileViewComponent implements AfterViewInit {
 
   constructor(
     private dataService: DataService,
+    private modalController: ModalController,
   ) { }
 
 
@@ -104,5 +109,17 @@ export class ProfileViewComponent implements AfterViewInit {
 
   stopProfileImageIntersectionObserver() {
     this.profileImageIntersectionObserver.disconnect();
+  }
+
+
+  async presentReviewsModal() {
+    const modal = await this.modalController.create({
+      enterAnimation: this.isAPage ? ModalAnimationSlideWithOpacityEnter : ModalAnimationSlideWithOpacityFromModalEnter,
+      leaveAnimation: this.isAPage ? ModalAnimationSlideWithOpacityLeave : ModalAnimationSlideWithOpacityFromModalLeave,
+      component: ReviewsComponent,
+      componentProps: { userId: this.user.id }
+    });
+  
+    await modal.present();
   }
 }

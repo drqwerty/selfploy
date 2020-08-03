@@ -2,7 +2,8 @@
   [backgroundColor]="backgroundColor"
   [user]="user"
   [mapId]="user?.id"
-  navBarSpace="true"
+  [navBarSpace]="true"
+  [isAPage]="true"
 >
   <ion-button buttonsEnd (click)="presentPopover($event)">
     <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>

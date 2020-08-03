@@ -111,7 +111,8 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
     });
 
     this.toggleFav();
-    modal.present();
+    modal.onWillDismiss().then(() => modal.classList.remove('background-black'));
+    modal.present().then(() => modal.classList.add('background-black'));
   }
 
 

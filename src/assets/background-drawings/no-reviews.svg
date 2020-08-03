@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="188.951" height="163.014" viewBox="0 0 188.951 163.014">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" y1="1" x2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="gray" stop-opacity="0.251"/>
+      <stop offset="0.54" stop-color="gray" stop-opacity="0.122"/>
+      <stop offset="1" stop-color="gray" stop-opacity="0.102"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="0.5" y1="1" x2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#b3b3b3" stop-opacity="0.251"/>
+      <stop offset="0.54" stop-color="#b3b3b3" stop-opacity="0.102"/>
+      <stop offset="1" stop-color="#b3b3b3" stop-opacity="0.051"/>
+    </linearGradient>
+  </defs>
+  <g id="Grupo_228" data-name="Grupo 228" opacity="0.5">
+    <rect id="Rectángulo_321" data-name="Rectángulo 321" width="188.951" height="43.655" rx="10" fill="url(#linear-gradient)"/>
+    <rect id="Rectángulo_341" data-name="Rectángulo 341" width="188.951" height="43.655" rx="10" transform="translate(0 59.68)" fill="url(#linear-gradient)"/>
+    <rect id="Rectángulo_349" data-name="Rectángulo 349" width="188.951" height="43.655" rx="10" transform="translate(0 119.36)" fill="url(#linear-gradient)"/>
+    <rect id="Rectángulo_322" data-name="Rectángulo 322" width="31.645" height="30.737" rx="8.35" transform="translate(14.219 6.903)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_347" data-name="Rectángulo 347" width="31.645" height="30.737" rx="8.35" transform="translate(14.219 66.583)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_355" data-name="Rectángulo 355" width="31.645" height="30.737" rx="8.35" transform="translate(14.219 126.263)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_323" data-name="Rectángulo 323" width="60.885" height="4.009" transform="translate(30.427 10.468)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_346" data-name="Rectángulo 346" width="60.885" height="4.009" transform="translate(30.427 70.148)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_354" data-name="Rectángulo 354" width="60.885" height="4.009" transform="translate(30.427 129.828)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_324" data-name="Rectángulo 324" width="86.119" height="4.009" transform="translate(27.277 19.821)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_345" data-name="Rectángulo 345" width="86.119" height="4.009" transform="translate(27.277 79.501)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_353" data-name="Rectángulo 353" width="86.119" height="4.009" transform="translate(27.277 139.181)" fill="url(#linear-gradient-4)"/>
+    <rect id="Rectángulo_337" data-name="Rectángulo 337" width="183.445" height="38.541" rx="9" transform="translate(2.753 2.228)" fill="#fff"/>
+    <rect id="Rectángulo_342" data-name="Rectángulo 342" width="183.445" height="38.541" rx="9" transform="translate(2.753 61.908)" fill="#fff"/>
+    <rect id="Rectángulo_350" data-name="Rectángulo 350" width="183.445" height="38.541" rx="9" transform="translate(2.753 121.588)" fill="#fff"/>
+    <rect id="Rectángulo_338" data-name="Rectángulo 338" width="31.07" height="27.137" rx="8.35" transform="translate(16.714 7.67)" fill="#f69837"/>
+    <rect id="Rectángulo_348" data-name="Rectángulo 348" width="31.07" height="27.137" rx="8.35" transform="translate(16.714 67.35)" fill="#f69837"/>
+    <rect id="Rectángulo_356" data-name="Rectángulo 356" width="31.07" height="27.137" rx="8.35" transform="translate(16.714 127.03)" fill="#f69837"/>
+    <rect id="Rectángulo_339" data-name="Rectángulo 339" width="59.777" height="3.541" transform="translate(60.07 10.816)" fill="#bdbdbd"/>
+    <rect id="Rectángulo_344" data-name="Rectángulo 344" width="59.777" height="3.541" transform="translate(60.07 70.495)" fill="#bdbdbd"/>
+    <rect id="Rectángulo_352" data-name="Rectángulo 352" width="59.777" height="3.541" transform="translate(60.07 130.175)" fill="#bdbdbd"/>
+    <rect id="Rectángulo_340" data-name="Rectángulo 340" width="84.553" height="3.541" transform="translate(63.351 19.074)" fill="#e0e0e0"/>
+    <rect id="Rectángulo_343" data-name="Rectángulo 343" width="84.553" height="3.541" transform="translate(63.351 78.754)" fill="#e0e0e0"/>
+    <rect id="Rectángulo_351" data-name="Rectángulo 351" width="84.553" height="3.541" transform="translate(63.351 138.434)" fill="#e0e0e0"/>
+  </g>
+</svg>

@@ -20,7 +20,7 @@ export class Review {
   [ReviewProperties.timestamp]      : Moment | firestore.Timestamp;
 
 
-  constructor(review: Review = null) {
+  constructor(review: any = null) {
     if (review) {
       const { id, professionalId, ownerId, text, stars, timestamp } = review;
 

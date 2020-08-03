@@ -521,11 +521,37 @@ export class FirestoreService {
   }
 
 
+  /* reviews */
+
   async postReview(review: Review) {
     (<firestore.FieldValue>review.timestamp) = firestore.FieldValue.serverTimestamp();
     await this.db
       .collection(dbKeys.reviews)
       .add(Object.assign({}, review));
+  }
+
+
+  async getAllReviewFrom(userId: string) {
+    const reviews = await this.db
+      .collection(dbKeys.reviews, ref => ref.where(`${ReviewProperties.professionalId}`, '==', userId))
+      .get()
+      .toPromise();
+
+    const reviewList = reviews.docs.map(doc => {
+      const review = new Review(doc.data())
+      review.id = doc.id;
+      return review;
+    });
+    
+    const userList: User[] = [];
+    for await (const review of reviewList) {
+      const user = await this.getUserProfile(review.ownerId);
+      userList.push(user)
+    }
+
+    return  reviewList.map((review, index) => {
+      return {review, user: userList[index]}
+    });
   }
 
 

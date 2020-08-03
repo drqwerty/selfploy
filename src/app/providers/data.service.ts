@@ -703,7 +703,6 @@ export class DataService {
       ?.anotherUser;
   }
 
-
   
   async postReview(userId: string, starRating: number, text: string) {
     const { id } = await this.getMyProfile();
@@ -715,6 +714,11 @@ export class DataService {
     review.text = text
 
     this.firestore.postReview(review)
+  }
+
+
+  getAllReviewFrom(userId: string) {
+    return this.firestore.getAllReviewFrom(userId);
   }
 
 
