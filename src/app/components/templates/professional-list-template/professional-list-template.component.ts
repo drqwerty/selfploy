@@ -55,6 +55,7 @@ export class ProfessionalListTemplateComponent {
       this.professionals = this.professionalsWithoutFilters.filter(user => {
         if (user.distance > filterValues.distance.value) return false;
         if (!user.workingHours.some(workinHour => filterValues.workingHours.value.includes(workinHour))) return false;
+        if (user.avg < filterValues.classification.value) return false;
 
         return true;
       });
