@@ -36,14 +36,14 @@
       <div #profileImageWrapper class="image-profile">
         <ng-container *ngTemplateOutlet="profileImageTemplate"></ng-container>
         <div *ngIf="user?.role === userRol.professional" class="stars">
-          <span class="number">{{reviewStats.avg | number:'1.0-1'}}</span>
+          <span class="number">{{user.avg | number:'1.0-1'}}</span>
         </div>
       </div>
 
       <div *ngIf="user?.role === userRol.professional" class="stats">
         <div class="works">
           <ion-text color="primary">
-            <h1 class="number">{{completedRequests}}</h1>
+            <h1 class="number">{{user.completedRequests}}</h1>
           </ion-text>
           <ion-text color="tertiary">
             Trabajos
@@ -52,7 +52,7 @@
         <div class="image-space"></div>
         <div class="opinions" (click)="presentReviewsModal()">
           <ion-text color="primary">
-            <h1 class="number">{{reviewStats.reviews}}</h1>
+            <h1 class="number">{{user.reviews}}</h1>
           </ion-text>
           <ion-text color="tertiary">
             Opiniones

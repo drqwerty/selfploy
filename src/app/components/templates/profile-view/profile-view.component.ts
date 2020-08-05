@@ -21,8 +21,8 @@ export class ProfileViewComponent implements AfterViewInit {
   @Input() mapId: string;
   @Input() navBarSpace = false;
   @Input() scrollEvents = false;
-  @Input() completedRequests = 0;
-  @Input() reviewStats = { avg: 0, reviews: 0 };
+  // @Input() completedRequests = 0;
+  // @Input() reviewStats = { avg: 0, reviews: 0 };
   @Input() isAPage = false;
 
 
@@ -62,12 +62,12 @@ export class ProfileViewComponent implements AfterViewInit {
 
 
   async getTotalNumberCompletedRequests() {
-    this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
+    // this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
   }
 
 
   async getReviewStats() {
-    if (!this.reviewStats) this.reviewStats = await this.dataService.getReviewStats(this.user.id);
+    // if (!this.reviewStats) this.reviewStats = await this.dataService.getReviewStats(this.user.id);
   }
 
 

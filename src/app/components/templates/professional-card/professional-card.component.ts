@@ -21,8 +21,8 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
   isFav = true;
 
-  reviewStats = { avg: 0, reviews: 0 };
-  completedRequests = 0;
+  // reviewStats = { avg: 0, reviews: 0 };
+  // completedRequests = 0;
 
   showSpinner = true;
   cardIntersectionObserver: IntersectionObserver;
@@ -39,21 +39,21 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
 
   async ngAfterViewInit() {
-    await this.getTotalNumberCompletedRequests();
-    await this.getReviewStats();
+    // await this.getTotalNumberCompletedRequests();
+    // await this.getReviewStats();
     await this.checkFavState();
     if (this.user) this.startCardIntersectionObserver();
   }
 
 
-  async getTotalNumberCompletedRequests() {
-    this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
-  }
+  // async getTotalNumberCompletedRequests() {
+  //   this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
+  // }
 
 
-  async getReviewStats() {
-    this.reviewStats = await this.dataService.getReviewStats(this.user.id);
-  }
+  // async getReviewStats() {
+  //   this.reviewStats = await this.dataService.getReviewStats(this.user.id);
+  // }
 
 
   ngOnDestroy() {
@@ -100,8 +100,8 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
       componentProps: { 
         backgroundColor: 'primary', user,
         selectingProfessionals: this.selectingProfessionals,
-        completedRequests: this.completedRequests,
-        reviewStats: this.reviewStats,
+        // completedRequests: this.completedRequests,
+        // reviewStats: this.reviewStats,
        }
     });
 

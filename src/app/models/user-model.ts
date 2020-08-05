@@ -52,6 +52,9 @@ export enum UserProperties {
   fcmToken                     = 'fcmToken',
   selectedForRequest           = 'selectedForRequest',
   imgLoaded                    = 'imgLoaded',
+  avg                      = 'avg',
+  reviews                      = 'reviews',
+  completedRequests            = 'completedRequests'
 }
 
 export class User {
@@ -83,4 +86,7 @@ export class User {
   [UserProperties.fcmToken]                     : string;
   [UserProperties.selectedForRequest]           : boolean;
   [UserProperties.imgLoaded]                    : boolean;
+  [UserProperties.avg]                      : number;
+  [UserProperties.reviews]                      : number;
+  [UserProperties.completedRequests]            : number;
 }

@@ -126,7 +126,16 @@ export class FirestoreService {
       .get()
       .then(value => this.translateCoordinatesAndSortByDistance(value));
 
-    return this.omitMyProfile(query, uid);
+    const userList = this.omitMyProfile(query, uid);
+
+    for await (const user of userList) {
+      const { avg, reviews } = await this.getReviewStats(user.id);
+      user.avg = avg;
+      user.reviews = reviews;
+      user.completedRequests = await this.getTotalNumberCompletedRequestsBy(user.id);
+    }
+
+    return userList;
   }
 
 

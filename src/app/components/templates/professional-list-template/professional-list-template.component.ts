@@ -56,24 +56,19 @@ export class ProfessionalListTemplateComponent {
         if (user.distance > filterValues.distance.value) return false;
         if (!user.workingHours.some(workinHour => filterValues.workingHours.value.includes(workinHour))) return false;
 
-        
-        if (filterValues.order.value.order == Order.distance) {
-
-          if (filterValues.order.value.ascendent) {
-            this.professionals?.sort((a, b) => a.distance - b.distance);
-            
-          } else {
-            this.professionals?.sort((a, b) => b.distance - a.distance);
-          }
-
-        } else {
-
-        }
-        
         return true;
-      })
+      });
+
+      const ascendenOrder = filterValues.order.value.ascendent;
+
+      if (filterValues.order.value.order == Order.distance) {
+        if (ascendenOrder) this.professionals?.sort((a, b) => a.distance - b.distance);
+        else this.professionals?.sort((a, b) => b.distance - a.distance);
+
+      } else {
+        if (ascendenOrder) this.professionals?.sort((a, b) => a.avg - b.avg);
+        else this.professionals?.sort((a, b) => b.avg - a.avg);
+      }
     }
-
   }
-
 }
