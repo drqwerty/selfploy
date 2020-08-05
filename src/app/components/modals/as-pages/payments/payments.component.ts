@@ -77,8 +77,7 @@ export class PaymentsComponent {
     setTimeout(() => this.showPaymentComplete = false, 1000);
     setTimeout(async () => {
       await this.presentReviewModal();
-      // this.modal.dismiss(true);
-      this.modal.dismiss();
+      this.modal.dismiss(true);
     }, 2000);
   }
 

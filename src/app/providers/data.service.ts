@@ -232,6 +232,13 @@ export class DataService {
     this.translateCoors();
   }
 
+  
+  async updateSavedFavoriteUser(user: User) {
+    await this.getFavoriteList();
+    if (this.favorites.includes(user)) this.saveFavorite(user);
+  }
+
+
 
   /* requests */
 

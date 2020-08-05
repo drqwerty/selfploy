@@ -39,25 +39,28 @@ export class ProfessionalCardComponent implements OnInit, AfterViewInit, OnDestr
 
 
   async ngAfterViewInit() {
-    // await this.getTotalNumberCompletedRequests();
-    // await this.getReviewStats();
+    await this.getTotalNumberCompletedRequests();
+    await this.getReviewStats();
     await this.checkFavState();
+    this.dataService.updateSavedFavoriteUser(this.user);
     if (this.user) this.startCardIntersectionObserver();
   }
 
 
-  // async getTotalNumberCompletedRequests() {
-  //   this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
-  // }
+  async getTotalNumberCompletedRequests() {
+    this.user.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
+  }
 
 
-  // async getReviewStats() {
-  //   this.reviewStats = await this.dataService.getReviewStats(this.user.id);
-  // }
+  async getReviewStats() {
+    const { avg,reviews } = await this.dataService.getReviewStats(this.user.id);
+    this.user.avg = avg;
+    this.user.reviews = reviews;
+  }
 
 
   ngOnDestroy() {
-    if (this.user) this.cardIntersectionObserver.disconnect();
+    if (this.user) this.cardIntersectionObserver?.disconnect();
   }
 
 
