@@ -599,6 +599,13 @@ export class DataService {
   }
 
 
+  getConversationFromRequest(requestId: string) {
+    return Object
+      .values(this.conversations)
+      .filter(({ request }) => request == requestId);
+  }
+
+
   /* notifications */
 
 

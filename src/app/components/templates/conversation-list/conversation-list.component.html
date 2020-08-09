@@ -10,7 +10,7 @@
       <p>{{getLastMessage(conversation.messages)}}</p>
     </ion-label>
     <ion-label slot="end" class="message-info">
-      <!-- <h3>4</h3> -->
+      <ion-badge mode="ios" class="font-weight-500" *ngIf="existMessagesNotReaded(conversation.messages)">{{getNotReadedMessagesCount(conversation.messages)}}</ion-badge>
       <p>{{getLastTimestamp(conversation.messages)}}</p>
     </ion-label>
   </ion-item>

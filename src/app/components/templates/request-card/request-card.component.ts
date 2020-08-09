@@ -188,6 +188,7 @@ export class RequestCardComponent implements AfterViewInit {
     return modal;
   }
 
+
   async presentModal() {
     const modal = await this.modalController.create({
       component: RequestInfoComponent,
@@ -198,4 +199,9 @@ export class RequestCardComponent implements AfterViewInit {
     modal.present().then(() => modal.classList.add('background-black'));
   }
 
+
+  existUnreadedMessages() {
+    const conversations = this.dataService.getConversationFromRequest(this.request.id);
+    return conversations.some(conversation => Object.values(conversation.messages).some(({ fromMe, readed }) => !fromMe && !readed));
+  }
 }

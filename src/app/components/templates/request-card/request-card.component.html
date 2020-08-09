@@ -54,11 +54,11 @@
             <ng-template #showContacts>
               <ion-col size="6" class="ion-justify-content-end ion-no-padding" *ngIf="request.status != requestStatus.completed">
                 <ion-text color="tertiary" class="margin-end">Contactos:</ion-text>
-                <ion-badge mode="ios" class="font-weight-500" [class.unread-messages]="request.unreadMesseages">{{request.contactsTotalNumber || 0}}</ion-badge>
+                <ion-badge mode="ios" class="font-weight-500" [class.unread-messages]="existUnreadedMessages()">{{request.contactsTotalNumber || 0}}</ion-badge>
               </ion-col>
             </ng-template>
             <ng-template #showChatButton>
-              <div class="badge" [class.unread-messages]="request.unreadMesseages"></div>
+              <div class="badge" [class.unread-messages]="existUnreadedMessages()"></div>
               <ion-button (click)="openConversation($event)" class="chat-button">
                 <ion-icon slot="icon-only" name="chatbubble"></ion-icon>
               </ion-button>

@@ -261,15 +261,37 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
 
 
   onSameDay(index1: number, index2: number) {
-    const date1 = <moment.Moment>Object.values(this.messages)[index1]?.timestamp
-    const date2 = <moment.Moment>Object.values(this.messages)[index2].timestamp
+    const date1 = <moment.Moment>Object.values(this.messages)[index1]?.timestamp;
+    const date2 = <moment.Moment>Object.values(this.messages)[index2].timestamp;
 
     return date1?.isSame(date2, 'day');
   }
 
 
+  newMessages(index1: number, index2: number) {
+    const messagePrev    = Object.values(this.messages)[index1];
+    const messageCurrent = Object.values(this.messages)[index2];
+
+    return !messageCurrent.readed && !messageCurrent.fromMe
+      && (
+        messagePrev == null
+        || messagePrev.fromMe
+        || messagePrev.readed
+      );
+  }
+
+
   formatDate(date: moment.Moment, format: 'LL' | 'HH:mm') {
     return date.format(format);
+  }
+
+
+  getNotReadedMessagesText() {
+    const notReadedMessagesCount = Object.values(this.messages).filter(({ fromMe, readed }) => !fromMe && !readed).length;
+
+    return notReadedMessagesCount == 1
+      ? `${notReadedMessagesCount} mensaje nuevo`
+      : `${notReadedMessagesCount} mensajes nuevos`
   }
 
 

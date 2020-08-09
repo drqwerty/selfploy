@@ -35,11 +35,11 @@ ion-avatar {
   overflow-x: scroll;
   min-height: 100%;
 
-  .col-date {
+  .col-info {
     position: sticky;
     left: calc(calc(2 / var(--ion-grid-columns, 12)) * 100%);
 
-    .date {
+    .info {
       text-align: center;
       margin: 10px auto;
       color: var(--ion-color-medium);

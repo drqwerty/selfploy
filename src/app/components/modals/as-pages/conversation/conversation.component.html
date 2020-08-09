@@ -37,9 +37,17 @@
       <ng-container *ngIf="messages; else emptyContent">
         <ng-container *ngFor="let message of (messages | objectToArray); let i = index">
 
+          <ion-row *ngIf="newMessages(i-1, i)">
+            <ion-col class="col-info" size="8">
+              <div class="info">
+                {{ getNotReadedMessagesText() }}
+              </div>
+            </ion-col>
+          </ion-row>
+          
           <ion-row *ngIf="!onSameDay(i-1, i)">
-            <ion-col class="col-date" size="8">
-              <div class="date">
+            <ion-col class="col-info" size="8">
+              <div class="info">
                 {{ formatDate(message.timestamp, 'LL') }}
               </div>
             </ion-col>

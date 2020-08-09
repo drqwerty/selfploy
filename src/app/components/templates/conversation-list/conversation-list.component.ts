@@ -55,6 +55,16 @@ export class ConversationListComponent implements OnInit {
   }
 
 
+  existMessagesNotReaded(messages: { [id: string]: Message }) {
+    return Object.values(messages).some(({ fromMe, readed }) => !fromMe && !readed);
+  }
+  
+  
+  getNotReadedMessagesCount(messages: { [id: string]: Message }) {
+    return Object.values(messages).filter(({ fromMe, readed }) => !fromMe && !readed).length;
+  }
+
+
   async openConversation(conversation: Conversation) {
     const modal = await this.modalController.create({
       component: ConversationComponent,
