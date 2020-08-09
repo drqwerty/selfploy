@@ -606,6 +606,19 @@ export class DataService {
   }
 
 
+  async setMessagesAsReaded(conversationId: string) {
+    const messages = Object.values(this.conversations).find(({ id }) => id == conversationId).messages;
+
+    const notReadedMessages = Object.values(messages)
+      .filter(({ fromMe, readed }) => !fromMe && !readed);
+
+    notReadedMessages.forEach(message => message.readed = true);
+
+    this.firestore.setMessagesAsReaded(conversationId, notReadedMessages);
+    this.storage.saveConversations(this.conversations);
+  }
+
+
   /* notifications */
 
 

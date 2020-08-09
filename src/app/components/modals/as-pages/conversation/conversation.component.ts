@@ -51,16 +51,19 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   @ViewChildren(IonImg)                        ionImg          : QueryList<any>;
 
   private nearToBottom = true;
-  private touching = false;
+  private touching     = false;
 
-  image: HTMLImageElement = null;
-  bottomIntersectionObserver: IntersectionObserver;
+  image                      : HTMLImageElement = null;
+  bottomIntersectionObserver : IntersectionObserver;
 
-  myUid: string;
-  anotherUser: User;
-  conversation: Conversation;
-  messages: { [id: string]: Message };
-  newMessage = '';
+  myUid        : string;
+  anotherUser  : User;
+  conversation : Conversation;
+  messages     : { [id: string]: Message };
+  newMessage   = '';
+
+  firstNotReadedMessageId : string;
+  notReadedMessageText    : string;
 
   constructor(
     private modalController: ModalController,
@@ -70,6 +73,8 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
 
   ngOnInit() {
     this.getMessages();
+    this.checkNotReadedMessages();
+    this.setMessagesAsReaded();
     this.getAnotherUser();
   }
 
@@ -124,15 +129,20 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
           })
         }
 
-        if (conversationId === this.conversation.id && Object.values(this.messages).slice(-1)[0].isImage) {
-          setTimeout(() => {
-            this.fivGallery.updateImagesIndex();
-            this.fivGallery.images.last.click
-              .pipe(untilDestroyed(this))
-              .subscribe(image => this.fivGallery.open(image)); 
-          });
+        if (conversationId === this.conversation.id) {
+          if (Object.values(this.messages).slice(-1)[0].isImage) {
+            setTimeout(() => {
+              this.fivGallery.updateImagesIndex();
+              this.fivGallery.images.last.click
+                .pipe(untilDestroyed(this))
+                .subscribe(image => this.fivGallery.open(image)); 
+            });
+          }
+
+          this.firstNotReadedMessageId = null;
+          this.notReadedMessageText = null;
         }
-      })
+      });
   }
 
 
@@ -268,28 +278,45 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   }
 
 
-  newMessages(index1: number, index2: number) {
-    const messagePrev    = Object.values(this.messages)[index1];
-    const messageCurrent = Object.values(this.messages)[index2];
-
-    return !messageCurrent.readed && !messageCurrent.fromMe
-      && (
-        messagePrev == null
-        || messagePrev.fromMe
-        || messagePrev.readed
-      );
-  }
-
-
   formatDate(date: moment.Moment, format: 'LL' | 'HH:mm') {
     return date.format(format);
   }
 
 
-  getNotReadedMessagesText() {
+  checkNotReadedMessages() {
+    this.updateNotReadedMessagesText();
+    this.findFirstNotReadedMessageId();
+  }
+
+
+  setMessagesAsReaded() {
+    this.data.setMessagesAsReaded(this.conversation.id);
+  }
+
+
+  findFirstNotReadedMessageId() {
+    const messageList = Object.values(this.messages);
+
+    for (let i = 0; i < messageList.length; i++) {
+      const messagePrev    = messageList[i-1];
+      const messageCurrent = messageList[i];
+  
+      if (!messageCurrent.readed && !messageCurrent.fromMe
+        && (
+          messagePrev == null
+          || messagePrev.fromMe
+          || messagePrev.readed
+        )) this.firstNotReadedMessageId = messageCurrent.id;
+
+        if (this.firstNotReadedMessageId) break;
+    }
+  }
+
+
+  updateNotReadedMessagesText() {
     const notReadedMessagesCount = Object.values(this.messages).filter(({ fromMe, readed }) => !fromMe && !readed).length;
 
-    return notReadedMessagesCount == 1
+    this.notReadedMessageText = notReadedMessagesCount == 1
       ? `${notReadedMessagesCount} mensaje nuevo`
       : `${notReadedMessagesCount} mensajes nuevos`
   }

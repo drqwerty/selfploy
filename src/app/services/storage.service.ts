@@ -86,6 +86,9 @@ export class StorageService {
   }
 
 
+  /* requests */
+
+
   saveRequests(requests: Request[], dbKey: dbKeys.requests | dbKeys.requestsFollowing) {
     if (!requests) return this.removeKeys(dbKey);
     return this.saveData(dbKey, requests)
@@ -116,6 +119,9 @@ export class StorageService {
     await this.saveRequests(requests, request.isMine ? dbKeys.requests : dbKeys.requestsFollowing);
     return requests;
   }
+
+
+  /* messages */
 
 
   async saveConversations(conversations) {

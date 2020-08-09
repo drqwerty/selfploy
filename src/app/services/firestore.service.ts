@@ -530,6 +530,18 @@ export class FirestoreService {
   }
 
 
+  setMessagesAsReaded(conversationId: string, messages: Message[]) {
+    const updateBatch = this.db.firestore.batch();
+
+    messages.forEach(message => {
+      const docRef = this.db.doc(`${dbKeys.conversations}/${conversationId}/${dbKeys.messages}/${message.id}`).ref;
+      updateBatch.update(docRef, {[ConversationProperties.readed]: message.readed})
+    });
+
+    updateBatch.commit();
+  }
+
+
   /* reviews */
 
   async postReview(review: Review) {

@@ -37,11 +37,9 @@
       <ng-container *ngIf="messages; else emptyContent">
         <ng-container *ngFor="let message of (messages | objectToArray); let i = index">
 
-          <ion-row *ngIf="newMessages(i-1, i)">
+          <ion-row *ngIf="message.id === firstNotReadedMessageId">
             <ion-col class="col-info" size="8">
-              <div class="info">
-                {{ getNotReadedMessagesText() }}
-              </div>
+              <div class="info">{{notReadedMessageText}}</div>
             </ion-col>
           </ion-row>
           
