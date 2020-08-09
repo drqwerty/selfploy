@@ -4,6 +4,9 @@ import { Review } from 'src/app/models/review-model';
 import { DataService } from 'src/app/providers/data.service';
 import { User } from 'src/app/models/user-model';
 import { Moment } from 'moment';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+const { StatusBar } = Plugins;
+
 
 @Component({
   selector: 'app-reviews',
@@ -25,8 +28,8 @@ export class ReviewsComponent {
 
 
   ionViewWillEnter() {
-    this.dataService.getAllReviewFrom(this.userId)
-      .then(reviews => this.reviewList = reviews);
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
+    this.dataService.getAllReviewFrom(this.userId).then(reviews => this.reviewList = reviews);
   }
 
 

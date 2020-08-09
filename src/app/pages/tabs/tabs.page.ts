@@ -2,7 +2,7 @@ import { Component, } from '@angular/core';
 import { Platform, ModalController } from '@ionic/angular';
 import { playLoginAnimation } from "../../animations/log-in-out-transition";
 
-import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+import { Plugins, StatusBarStyle, Capacitor, StatusBarStyleOptions } from '@capacitor/core';
 import { RequestNewComponent } from 'src/app/components/modals/as-pages/request-new/request-new.component';
 import { Animations } from 'src/app/animations/animations';
 import { DataService } from 'src/app/providers/data.service';
@@ -12,7 +12,7 @@ import { RequestInfoComponent } from 'src/app/components/modals/as-pages/request
 import { ConversationComponent } from 'src/app/components/modals/as-pages/conversation/conversation.component';
 import { Request } from 'src/app/models/request-model';
 import { Conversation } from 'src/app/models/conversation-model';
-import { PaymentsComponent } from 'src/app/components/modals/as-pages/payments/payments.component';
+import { Router } from '@angular/router';
 const { StatusBar } = Plugins;
 
 @Component({
@@ -49,6 +49,7 @@ export class TabsPage {
     private anim: Animations,
     private data: DataService,
     private notifications: NotificationService,
+    private router: Router
   ) {
     setTimeout(async () => {
       await playLoginAnimation(platform.height())
@@ -99,7 +100,7 @@ export class TabsPage {
       .subscribe(async ({ conversationId }) => {
 
         let conversation: Conversation = this.data.getConversationFromId(conversationId);
-        
+
         if (conversation) {
           this.openConversation(conversation)
 
@@ -148,9 +149,28 @@ export class TabsPage {
       animated: false,
     });
 
-    // await this.anim.addElement(this.ionFab).startAnimation();
-    modal.onWillDismiss().then(() => modal.classList.remove('background-black'));
-    modal.present().then(() => modal.classList.add('background-black'));
+    let style: 0 | 1;
+    const statusBarStyles: StatusBarStyleOptions[] = [
+      { style: StatusBarStyle.Dark },
+      { style: StatusBarStyle.Light }
+    ];
+
+    const currentPage = this.router.parseUrl(this.router.url).root.children.primary.segments[1].path;
+    style = (currentPage == 'profile')
+      ? 0
+      : 1;
+
+    await this.anim.addElement(this.ionFab).startAnimation();
+
+    modal.onWillDismiss().then(() => {
+      modal.classList.remove('background-black');
+      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle(statusBarStyles[style]);
+    });
+
+    modal.present().then(() => {
+      modal.classList.add('background-black');
+      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle(statusBarStyles[1]);
+    });
   }
 
 }

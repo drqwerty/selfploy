@@ -54,13 +54,13 @@ export class RequestNewComponent implements OnInit {
 
 
   ionViewWillEnter() {
-    // this.anim.modalLoaded();
+    this.anim.modalLoaded();
     // this.continue();
   }
 
 
   async goBack() {
-    // await this.anim.startReverseAnimation();
+    await this.anim.startReverseAnimation();
     this.modalController.dismiss();
   }
 

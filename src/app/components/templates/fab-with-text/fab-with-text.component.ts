@@ -51,7 +51,7 @@ export class FabWithTextComponent implements AfterViewInit {
       elementsToStyle.forEach(({ el, style, string }) => this.renderer.setStyle(el, style, string));
 
       setTimeout(() => this.loaded = true, 100);
-    });
+    }, 250);
   }
 
 

@@ -36,7 +36,7 @@ export class ProfilePage {
     this.user = await this.data.getMyProfile();
     this.updateBackgroundColor();
     this.profileView.startProfileImageIntersectionObserver();
-    if (this.user.role === UserRole.professional) this.profileView.getTotalNumberCompletedRequests();
+    // if (this.user.role === UserRole.professional) this.profileView.getTotalNumberCompletedRequests();
   }
 
 

@@ -7,6 +7,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DataService } from 'src/app/providers/data.service';
 import { ReviewsComponent } from '../../modals/as-pages/reviews/reviews.component';
 import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave, ModalAnimationSlideEnter, ModalAnimationSlideLeave, ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeave } from 'src/app/animations/page-transitions';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+const { StatusBar } = Plugins;
 
 @UntilDestroy()
 @Component({
@@ -47,10 +49,10 @@ export class ProfileViewComponent implements AfterViewInit {
 
 
   ngAfterViewInit() {
-    if (this.user?.role === this.userRol.professional) {
-      this.getTotalNumberCompletedRequests();
-      this.getReviewStats();
-    }
+    // if (this.user?.role === this.userRol.professional) {
+      // this.getTotalNumberCompletedRequests();
+      // this.getReviewStats();
+    // }
     this.startScrollSubscription();
     this.setCornersStyle();
   }
@@ -61,14 +63,14 @@ export class ProfileViewComponent implements AfterViewInit {
   }
 
 
-  async getTotalNumberCompletedRequests() {
-    // this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
-  }
+  // async getTotalNumberCompletedRequests() {
+  //   // this.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
+  // }
 
 
-  async getReviewStats() {
-    // if (!this.reviewStats) this.reviewStats = await this.dataService.getReviewStats(this.user.id);
-  }
+  // async getReviewStats() {
+  //   // if (!this.reviewStats) this.reviewStats = await this.dataService.getReviewStats(this.user.id);
+  // }
 
 
   imageLoaded() {
@@ -119,6 +121,8 @@ export class ProfileViewComponent implements AfterViewInit {
       component: ReviewsComponent,
       componentProps: { userId: this.user.id }
     });
+
+    modal.onDidDismiss().then(() => { if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark }); });
   
     await modal.present();
   }

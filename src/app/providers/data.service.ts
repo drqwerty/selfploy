@@ -234,8 +234,9 @@ export class DataService {
 
   
   async updateSavedFavoriteUser(user: User) {
-    await this.getFavoriteList();
-    if (this.favorites.includes(user)) this.saveFavorite(user);
+    const favoriteList = await this.storage.getFavorites()
+    const favUser = favoriteList.find(({ id }) => id === user.id);
+    if (favUser?.avg != user.avg || favUser?.reviews != user.reviews) this.saveFavorite(user);
   }
 
 
