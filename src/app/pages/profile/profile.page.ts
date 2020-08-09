@@ -23,20 +23,40 @@ export class ProfilePage {
   backgroundColor: string;
 
   constructor(
-    private data: DataService,
+    private dataService: DataService,
     private popoverController: PopoverController,
     private navController: NavController,
   ) {
-    this.data.getMyProfile().then(user => this.user = user);
+    this.dataService.getMyProfile().then(user => this.user = user);
   }
 
 
   async ionViewWillEnter() {
     if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark });
-    this.user = await this.data.getMyProfile();
+    this.user = await this.dataService.getMyProfile();
     this.updateBackgroundColor();
     this.profileView.startProfileImageIntersectionObserver();
-    // if (this.user.role === UserRole.professional) this.profileView.getTotalNumberCompletedRequests();
+    this.getStats();
+  }
+
+
+  getStats() {
+    if (this.user?.role === this.userRol.professional) {
+      this.getTotalNumberCompletedRequests();
+      this.getReviewStats();
+    }
+  }
+
+
+  async getTotalNumberCompletedRequests() {
+    this.user.completedRequests = await this.dataService.getTotalNumberCompletedRequestsBy(this.user.id);
+  }
+
+
+  async getReviewStats() {
+    const { avg, reviews } = await this.dataService.getReviewStats(this.user.id);
+    this.user.avg = avg;
+    this.user.reviews = reviews;
   }
 
 

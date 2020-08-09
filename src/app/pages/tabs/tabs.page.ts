@@ -149,27 +149,19 @@ export class TabsPage {
       animated: false,
     });
 
-    let style: 0 | 1;
-    const statusBarStyles: StatusBarStyleOptions[] = [
-      { style: StatusBarStyle.Dark },
-      { style: StatusBarStyle.Light }
-    ];
-
-    const currentPage = this.router.parseUrl(this.router.url).root.children.primary.segments[1].path;
-    style = (currentPage == 'profile')
-      ? 0
-      : 1;
-
     await this.anim.addElement(this.ionFab).startAnimation();
 
-    modal.onWillDismiss().then(() => {
+    let currentStatusBarStyle: StatusBarStyle;
+    if (Capacitor.isPluginAvailable('StatusBar')) currentStatusBarStyle = (await StatusBar.getInfo()).style;
+    
+    modal.onWillDismiss().then(() => { 
+      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: currentStatusBarStyle })
       modal.classList.remove('background-black');
-      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle(statusBarStyles[style]);
     });
 
-    modal.present().then(() => {
+    modal.present().then(() =>       { 
+      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light })
       modal.classList.add('background-black');
-      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle(statusBarStyles[1]);
     });
   }
 

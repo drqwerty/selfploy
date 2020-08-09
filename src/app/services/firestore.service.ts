@@ -572,7 +572,8 @@ export class FirestoreService {
 
     return  reviewList.map((review, index) => {
       return {review, user: userList[index]}
-    });
+    })
+    .sort((a, b) => (<moment.Moment>a.review.timestamp).isBefore(b.review.timestamp) ? 1 : -1);
   }
 
 

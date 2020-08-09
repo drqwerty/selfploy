@@ -421,7 +421,6 @@ export class DataService {
 
   private observeFollowingRequest(id: string, path: string) {
     this.followingRequestsSubscription[id] = this.observeRequest(this.firestore.getObservableFromPath(path), false)
-    console.log('mete', id);
   }
 
 
@@ -558,11 +557,8 @@ export class DataService {
         conversationList.forEach(async conversation => {
 
           this.getRequest(conversation.request).then(request => {
-            if (request.contactsTotalNumber == null) {
-              request.contactsTotalNumber = 1;
-            } else {
-              request.contactsTotalNumber++;
-            }
+            if (!request.contactsTotalNumber) request.contactsTotalNumber = 1;
+            else request.contactsTotalNumber++;
           })
 
           let activeRequest = this.followingRequestList?.findIndex(request => request.id === conversation.request) > -1;

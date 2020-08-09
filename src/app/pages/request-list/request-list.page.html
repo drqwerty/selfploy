@@ -19,7 +19,7 @@
 
   <ng-template #clientView>
 
-    <ng-template *ngIf="myRequestList?.length then showClientContent; else clientEmptyContent"></ng-template>
+    <ng-template *ngIf="showAtLeastOneRequest() then showClientContent; else clientEmptyContent"></ng-template>
 
     <ng-template #clientEmptyContent>
       <empty-content image="no-requests-client" text="Aún sin encargos"></empty-content>

@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
+import { Component, Input, AfterViewInit, OnInit } from '@angular/core';
 import { Request, RequestStatus, RequestStatusText } from 'src/app/models/request-model';
 import { ModalController, ToastController } from '@ionic/angular';
 import { RequestCardActionSheetComponent } from 'src/app/components/action-sheets/request-card-action-sheet/request-card-action-sheet.component';
@@ -12,13 +12,17 @@ import { ModalAnimationSlideWithOpacityEnter, ModalAnimationSlideWithOpacityLeav
 import { PaymentsComponent } from '../../modals/as-pages/payments/payments.component';
 import { ToastAnimationEnter, ToastAnimationLeave } from 'src/app/animations/toast-transitions';
 import { User } from 'src/app/models/user-model';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+const { StatusBar } = Plugins;
 
+@UntilDestroy()
 @Component({
   selector: 'request-card',
   templateUrl: './request-card.component.html',
   styleUrls: ['./request-card.component.scss'],
 })
-export class RequestCardComponent implements AfterViewInit {
+export class RequestCardComponent implements OnInit {
 
   @Input() request: Request;
 
@@ -26,6 +30,7 @@ export class RequestCardComponent implements AfterViewInit {
   requestStatus = RequestStatus;
   requestStatusText = RequestStatusText;
   showSpinner = true;
+  contactsCount = 0;
 
   constructor(
     private modalController: ModalController,
@@ -34,7 +39,12 @@ export class RequestCardComponent implements AfterViewInit {
   ) { }
 
 
-  ngAfterViewInit() { }
+  ngOnInit() {
+    this.updateContactsCount();
+    this.dataService.newMessageSubject
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.updateContactsCount());
+   }
 
 
   imageLoaded() {
@@ -195,13 +205,28 @@ export class RequestCardComponent implements AfterViewInit {
       componentProps: { request: this.request }
     });
 
-    modal.onWillDismiss().then(() => modal.classList.remove('background-black'));
-    modal.present().then(() => modal.classList.add('background-black'));
+    let currentStatusBarStyle: StatusBarStyle;
+    if (Capacitor.isPluginAvailable('StatusBar')) currentStatusBarStyle = (await StatusBar.getInfo()).style;
+    
+    modal.onWillDismiss().then(() => { 
+      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: currentStatusBarStyle })
+      modal.classList.remove('background-black');
+    });
+
+    modal.present().then(() =>       { 
+      if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Dark })
+      modal.classList.add('background-black');
+    });
   }
 
 
   existUnreadedMessages() {
     const conversations = this.dataService.getConversationFromRequest(this.request.id);
     return conversations.some(conversation => Object.values(conversation.messages).some(({ fromMe, readed }) => !fromMe && !readed));
+  }
+  
+  
+  updateContactsCount() {
+    this.contactsCount = this.dataService.getConversationFromRequest(this.request.id).length;
   }
 }

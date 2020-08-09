@@ -84,6 +84,11 @@ export class RequestListPage {
   }
 
 
+  showAtLeastOneRequest() {
+    return this.myRequestList.some(({ status }) => this.showCard(status));
+  }
+
+
   showCard(state: RequestStatus) {
     if (state != this.requestStatus.draft     && state != this.requestStatus.completed)            return true;
     if (state == this.requestStatus.draft     && this.userConfig.requestListOptions.showDraft)     return true;
