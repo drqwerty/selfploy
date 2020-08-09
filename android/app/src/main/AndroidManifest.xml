@@ -34,6 +34,7 @@
             android:name="es.tfg.selfploy.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:screenOrientation="locked"
             android:launchMode="singleTask">
 
             <intent-filter>
