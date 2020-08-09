@@ -46,10 +46,6 @@ export class RequestNewComponent implements OnInit {
 
   ngOnInit() {
     this.tempRequest = new Request(this.request);
-    this.tempRequest.title = 'titulazo';
-    this.tempRequest.description = 'descripcionaca';
-    this.tempRequest.category = 'carpintería';
-    this.tempRequest.service = 'aluminio';
   }
 
 
