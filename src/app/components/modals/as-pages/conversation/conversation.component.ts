@@ -14,6 +14,8 @@ import { MapLocationComponent } from '../map-location/map-location.component';
 import { ModalAnimationSlideWithOpacityFromModalEnter, ModalAnimationSlideWithOpacityFromModalLeave } from 'src/app/animations/page-transitions';
 import { MapPreviewComponent } from 'src/app/components/templates/map-preview/map-preview.component';
 import { LatLng } from 'leaflet';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+const { StatusBar } = Plugins;
 
 @UntilDestroy()
 @Component({
@@ -49,6 +51,8 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   @ViewChild(FivGallery)                       fivGallery      : FivGallery;
   @ViewChildren(FivGalleryImage)               fivGalleryImage : QueryList<FivGalleryImage>;
   @ViewChildren(IonImg)                        ionImg          : QueryList<any>;
+
+  statusBarStyle: StatusBarStyle;
 
   private nearToBottom = true;
   private touching     = false;
@@ -95,6 +99,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
 
 
   ionViewDidEnter() {
+    this.updateStatusBar();
     this.mapPreviewList.toArray().forEach(el => el.initMap());
     this.mapPreviewList
       .changes
@@ -105,6 +110,15 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
 
   ionViewWillLeave() {
     if (this.conversation?.id) DataService.conversationOpenedList.shift();
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: this.statusBarStyle });
+  }
+
+
+  async updateStatusBar() {
+    if (Capacitor.isPluginAvailable('StatusBar')) {
+      this.statusBarStyle = (await StatusBar.getInfo()).style;
+      StatusBar.setStyle({ style: StatusBarStyle.Dark });
+    }
   }
 
 
@@ -141,6 +155,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
 
           this.firstNotReadedMessageId = null;
           this.notReadedMessageText = null;
+          this.setMessagesAsReaded();
         }
       });
   }

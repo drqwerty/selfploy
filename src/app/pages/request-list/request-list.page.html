@@ -54,7 +54,7 @@
         <super-tab>
           <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event.detail)">
             <div class="nav-bar-space">
-              <ng-container *ngIf="followingRequestList?.length; else proEmptyContentFollowing">
+              <ng-container *ngIf="showAtLeastOneFollowingRequest(); else proEmptyContentFollowing">
                 <ng-container *ngFor="let request of followingRequestList">
                   <request-card *ngIf="showCard(request.status)" [request]="request"></request-card>
                 </ng-container>
@@ -68,7 +68,7 @@
         <super-tab>
           <ion-content [scrollEvents]="true" (ionScroll)="propagateScroll($event.detail)">
             <div class="nav-bar-space">
-              <ng-container *ngIf="myRequestList?.length; else proEmptyContentOwn">
+              <ng-container *ngIf="showAtLeastOneRequest(); else proEmptyContentOwn">
                 <ng-container *ngFor="let request of myRequestList">
                   <request-card *ngIf="showCard(request.status)" [request]="request"></request-card>
                 </ng-container>

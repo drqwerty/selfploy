@@ -85,7 +85,12 @@ export class RequestListPage {
 
 
   showAtLeastOneRequest() {
-    return this.myRequestList.some(({ status }) => this.showCard(status));
+    return this.myRequestList?.some(({ status }) => this.showCard(status));
+  }
+
+
+  showAtLeastOneFollowingRequest() {
+    return this.followingRequestList?.some(({ status }) => this.showCard(status));
   }
 
 

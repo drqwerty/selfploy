@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { DataService } from 'src/app/providers/data.service';
 import { tabBarAnimateIn } from 'src/app/animations/tab-bar-transition';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+const { StatusBar } = Plugins;
 
 @Component({
   selector: 'app-settings',
@@ -19,6 +21,7 @@ export class SettingsPage {
 
 
   ionViewWillEnter() {
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: StatusBarStyle.Light });
     this.getUser();
   }
 

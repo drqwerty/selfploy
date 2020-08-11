@@ -14,6 +14,8 @@ import { Conversation } from 'src/app/models/conversation-model';
 import { PaymentsComponent } from '../payments/payments.component';
 import { ToastAnimationEnter, ToastAnimationLeave } from 'src/app/animations/toast-transitions';
 import { User } from 'src/app/models/user-model';
+import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
+const { StatusBar } = Plugins;
 
 @Component({
   selector: 'app-request-info',
@@ -29,6 +31,8 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
   @ViewChild(IonContent) ionContent: IonContent;
   @ViewChild(SuperTabs) superTabs: SuperTabs;
   @ViewChildren(SuperTab) superTabListQuery: QueryList<SuperTab>;
+
+  statusBarStyle: StatusBarStyle;
 
   requestStatus = RequestStatus;
   statusText = RequestStatusText
@@ -61,7 +65,21 @@ export class RequestInfoComponent implements OnInit, AfterViewInit {
 
 
   ionViewDidEnter() {
+    this.updateStatusBar();
     if (this.request.coordinates) this.mapPreview.initMap();
+  }
+
+
+  ionViewWillLeave() {
+    if (Capacitor.isPluginAvailable('StatusBar')) StatusBar.setStyle({ style: this.statusBarStyle });
+  }
+
+
+  async updateStatusBar() {
+    if (Capacitor.isPluginAvailable('StatusBar')) {
+      this.statusBarStyle = (await StatusBar.getInfo()).style;
+      StatusBar.setStyle({ style: StatusBarStyle.Dark });
+    }
   }
 
 
