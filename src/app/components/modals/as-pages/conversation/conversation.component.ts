@@ -78,7 +78,6 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
   ngOnInit() {
     this.getMessages();
     this.checkNotReadedMessages();
-    this.setMessagesAsReaded();
     this.getAnotherUser();
   }
 
@@ -100,6 +99,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked, OnDestro
 
   ionViewDidEnter() {
     this.updateStatusBar();
+    this.setMessagesAsReaded();
     this.mapPreviewList.toArray().forEach(el => el.initMap());
     this.mapPreviewList
       .changes
