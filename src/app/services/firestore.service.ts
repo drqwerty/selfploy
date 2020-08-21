@@ -156,6 +156,23 @@ export class FirestoreService {
   }
 
 
+  async findUserByCompany(companyName, categoryFilter) {
+    const { uid } = await this.aFAuth.currentUser;
+    const user = await this.storage.getUserProfile();
+
+    let query = await this.geofirestore
+      .collection(dbKeys.users)
+      .near({ center: new firestore.GeoPoint(user.coordinates.lat, user.coordinates.lng), radius: this.DEFAULT_RADIUS })
+      .where(UserProperties.companyName, '==', companyName)
+      .get()
+      .then(value => this.translateCoordinatesAndSortByDistance(value));
+
+    if (categoryFilter) query = query.filter(user => user.services[categoryFilter])
+
+    return this.omitMyProfile(query, uid);
+  }
+
+
   private translateCoordinatesAndSortByDistance(value: GeoQuerySnapshot) {
     return value.docs
       .sort(({ distance: a }, { distance: b }) => a - b)

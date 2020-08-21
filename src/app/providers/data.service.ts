@@ -158,6 +158,11 @@ export class DataService {
   }
 
 
+  async findUserByCompany(companyName: string, categoryFilter: string) {
+    return this.firestore.findUserByCompany(companyName, categoryFilter);
+  }
+
+
   /* favorites */
 
 

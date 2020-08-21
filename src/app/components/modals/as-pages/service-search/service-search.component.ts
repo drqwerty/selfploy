@@ -6,6 +6,7 @@ import { Plugins, StatusBarStyle, Capacitor } from '@capacitor/core';
 const { StatusBar } = Plugins;
 import Utils from "src/app/utils";
 import { DataService } from 'src/app/providers/data.service';
+import { User } from 'src/app/models/user-model';
 
 
 @Component({
@@ -22,9 +23,9 @@ export class ServiceSearchComponent {
 
   hideHeaderBorder = true;
 
-  categories = Categories;
-  servicesQuery = [];
-  professionalsQuery = [];
+  categories         = Categories;
+  servicesQuery      = [];
+  professionalsQuery: User[] = [];
 
   constructor(
     private modalController: ModalController,
@@ -99,6 +100,30 @@ export class ServiceSearchComponent {
 
   async findUsers(text) {
     this.professionalsQuery = null;
-    this.professionalsQuery = (text == '') ? [] : await this.data.findUserByName(text, this.categoryFilter);
+    
+    if (text == '') {
+      this.professionalsQuery = [];
+      
+    } else {
+      const users = await Promise.all([
+        this.data.findUserByName(text, this.categoryFilter),
+        this.data.findUserByCompany(text, this.categoryFilter)
+      ]);
+
+      
+      if (users[0].length) {
+        this.professionalsQuery = users[0];
+        users[1].forEach(user => {
+          if (this.professionalsQuery.findIndex(({ id }) => id = user.id) != -1) {
+            this.professionalsQuery.push(user);
+          }
+        });
+        
+      } else {
+        this.professionalsQuery = users[1];
+      }
+
+    }
+
   }
 }
