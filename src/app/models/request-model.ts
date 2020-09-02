@@ -95,14 +95,8 @@ export class Request {
         if (lat && lng) this.coordinates = new LatLng(lat, lng);
       }
 
-      if (this.startDate) this.startDate = this.startDate?.constructor.name == 't'
-        ? moment(this.startDate.toDate())
-        : moment(this.startDate);
-
-      if (this.endDate) this.endDate = this.endDate?.constructor.name == 't'
-        ? moment(this.endDate.toDate())
-        : moment(this.endDate);
-
+      if (this.startDate) this.startDate = moment(this.startDate.toDate());
+      if (this.endDate)   this.endDate   = moment(this.endDate.toDate());
 
     } else {
       this.hideLocationAccuracy = false;

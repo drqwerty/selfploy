@@ -30,9 +30,7 @@ export class Review {
       this.text           = text;
       this.stars          = stars;
 
-      this.timestamp = timestamp?.constructor.name == 't'
-        ? moment(timestamp.toDate())
-        : moment(timestamp);
+      this.timestamp = moment(timestamp.toDate());
     }
 
   }

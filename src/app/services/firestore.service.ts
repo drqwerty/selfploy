@@ -329,10 +329,12 @@ export class FirestoreService {
     const { images, isMine, ...data } = request;
     const docData = Object.assign({}, data);
 
-    if (request.startDate?.constructor.name == 'Moment') {
-      if (request.startDate) docData.startDate = Timestamp.fromDate(request.startDate.toDate());
-      if (request.endDate) docData.endDate = Timestamp.fromDate(request.endDate.toDate());
+    if (request.startDate instanceof moment) {
+      if (request.startDate) docData.startDate = Timestamp.fromDate(( <moment.Moment> request.startDate).toDate());
+      if (request.endDate) docData.endDate     = Timestamp.fromDate(( <moment.Moment> request.endDate  ).toDate());
     }
+
+    console.log(docData)
 
     if (request.hasImages) await this.fStorage.uploadRequestImageList(images, request.id);
 

@@ -269,7 +269,7 @@ export class DataService {
 
     list = (await this.storage.getData(dbKey))?.map(request => {
       if (request.startDate) request.startDate = moment(request.startDate);
-      if (request.endDate) request.endDate = moment(request.endDate);
+      if (request.endDate)   request.endDate   = moment(request.endDate);
       return request;
     });
 
